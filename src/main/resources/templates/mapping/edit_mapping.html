@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2 th:if="${mapping == null}">Neue Zuordnung</h2>
+            <h2 th:if="${mapping != null}">Zuordnung bearbeiten</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <a class="btn btn-primary" th:href="@{/mapping/groups/{id}/(id=${group.getId()})}">Zurück</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+           <form class="form-control" method="post" >
+               <div class="row">
+                   <div class="col-4">
+                       <label for="from">Von</label>
+                   </div>
+                   <div class="col-8">
+                       <input th:if="${mapping != null}" class="form-control" type="text" id="from" name="from" th:value="${mapping.getFrom()}"/>
+                       <input th:if="${mapping == null}" class="form-control" type="text" id="from" name="from"/>
+                   </div>
+               </div>
+                <div class="row">
+                     <div class="col-4">
+                          <label for="to">Zu</label>
+                     </div>
+                     <div class="col-8">
+                         <th:block th:if="${mapping == null}">
+                            <th:block th:if="${categories != null}">
+                                <select class="form-control" id="to" name="to">
+                                    <option value="">Bitte wählen</option>
+                                    <option th:each="category: ${categories}" th:value="${category.id()}" th:text="${category.label()}"></option>
+                                </select>
+                            </th:block>
+                             <th:block th:if="${categories == null}">
+                                 <input class="form-control" type="text" id="to" name="to"/>
+                             </th:block>
+                         </th:block>
+                         <th:block th:if="${mapping != null}">
+                             <th:block th:if="${categories != null}">
+                                 <select class="form-control" id="to" name="to">
+                                     <option value="">Bitte wählen</option>
+                                     <option th:each="category: ${categories}" th:selected="${category.id().equals(mapping.to)}" th:value="${category.id()}" th:text="${category.label()}"></option>
+                                 </select>
+                             </th:block>
+                             <th:block th:if="${categories == null}">
+                                 <input class="form-control" type="text" id="to" name="to" th:value="${mapping.to}"/>
+                             </th:block>
+                         </th:block>
+                     </div>
+                </div>
+               <input th:if="${mapping != null}" type="hidden" name="id" th:value="${mapping.getId()}"/>
+               <input th:if="${group != null}" type="hidden" name="group" th:value="${group.getId()}"/>
+               <div class="row">
+                   <div class="col-4">
+                       <input type="submit" class="form-control" value="Speichern"/>
+                   </div>
+               </div>
+           </form>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+
+</body>
+</html>

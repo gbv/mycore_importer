@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <h2>Sie haben keine Berechtigung für diese Seite!</h2>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+</body>

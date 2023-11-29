@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2 th:if="${group == null}">Neue Zuordnungsgruppe</h2>
+            <h2 th:if="${group != null}">Zuordnungsgruppe bearbeiten</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <a class="btn btn-primary" th:href="@{/mapping/groups/}">Zurück</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+           <form class="form-control" method="post" >
+               <div class="row">
+                   <div class="col-4">
+                       <label for="name">Name</label>
+                   </div>
+                   <div class="col-8">
+                       <input th:if="${group != null}" class="form-control" type="text" id="name" name="name" th:value="${group.getName()}"/>
+                       <input th:if="${group == null}" class="form-control" type="text" id="name" name="name"/>
+                   </div>
+               </div>
+                <div class="row">
+                     <div class="col-4">
+                          <label for="description">Beschreibung</label>
+                     </div>
+                     <div class="col-8">
+                         <input th:if="${group != null}" class="form-control" type="text" id="description" name="description" th:value="${group.getDescription()}"/>
+                         <input th:if="${group == null}" class="form-control" type="text" id="description" name="description"/>
+                     </div>
+                </div>
+               <div class="row">
+                   <div class="col-4">
+                       <label for="target">MyCoRe Anwendung</label>
+                   </div>
+                     <div class="col-8">
+                          <select class="form-control" id="target" name="target">
+                            <option th:each="target : ${targets}" th:value="${target}" th:text="${target}" th:selected="${group != null && group.getTarget() == target}"></option>
+                          </select>
+                     </div>
+               </div>
+               <div class="row">
+                     <div class="col-4">
+                          <label for="classId">MyCoRe Klassifikation</label>
+                     </div>
+                     <div class="col-8">
+                            <input th:if="${group != null && group.getClassId() != null}" class="form-control" type="text" id="classId" name="classId" th:value="${group.getClassId()}"/>
+                            <input th:if="${group == null || group.getClassId() == null}" class="form-control" type="text" id="classId" name="classId"/>
+                     </div>
+               </div>
+
+               <input th:if="${group != null}" type="hidden" name="id" th:value="${group.getId()}"/>
+               <div class="row">
+                   <div class="col-4">
+                       <input type="submit" class="form-control" value="Speichern"/>
+                   </div>
+               </div>
+           </form>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+
+</body>
+</html>

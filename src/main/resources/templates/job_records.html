@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Zu importierende Dokumente</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
+            <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID})}">Zuordnungen Prüfen</a>
+            <a class="btn btn-primary" th:href="@{/jobs/{jid}/import(jid=${jobID})}">Import Starten</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Metadaten</th>
+                    <th>Datum</th>
+                    <th>Gelöscht</th>
+                    <th>Aktion</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="record: ${records}">
+                    <td th:text="${record.getForeignId()}"></td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                th:data-bs-target="'#metadata_' + ${record.getId()}"
+                                aria-expanded="false">
+                            Metadaten
+                        </button>
+
+                        <div class="modal" tabindex="-1" th:id="'metadata_' + ${record.getId()}">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Modal title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre th:text="${record.getMetadata()}"></pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </td>
+                    <td th:text="${record.getDatestamp()}">
+                    </td>
+
+                    <td th:text="${record.getDeleted()}">
+
+                    </td>
+
+                    <td>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/test/' + ${record.getForeignId()}}">Test</a>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/import/' + ${record.getForeignId()}}">Import</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Zuordnungsgruppen</h2>
+        </div>
+    </div>
+    <div class="row" sec:authorize="hasAnyAuthority('mapping-admin')">
+        <div class="col-12">
+            <a class="btn btn-primary" th:href="@{/mapping/groups/add/}">Neue Gruppe</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Beschreibung</th>
+                    <th>MyCoRe Anwendung</th>
+                    <th>MyCoRe Klassifikation</th>
+                    <th>Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mappingGroup: ${groups.getContent()}">
+                    <td th:text="${mappingGroup.getName()}"></td>
+                    <td th:text="${mappingGroup.getDescription()}"></td>
+                    <td><span th:if="${mappingGroup.getTarget()!=null}" th:text="${mappingGroup.getTarget()}"> </span></td>
+                    <td><span th:if="${mappingGroup.getClassId()!=null}" th:text="${mappingGroup.getClassId()}"> </span></td>
+                    <td>
+                        <a th:href="@{/mapping/groups/{id}/(id=${mappingGroup.getId()})}">Anzeigen</a>
+                        <a th:href="@{/mapping/groups/{id}/edit/(id=${mappingGroup.getId()})}">Bearbeiten</a>
+                        <!-- <a th:href="@{/mapping/group/delete/{id}(id=${mappingGroup.getId()})}">Delete</a> -->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" th:if="${groups.hasPrevious()}"><a class="page-link"
+                                                                             th:href="@{/mapping/groups/(page=${groups.getNumber()-1})}">Vorherige</a>
+                    </li>
+                    <li class="page-item" th:each="page: ${pages}"><a class="page-link"
+                                                                      th:href="@{/mapping/groups/(page=${page}-1)}"
+                                                                      th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${groups.hasNext()}"><a class="page-link"
+                                                                         th:href="@{/mapping/groups/(page=${groups.getNumber()+1})}">Nächste</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+
+</body>
+</html>

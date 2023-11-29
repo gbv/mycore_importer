@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+<body>
+<section class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{fragments/menu :: menu}"></div>
+        </div>
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <th>URL</th>
+                <th>Name</th>
+                <th>Aktion</th>
+                </thead>
+
+                <tbody>
+                <tr th:each="source: ${sources}">
+                    <td th:text="${source.value.getUrl()}"></td>
+                    <td th:text="${source.key}"></td>
+                    <td>
+                        <a th:href="@{'/sources/'+ ${source.key} + '/'}">Anzeigen</a>
+                        <a th:href="@{'/sources/'+ ${source.key} + '/update'}">Aktualisieren</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</section>
+</body>
+</html>

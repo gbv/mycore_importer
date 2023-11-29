@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<ul th:fragment="menu" class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link active" th:href="@{'/sources/'}">Quellen</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{'/targets/'}">Ziele</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{'/jobs/'}">Vorgänge</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{'/mapping/groups/'}">Zuordnung</a>
+    </li>
+    <li class="nav-item" sec:authorize="isFullyAuthenticated()">
+            <form th:action="@{/logout}" method="post">
+            <input class="nav-link"  type="submit" value="Abmelden"> </input>
+        </form>
+    </li>
+</ul>
+</body>
+</html>
