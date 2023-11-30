@@ -95,11 +95,6 @@
         </dependency>
         <dependency>
             <groupId>org.mycore.libmeta</groupId>
-            <artifactId>libmeta-marc21</artifactId>
-            <version>0.8.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mycore.libmeta</groupId>
             <artifactId>libmeta-mods</artifactId>
             <version>0.8.1-SNAPSHOT</version>
         </dependency>
