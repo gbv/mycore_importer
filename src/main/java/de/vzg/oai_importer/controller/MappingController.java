@@ -25,7 +25,7 @@ import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
 
 @Controller
 @RequestMapping("/mapping")
-@PreAuthorize("hasAnyAuthority('mapping')")
+@PreAuthorize("hasAnyAuthority('mapping', 'mapping-admin')")
 public class MappingController {
 
     @Autowired
