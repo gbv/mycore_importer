@@ -16,6 +16,16 @@
             <h2>Bereits importierte Dokumente</h2>
         </div>
     </div>
+    <div class="row" th:if="${ success != null}">
+        <div class="col-12">
+            <div th:if="${success == 'true' }" class="alert alert-success" role="alert">
+                <p>Import erfolgreich</p>
+            </div>
+            <div th:if="${success == 'false' }" class="alert alert-danger" role="alert">
+                <p>Import fehlgeschlagen</p>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>

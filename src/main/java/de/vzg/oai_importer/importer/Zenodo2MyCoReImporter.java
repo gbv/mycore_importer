@@ -353,9 +353,8 @@ public class Zenodo2MyCoReImporter implements Importer {
         }
 
         String mycoreID = object.getMycoreId();
-        Element metadata = MODSUtil.getMetadata(objectDoc);
-
-        restAPIService.putObjectMetadata(target, mycoreID, metadata.getDocument());
+        Element metadata = MODSUtil.getMetadata(objectDoc).detach();
+        restAPIService.putObjectMetadata(target, mycoreID, new org.jdom2.Document(metadata));
 
         return true;
     }
