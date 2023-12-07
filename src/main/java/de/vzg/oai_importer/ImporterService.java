@@ -1,6 +1,6 @@
 package de.vzg.oai_importer;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class ImporterService {
     public Map<ForeignEntity, MyCoReObjectInfo> detectUpdateableEntities(String configID, Configuration source, String targetRepository) {
         List<Object[]> updateableEntities = recordRepository.findUpdateableEntities(configID, configID, targetRepository);
 
-        HashMap<ForeignEntity, MyCoReObjectInfo> result = new HashMap<>();
+        LinkedHashMap<ForeignEntity, MyCoReObjectInfo> result = new LinkedHashMap<>(updateableEntities.size());
         for (Object[] objects : updateableEntities) {
             ForeignEntity foreignEntity = (ForeignEntity) objects[0];
             MyCoReObjectInfo myCoReObjectInfo = (MyCoReObjectInfo) objects[1];
