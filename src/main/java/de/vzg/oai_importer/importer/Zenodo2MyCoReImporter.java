@@ -343,6 +343,24 @@ public class Zenodo2MyCoReImporter implements Importer {
         return true;
     }
 
+    @SneakyThrows
+    @Override
+    public boolean updateRecord(MyCoReTargetConfiguration target, ForeignEntity record, MyCoReObjectInfo object) {
+
+        org.jdom2.Document objectDoc = convertEntity(target, record);
+        if (objectDoc == null) {
+            return false;
+        }
+
+        String mycoreID = object.getMycoreId();
+        Element metadata = MODSUtil.getMetadata(objectDoc);
+
+        restAPIService.putObjectMetadata(target, mycoreID, metadata.getDocument());
+
+        return true;
+    }
+
+
     private void updateGroupingState(MyCoReTargetConfiguration target, org.jdom2.Document object, String mycoreID)
         throws IOException, URISyntaxException {
         String xp = ".//mods:relatedItem[@xlink:href and @otherType='has_grouping']";
@@ -491,7 +509,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         handleAbstract(restRecord, mods);
         handleSubject(restRecord, mods);
         handleCreators(restRecord, mods);
-        if (handleContributors(restRecord, mods)) {
+        if (!handleContributors(restRecord, mods)) {
             return null;
         }
         handlePublicationInfo(restRecord, mods);

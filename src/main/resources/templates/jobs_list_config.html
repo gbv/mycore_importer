@@ -25,7 +25,8 @@
                     <td th:text="${job.value.targetConfigId}"></td>
                     <td th:text="${job.value.importer}"></td>
                     <td>
-                        <a th:href="@{'/jobs/'+ ${job.key} + '/'}">Anzeigen</a>
+                        <a th:href="@{'/jobs/'+ ${job.key} + '/'}">Neue Dokumente Anzeigen</a>
+                        <a th:href="@{'/jobs/'+ ${job.key} + '/update/'}">Importierte Dokumente Anzeigen</a>
                     </td>
                 </tr>
                 </tbody>

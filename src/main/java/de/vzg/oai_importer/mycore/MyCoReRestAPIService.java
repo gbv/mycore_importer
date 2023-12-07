@@ -144,6 +144,25 @@ public class MyCoReRestAPIService {
         }
     }
 
+    public String putObjectMetadata(MyCoReTargetConfiguration target, String objectID, Document object)
+        throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        String authenticate = authenticate(target);
+        if (authenticate == null) {
+            throw new IOException("Could not authenticate");
+        }
+        byte[] byteArray;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            new XMLOutputter().output(object, out);
+            byteArray = out.toByteArray();
+        }
+        try (ByteArrayInputStream out = new ByteArrayInputStream(byteArray)) {
+           return client.putObjectMetadata(url, objectID, authenticate, out, "application/xml");
+        }
+    }
+
     public List<Category> getClassificationCategories(MyCoReTargetConfiguration target, String classId)
         throws IOException, URISyntaxException {
         String url = target.getUrl();

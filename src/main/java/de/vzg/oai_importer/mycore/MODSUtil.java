@@ -20,7 +20,8 @@ public class MODSUtil {
 
     public static final Namespace MODS_NAMESPACE = Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
 
-    private static final String FULLTEXT_URL_XPATH = "/mycoreobject/metadata/def.modsContainer/modsContainer/mods:mods/mods:location/mods:url";
+    public static final String METADATA_XPATH = "/mycoreobject/metadata";
+    private static final String FULLTEXT_URL_XPATH = METADATA_XPATH + "/mods:location/mods:url";
     private static final String LOCKED_DELETED_XPATH = "/mycoreobject/service/servstates/servstate[@categid='blocked' or @categid='deleted']";
 
     private static final String CREATED_BY_XPATH = "/mycoreobject/service/servflags/servflag[@type='createdby']";
@@ -130,6 +131,12 @@ public class MODSUtil {
         XPathExpression<Element> fulltextXPath = XPathFactory.instance()
             .compile(LOCKED_DELETED_XPATH, Filters.element(), null, MODS_NAMESPACE);
         return fulltextXPath.evaluate(childDoc).size() > 0;
+    }
+
+    public static Element getMetadata(Document mycoreObject) {
+        XPathExpression<Element> metadataXPath = XPathFactory.instance()
+            .compile(METADATA_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        return metadataXPath.evaluateFirst(mycoreObject);
     }
 
     public record MODSRecordInfo(String id, String url) {

@@ -23,6 +23,8 @@ import de.vzg.oai_importer.importer.Importer;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MyCoReSynchronizeService;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
+import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
+import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfoRepository;
 import lombok.extern.log4j.Log4j2;
 
 @Service
@@ -41,6 +43,9 @@ public class JobService {
 
     @Autowired
     MyCoReSynchronizeService myCoReSynchronizeService;
+
+    @Autowired
+    MyCoReObjectInfoRepository mycoreRepo;
 
     @Autowired
     ForeignEntityRepository repo;
@@ -68,6 +73,17 @@ public class JobService {
         Configuration source = getCombinedConfig().get(sourceConfigId);
 
         return importerService.detectImportableEntities(sourceConfigId, source, target.getUrl());
+    }
+
+    public Map<ForeignEntity, MyCoReObjectInfo> listUpdateableRecords(String jobID) {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+        Configuration source = getCombinedConfig().get(sourceConfigId);
+
+        return importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl());
     }
 
     public Map<ForeignEntity, List<Mapping>> testMapping(String jobID) {
@@ -122,7 +138,7 @@ public class JobService {
         }
     }
 
-    public void import_(String jobID, String recordID) {
+    public void importSingleDocument(String jobID, String recordID) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String sourceConfigId = jobConfig.getSourceConfigId();
 
@@ -132,6 +148,21 @@ public class JobService {
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
         importer.importRecord(target, testRecord);
+    }
+
+    public void updateSingleDocument(String jobID, String recordID) {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(jobConfig.getTargetConfigId());
+        ForeignEntity testRecord = repo.findFirstByConfigIdAndForeignId(sourceConfigId, recordID);
+
+        MyCoReObjectInfo object = mycoreRepo.findFirstByRepositoryAndImportURLAndImportID(target.getUrl(),
+            jobConfig.getSourceConfigId(), testRecord.getForeignId());
+
+        Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+        importer.setConfig(jobConfig.getImporterConfig());
+        importer.updateRecord(target, testRecord, object);
     }
 
     public String test(String jobID, String recordID) {

@@ -185,6 +185,32 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         return result.headers().get("Location");
     }
 
+    public String putObjectMetadata(String repositoryURL,
+                                    String objectID,
+                                    String authenticate,
+                                    ByteArrayInputStream objectContent,
+                                    String contentType) throws URISyntaxException, IOException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+
+        applyAuth(authenticate, headers);
+        adaptRequestParameters(parameters, headers);
+
+        TransferResult result = transferLayer.put(repositoryURL + API_V_2_OBJECTS + "/" + objectID + "/metadata", contentType,
+                objectContent, headers, parameters);
+        int i = result.statusCode();
+
+        if (!(i == 200 || i == 201 || i == 204)) {
+            throw new RuntimeException("Error while putting object: " + result.statusMessage());
+        }
+
+        try (InputStream inputStream = result.inputStream()) {
+            inputStream.readAllBytes();
+        }
+        return result.headers().get("Location");
+
+    }
+
     private void applyQueryParameters(MyCoReObjectQuery query, HashMap<String, List<String>> parameters) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
                 .withZone(ZoneId.of("GMT"));
@@ -251,6 +277,7 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         }
 
     }
+
 
 
 }

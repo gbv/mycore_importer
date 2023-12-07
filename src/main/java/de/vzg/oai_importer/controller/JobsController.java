@@ -17,6 +17,7 @@ import de.vzg.oai_importer.ImporterConfiguration;
 import de.vzg.oai_importer.JobService;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
+import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
 
 
 @Controller
@@ -45,6 +46,16 @@ public class JobsController {
         return "job_records";
     }
 
+    @RequestMapping("/{jobID}/update/")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
+    public String showUpdateJob(@PathVariable("jobID") String jobID, Model model) {
+        Map<ForeignEntity, MyCoReObjectInfo> records = jobService.listUpdateableRecords(jobID);
+        model.addAttribute("records", records);
+
+        return "job_update";
+    }
+
+
     @RequestMapping("/{jobID}/testMapping")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runTestJob(@PathVariable("jobID") String jobID, Model model) {
@@ -67,13 +78,18 @@ public class JobsController {
 
     @RequestMapping("/{jobID}/import/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
-    public String runJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID, Model model) {
-        model.addAttribute("jobID", jobID);
-        model.addAttribute("recordID", recordID);
+    public String runJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID) {
+        jobService.importSingleDocument(jobID, recordID);
 
-        jobService.import_(jobID, recordID);
+        return "redirect:/jobs/" + jobID + "/update/";
+    }
 
-        return "job_test";
+    @RequestMapping("/{jobID}/update/{recordID}")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
+    public String updateJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID) {
+        jobService.updateSingleDocument(jobID, recordID);
+
+        return "redirect:/jobs/" + jobID + "/update/";
     }
 
     @RequestMapping("/{jobID}/import")
