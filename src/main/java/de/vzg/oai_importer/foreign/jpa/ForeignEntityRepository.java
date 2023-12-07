@@ -17,6 +17,6 @@ public interface ForeignEntityRepository extends JpaRepository<ForeignEntity, Lo
         "(SELECT m.importID FROM MyCoReObjectInfo m where m.importURL = ?2 AND m.repository = ?3)")
     List<ForeignEntity> findImportableEntities(String oaiConfig, String oaiSource, String targetRepository);
 
-    @Query("SELECT fe, oi FROM ForeignEntity fe, MyCoReObjectInfo oi WHERE fe.configId = ?1 AND fe.isDeleted = false AND fe.foreignId = oi.importID AND oi.importURL = ?2 AND oi.repository = ?3")
+    @Query("SELECT fe, oi FROM ForeignEntity fe, MyCoReObjectInfo oi WHERE fe.configId = ?1 AND fe.isDeleted = false AND fe.foreignId = oi.importID AND oi.importURL = ?2 AND oi.repository = ?3 order by fe.datestamp desc")
     List<Object[]> findUpdateableEntities(String oaiConfig, String oaiSource, String targetRepository);
 }
