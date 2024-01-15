@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,12 +13,14 @@ import java.util.stream.Collectors;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.InputStreamEntity;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 
 import de.vzg.oai_importer.mycore.api.transfer.TransferLayer;
@@ -38,12 +41,22 @@ public class ApacheHttpClientTransferLayer implements TransferLayer {
     @Override
     public TransferResult post(String url, String bodyContentType, InputStream body, Map<String, String> headers,
                                Map<String, List<String>> params) throws URISyntaxException, IOException {
-        String requestURL = buildURIComplete(url, params);
+        String requestURL = buildURIComplete(url, Collections.emptyMap());
+
         log.info("Requesting (POST) {}", requestURL);
 
         HttpPost post = new HttpPost(requestURL);
         headers.forEach(post::addHeader);
-        post.setEntity(new InputStreamEntity(body, ContentType.parse(bodyContentType)));
+        if (body != null) {
+            post.setEntity(new InputStreamEntity(body, ContentType.parse(bodyContentType)));
+        }
+        if (!params.isEmpty()) {
+            List<BasicNameValuePair> list = params.entrySet().stream().flatMap(
+                e -> e.getValue().stream().map(
+                    v -> new BasicNameValuePair(e.getKey(), v)))
+                .toList();
+            post.setEntity(new UrlEncodedFormEntity(list));
+        }
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             return httpclient.execute(post, (ClassicHttpResponse response) -> {
                 InputStream content = response.getEntity().getContent();
@@ -66,7 +79,9 @@ public class ApacheHttpClientTransferLayer implements TransferLayer {
         log.info("Requesting (PUT) {}", requestURL);
         HttpPut put = new HttpPut(requestURL);
         headers.forEach(put::addHeader);
-        put.setEntity(new InputStreamEntity(body, ContentType.parse(bodyContentType)));
+        ContentType contentType = bodyContentType == null ? null : ContentType.parse(bodyContentType);
+        InputStreamEntity entity = new InputStreamEntity(body, contentType);
+        put.setEntity(entity);
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             return httpclient.execute(put, (ClassicHttpResponse response) -> {
                 byte[] bytes;

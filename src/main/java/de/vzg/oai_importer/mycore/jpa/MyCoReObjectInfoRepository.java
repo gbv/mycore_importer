@@ -1,10 +1,11 @@
 package de.vzg.oai_importer.mycore.jpa;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.ListPagingAndSortingRepository;
 
-import org.springframework.data.repository.Repository;
-
-public interface MyCoReObjectInfoRepository extends Repository<MyCoReObjectInfo, Long> {
+public interface MyCoReObjectInfoRepository extends ListPagingAndSortingRepository<MyCoReObjectInfo, Long>, ListCrudRepository<MyCoReObjectInfo, Long> {
 
     MyCoReObjectInfo findByMycoreIdAndRepository(String mycoreId, String repository);
 
@@ -12,8 +13,6 @@ public interface MyCoReObjectInfoRepository extends Repository<MyCoReObjectInfo,
 
     MyCoReObjectInfo findFirstByRepositoryAndImportURLAndImportID(String repository, String importURL, String importID);
 
-    List<MyCoReObjectInfo> findByRepository(String repository);
-
-    void save(MyCoReObjectInfo objectInfo);
+    Page<MyCoReObjectInfo> findByRepository(String repository, Pageable page);
 
 }

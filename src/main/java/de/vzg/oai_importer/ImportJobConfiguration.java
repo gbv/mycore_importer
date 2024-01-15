@@ -22,6 +22,11 @@ public class ImportJobConfiguration {
      */
     private String importer;
 
+    /**
+     * Whether to automatically run the job in a fixed schedule
+     */
+    private boolean auto;
+
     private Map<String, String> importerConfig;
 
 }

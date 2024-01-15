@@ -3,6 +3,7 @@ package de.vzg.oai_importer.mycore;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
@@ -107,6 +108,13 @@ public class MyCoReRestAPIService {
         return object;
     }
 
+    public Document getDerivate(MyCoReTargetConfiguration target, String objectID, String derivateID) throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+        String authenticate = authenticate(target);
+        return client.getDerivate(url, objectID, derivateID, authenticate);
+    }
+
     public String postObject(MyCoReTargetConfiguration target, Document object) throws IOException, URISyntaxException {
         String url = target.getUrl();
         MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
@@ -122,6 +130,36 @@ public class MyCoReRestAPIService {
         }
         try (ByteArrayInputStream out = new ByteArrayInputStream(byteArray)) {
             return client.postObject(url,  authenticate, out, "application/xml");
+        }
+    }
+
+    public String postDerivate(MyCoReTargetConfiguration target, String object, String order, String maindoc, List<String> classifications, List<String> titles) throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        String authenticate = authenticate(target);
+        if (authenticate == null) {
+            throw new IOException("Could not authenticate");
+        }
+
+        return client.postDerivate(url, object,  authenticate, order, maindoc, classifications, titles );
+    }
+
+    public String putDerivate(MyCoReTargetConfiguration target, String objectID, String derivateID, Document object) throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        String authenticate = authenticate(target);
+        if (authenticate == null) {
+            throw new IOException("Could not authenticate");
+        }
+        byte[] byteArray;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            new XMLOutputter().output(object, out);
+            byteArray = out.toByteArray();
+        }
+        try (ByteArrayInputStream out = new ByteArrayInputStream(byteArray)) {
+            return client.putDerivate(url, objectID, derivateID, authenticate, out, "application/xml");
         }
     }
 
@@ -161,6 +199,18 @@ public class MyCoReRestAPIService {
         try (ByteArrayInputStream out = new ByteArrayInputStream(byteArray)) {
            return client.putObjectMetadata(url, objectID, authenticate, out, "application/xml");
         }
+    }
+
+    public void putFiles(MyCoReTargetConfiguration target, String objectID, String derivativeID, String filename, InputStream is)
+        throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        String authenticate = authenticate(target);
+        if (authenticate == null) {
+            throw new IOException("Could not authenticate");
+        }
+        client.putFile(url, objectID, derivativeID, authenticate, "/"+filename, is);
     }
 
     public List<Category> getClassificationCategories(MyCoReTargetConfiguration target, String classId)

@@ -121,6 +121,16 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
             <!-- Temporary explicit version to fix Thymeleaf bug -->
         </dependency>
+        <dependency>
+            <groupId>org.mycore.pica2mods</groupId>
+            <artifactId>pica2mods-xslt</artifactId>
+            <version>2.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -128,6 +138,42 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Pack Web App</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <finalName>mycore-importer-webapp</finalName>
+                            <mainClass>de.vzg.oai_importer.OaiImporterWebApplication</mainClass>
+                            <outputDirectory>target</outputDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Pack Command Line App</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <finalName>mycore-importer-cli</finalName>
+                            <mainClass>de.vzg.oai_importer.OaiImporterCLIApplication</mainClass>
+                            <outputDirectory>target</outputDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

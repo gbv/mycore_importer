@@ -56,7 +56,7 @@
                     <li class="page-item" th:if="${groups.hasPrevious()}"><a class="page-link"
                                                                              th:href="@{/mapping/groups/(page=${groups.getNumber()-1})}">Vorherige</a>
                     </li>
-                    <li class="page-item" th:each="page: ${pages}"><a class="page-link"
+                    <li class="page-item" th:each="page: ${pages}"><a th:class="'page-link' + (${page} == ${records.getNumber()+1} ? ' active' : '')"
                                                                       th:href="@{/mapping/groups/(page=${page}-1)}"
                                                                       th:text="${page}">1</a></li>
                     <li class="page-item" th:if="${groups.hasNext()}"><a class="page-link"

@@ -21,7 +21,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="record: ${records}">
+                <tr th:each="record: ${records.getContent()}">
                     <td th:text="${record.getForeignId()}"></td>
                     <td>
                         <button class="btn btn-primary" type="button" data-bs-toggle="modal"
@@ -60,6 +60,23 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination flex-wrap">
+                    <li class="page-item" th:if="${records.hasPrevious()}"><a class="page-link"
+                                                                              th:href="@{'/sources/'+${source} +'/?page=' +${records.getNumber()-1}}">Vorherige</a>
+                    </li>
+                    <li class="page-item" th:each="page: ${pages}"><a th:class="'page-link' + (${page} == ${records.getNumber()+1} ? ' active' : '')"
+                                                                      th:href="@{'/sources/'+${source}+'/?page=' + ${page -1}}"
+                                                                      th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${records.hasNext()}"><a class="page-link"
+                                                                          th:href="@{'/sources/' + ${source}+ '/?page=' +${records.getNumber()+1}}">Nächste</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
     <div th:replace="~{fragments/footer :: footer}"></div>

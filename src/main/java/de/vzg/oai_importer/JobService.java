@@ -2,23 +2,21 @@ package de.vzg.oai_importer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.mycore.oai.pmh.OAIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.foreign.Configuration;
-import de.vzg.oai_importer.foreign.Harvester;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntityRepository;
-import de.vzg.oai_importer.foreign.oai.OAISourceConfiguration;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoSourceConfiguration;
 import de.vzg.oai_importer.importer.Importer;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MyCoReSynchronizeService;
@@ -40,7 +38,6 @@ public class JobService {
     @Autowired
     ImporterService importerService;
 
-
     @Autowired
     MyCoReSynchronizeService myCoReSynchronizeService;
 
@@ -50,29 +47,16 @@ public class JobService {
     @Autowired
     ForeignEntityRepository repo;
 
-    private HashMap<String, Configuration> getCombinedConfig() {
-        Map<String, OAISourceConfiguration> oaiSources =Optional.ofNullable( configuration.getOaiSources())
-                .orElseGet(Collections::emptyMap);
 
-        Map<String, ZenodoSourceConfiguration> zenodoSources = Optional.ofNullable(configuration.getZenodoSources())
-                .orElseGet(Collections::emptyMap);
-
-        HashMap<String, Configuration> sourceMap = new HashMap<>();
-
-        sourceMap.putAll(oaiSources);
-        sourceMap.putAll(zenodoSources);
-        return sourceMap;
-    }
-
-    public List<ForeignEntity> listImportableRecords(String jobID) {
+    public Page<ForeignEntity> listImportableRecords(String jobID, Pageable pageable) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
 
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
-        Configuration source = getCombinedConfig().get(sourceConfigId);
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        return importerService.detectImportableEntities(sourceConfigId, source, target.getUrl());
+        return importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), pageable);
     }
 
     public Map<ForeignEntity, MyCoReObjectInfo> listUpdateableRecords(String jobID) {
@@ -81,7 +65,7 @@ public class JobService {
         String sourceConfigId = jobConfig.getSourceConfigId();
 
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
-        Configuration source = getCombinedConfig().get(sourceConfigId);
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
         return importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl());
     }
@@ -92,19 +76,18 @@ public class JobService {
         String sourceConfigId = jobConfig.getSourceConfigId();
 
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
-        Configuration source = getCombinedConfig().get(sourceConfigId);
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        List<ForeignEntity> foreignEntities = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl());
+        Page<ForeignEntity> foreignEntities = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
 
         HashMap<ForeignEntity, List<Mapping>> result = new HashMap<>();
 
-        for (int i = 0; i < foreignEntities.size(); i++) {
-            ForeignEntity record = foreignEntities.get(i);
+        foreignEntities.forEach(record -> {
             List<Mapping> missingMappings = importer.checkMapping(target, record);
             result.put(record, missingMappings);
-        }
+        });
 
         return result;
     }
@@ -117,25 +100,33 @@ public class JobService {
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
 
 
-        Configuration source =  getCombinedConfig().get(sourceConfigId);
+        Configuration source =  configuration.getCombinedConfig().get(sourceConfigId);
 
-        List<ForeignEntity> records = importerService
-            .detectImportableEntities(sourceConfigId, source, target.getUrl());
+        Page<ForeignEntity> records = importerService
+            .detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
 
+        /*
         String harvesterID = source.getHarvester();
         Harvester<Configuration> harvester = (Harvester<Configuration>) context.getBean(harvesterID);
         harvester.update(sourceConfigId, source);
         myCoReSynchronizeService.synchronize(target);
+         */
 
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
-        log.info("Found {} records to import", records.size());
-        for (int i = 0; i < records.size(); i++) {
-            ForeignEntity record = records.get(i);
+        log.info("Found {} records to import", records.getTotalElements());
+
+        AtomicLong i = new AtomicLong(records.getTotalElements());
+        records.forEach(record -> {
             importer.importRecord(target, record);
-            myCoReSynchronizeService.synchronize(target);
-            log.info("{} jobs remaining", records.size() - (i + 1));
-        }
+            try {
+                myCoReSynchronizeService.synchronize(target);
+            } catch (IOException|URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("{} jobs remaining", i.decrementAndGet());
+
+        });
     }
 
     public void importSingleDocument(String jobID, String recordID) {

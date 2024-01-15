@@ -114,6 +114,23 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         }
     }
 
+    public T getDerivate(String repositoryURL, String object, String derivate, String authHeader) throws IOException, URISyntaxException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+        applyAuth(authHeader, headers);
+        adaptRequestParameters(parameters, headers);
+        TransferResult result = transferLayer.get(repositoryURL + API_V_2_OBJECTS + "/" + object + "/derivates/" + derivate, headers, parameters);
+        int i = result.statusCode();
+        if (i != 200) {
+            throw new RuntimeException("Error while getting object: " + result.statusMessage());
+        }
+        try (InputStream inputStream = result.inputStream()) {
+            return resultMapper.mapGeneric(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public T getObject(String repositoryURL, String object) throws IOException, URISyntaxException {
         return getObject(repositoryURL, object, null);
     }
@@ -158,6 +175,58 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         }
         return result.headers().get("Location");
     }
+
+    public String postDerivate(String url, String objectID, String authHeader, String order, String maindoc, List<String> classifications, List<String> titles)
+            throws URISyntaxException, IOException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+
+        applyAuth(authHeader, headers);
+
+        parameters.put("order", List.of(order));
+        parameters.put("maindoc", List.of(maindoc));
+        parameters.put("classification", classifications);
+        parameters.put("title", titles);
+
+        adaptRequestParameters(parameters, headers);
+
+
+        TransferResult result = transferLayer.post(url + API_V_2_OBJECTS + "/" + objectID + "/derivates", "application/json",  null ,headers, parameters);
+        int i = result.statusCode();
+
+        if (!(i == 200 || i == 201)) {
+            throw new RuntimeException("Error while putting object: " + result.statusMessage());
+        }
+
+        try (InputStream inputStream = result.inputStream()) {
+            inputStream.readAllBytes();
+        }
+        return result.headers().get("Location");
+    }
+
+    public String putDerivate(String url, String objectID, String derivateID, String authenticate, ByteArrayInputStream out, String s) throws URISyntaxException, IOException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+
+        applyAuth(authenticate, headers);
+        adaptRequestParameters(parameters, headers);
+
+        TransferResult result = transferLayer.put(url + API_V_2_OBJECTS + "/" + objectID + "/derivates/" + derivateID, s,
+                out, headers, parameters);
+
+        int i = result.statusCode();
+
+        if (!(i == 200 || i == 201 || i == 204)) {
+            throw new RuntimeException("Error while putting object: " + result.statusMessage());
+        }
+
+        try (InputStream inputStream = result.inputStream()) {
+            inputStream.readAllBytes();
+        }
+
+        return result.headers().get("Location");
+    }
+
     public String putObject(String repositoryURL,
         String objectID,
         String authHeader,
@@ -198,6 +267,33 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
 
         TransferResult result = transferLayer.put(repositoryURL + API_V_2_OBJECTS + "/" + objectID + "/metadata", contentType,
                 objectContent, headers, parameters);
+        int i = result.statusCode();
+
+        if (!(i == 200 || i == 201 || i == 204)) {
+            throw new RuntimeException("Error while putting object: " + result.statusMessage());
+        }
+
+        try (InputStream inputStream = result.inputStream()) {
+            inputStream.readAllBytes();
+        }
+        return result.headers().get("Location");
+
+    }
+
+    public String putFile(String repositoryURL,
+                           String objectID,
+                           String derivateID,
+                           String authenticate,
+                           String path,
+                           InputStream fileContent) throws URISyntaxException, IOException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+
+        applyAuth(authenticate, headers);
+        adaptRequestParameters(parameters, headers);
+
+        TransferResult result = transferLayer.put(repositoryURL + API_V_2_OBJECTS + "/" + objectID + "/derivates/" + derivateID + "/contents" + path, null,
+                fileContent, headers, parameters);
         int i = result.statusCode();
 
         if (!(i == 200 || i == 201 || i == 204)) {

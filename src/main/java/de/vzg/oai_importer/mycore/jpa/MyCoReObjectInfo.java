@@ -29,10 +29,10 @@ public class MyCoReObjectInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mycore_id", length = 20, nullable = false)
+    @Column(name = "mycore_id", length = 40, nullable = false)
     private String mycoreId;
 
-    @Column(name = "parent_mycore_id", length = 20)
+    @Column(name = "parent_mycore_id", length = 40)
     private String parentMycoreId;
 
     @Column(name = "import_id", length = 20)

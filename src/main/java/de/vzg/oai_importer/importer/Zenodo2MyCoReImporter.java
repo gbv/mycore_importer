@@ -22,7 +22,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.logging.log4j.util.Strings;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
@@ -599,7 +598,7 @@ public class Zenodo2MyCoReImporter implements Importer {
             throw new RuntimeException(e);
         }
 
-        org.jdom2.Document document = wrapInMyCoReFrame(xmlStringWriter.toString(), recordEntity);
+        org.jdom2.Document document = MODSUtil.wrapInMyCoReFrame(xmlStringWriter.toString(), config.get("base-id") ,getStatus());
         return document;
     }
 
@@ -651,47 +650,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         return true;
     }
 
-    private org.jdom2.Document wrapInMyCoReFrame(String xmlAsString, ForeignEntity recordEntity) {
-        SAXBuilder builder = new SAXBuilder();
-        Element modsDoc;
 
-        try (StringReader sr = new StringReader(xmlAsString)) {
-            org.jdom2.Document document = builder.build(sr);
-            modsDoc = document.getRootElement().detach();
-        } catch (IOException | JDOMException e) {
-            throw new RuntimeException(e);
-        }
-
-        Element mycoreDoc = new Element("mycoreobject");
-        mycoreDoc.addContent(new Element("structure"));
-
-        Element metadata = new Element("metadata");
-        Element modsContainer = new Element("def.modsContainer")
-            .setAttribute("class", "MCRMetaXML")
-            .setAttribute("heritable", false + "")
-            .setAttribute("notinherit", true + "");
-        metadata.addContent(modsContainer);
-
-        modsContainer.addContent(new Element("modsContainer").setAttribute("inherited", "0").addContent(modsDoc));
-
-        mycoreDoc.addContent(metadata);
-
-        Element service = new Element("service");
-        Element servstates = new Element("servstates");
-        service.addContent(servstates);
-        servstates.setAttribute("class", "MCRMetaClassification");
-        Element servState = new Element("servstate").setAttribute("categid", getStatus())
-            .setAttribute("classid", "state")
-            .setAttribute("inherited", "0");
-
-        servstates.addContent(servState);
-
-        mycoreDoc.addContent(service);
-
-        mycoreDoc.setAttribute("ID", config.get("base-id") + "_00000000");
-
-        return new org.jdom2.Document(mycoreDoc);
-    }
 
     private String getStatus() {
         return config.get("status");

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.foreign.Configuration;
@@ -18,8 +20,8 @@ public class ImporterService {
     @Autowired
     ForeignEntityRepository recordRepository;
 
-    public List<ForeignEntity> detectImportableEntities(String configID, Configuration source, String targetRepository) {
-        return recordRepository.findImportableEntities(configID, configID, targetRepository);
+    public Page<ForeignEntity> detectImportableEntities(String configID, Configuration source, String targetRepository, Pageable pageable) {
+        return recordRepository.findImportableEntities(configID, configID, targetRepository, pageable);
     }
 
     public Map<ForeignEntity, MyCoReObjectInfo> detectUpdateableEntities(String configID, Configuration source, String targetRepository) {
