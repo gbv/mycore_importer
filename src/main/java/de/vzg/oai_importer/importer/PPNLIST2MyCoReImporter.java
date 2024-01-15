@@ -55,7 +55,7 @@ public class PPNLIST2MyCoReImporter implements Importer {
         MODSUtil.setRecordInfo(object, record.getForeignId(), record.getConfigId());
 
         // check files
-        var davPath = config.get("dav-path");
+        var davPath = config.get("file-path");
         var path = Paths.get(davPath);
 
         var prefix = record.getForeignId().substring(0, 2);
@@ -98,7 +98,6 @@ public class PPNLIST2MyCoReImporter implements Importer {
             Document createdDerivate = restAPIService.getDerivate(target, mycoreID, derivateID);
             MyCoReUtil.setMainFile(createdDerivate, files.get(0).getFileName().toString());
             restAPIService.putDerivate(target, mycoreID, derivateID, createdDerivate);
-
              */
         }
 
