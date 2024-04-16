@@ -1,16 +1,26 @@
 package de.vzg.oai_importer.importer;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -19,7 +29,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jdom2.Document;
+import org.jdom2.Element;
 import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -30,6 +42,7 @@ import org.mycore.pica2mods.xsl.model.Pica2ModsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.vzg.oai_importer.ImporterService;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MODSUtil;
@@ -46,6 +59,24 @@ public class PPNLIST2MyCoReImporter implements Importer {
     MyCoReRestAPIService restAPIService;
     private Map<String, String> config;
 
+    Namespace picaxml = Namespace.getNamespace("info:srw/schema/5/picaXML-v1.0");
+
+    private static Document getForeignEntityDocument(ForeignEntity record) {
+        Document doc1;
+        try (var sr = new StringReader(record.getMetadata())) {
+            doc1 = new SAXBuilder().build(sr);
+        } catch (IOException | JDOMException e) {
+            throw new RuntimeException(e);
+        }
+        return doc1;
+    }
+
+    private static String extractFileName(String realURL) {
+        String fileName = realURL.substring(realURL.lastIndexOf('/') + 1).trim();
+        fileName = fileName.replaceAll("[^A-Za-z0-9_\\-.]", "");
+        return fileName;
+    }
+
     @SneakyThrows
     @Override
     public boolean importRecord(MyCoReTargetConfiguration target, ForeignEntity record) {
@@ -58,42 +89,90 @@ public class PPNLIST2MyCoReImporter implements Importer {
         var davPath = config.get("file-path");
         var path = Paths.get(davPath);
 
-        var prefix = record.getForeignId().substring(0, 2);
-        var prefixPath = path.resolve(prefix);
+        // this should be the ppn from the record in the field 003S@0 or 007G@0
+        Document picaXML = getForeignEntityDocument(record);
+        var filePPN = Stream.of(getPicaField(picaXML, "003@0", "0"), getPicaField(picaXML, "007G", "0"))
+            .flatMap(s -> s)
+            .distinct()
+            .collect(Collectors.toList());
 
-        if (!Files.exists(prefixPath)) {
-            return false;
-        }
+        List<Path> files = resolveFiles(record, filePPN, path);
 
-        List<Path> files = null;
-        try (var list = Files.list(prefixPath)) {
-            files = list.filter(p -> p.getFileName().toString().startsWith(record.getForeignId()))
-                .toList();
-        }
-        log.info("Found {} files for record {}", files.size(), record.getForeignId());
+        log.info("Found {} files for record {} in filesystem with ppn {}", files.size(), record.getForeignId(),
+            filePPN);
 
         // transfer everything
         var location = restAPIService.postObject(target, object);
         var mycoreID = location.substring(location.lastIndexOf("/") + 1);
 
+        List<String> fileURLs = getPicaField(picaXML, "017C", "u")
+                .toList();
+
+        List<String> filteredFileURLs = fileURLs.stream()
+                .filter(url -> (url.startsWith("http") || url.startsWith("https")) && (url.toLowerCase(Locale.ROOT).endsWith(".pdf") || url.contains("//www.dfi.de/")))
+                .toList();
+
         // transfer files
-        if (!files.isEmpty()) {
-            log.info("Certe derivate  for record {}", record.getId());
-            String derivateURL = restAPIService.postDerivate(target,
-                mycoreID,
-                "0",
-                files.get(0).getFileName().toString(),
-                List.of("derivate_types:content", "mir_access:ipAddressRange"),
+        if (!files.isEmpty() || !filteredFileURLs.isEmpty()) {
+            List<ImporterService.Pair<String, byte[]>> downloadedFiles = new ArrayList<>();
+            if (files.isEmpty()) {
+                filteredFileURLs.stream()
+                    .map(url -> {
+                        try {
+                            return downloadFile(url, 0);
+                        } catch (IOException e) {
+                            log.error("Error while downloading file {} for record {}", url, record.getId(), e);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .peek(p -> log.info("Downloaded file {} for record {}", p.first(), record.getId()))
+                    .forEach(downloadedFiles::add);
+            }
+
+            if (files.isEmpty() && downloadedFiles.isEmpty()) {
+                log.error("No files found for record {}", record.getId());
+                return true;
+            }
+
+            log.info("Create derivate  for record {}", record.getId());
+            String maindoc = files.isEmpty() ? downloadedFiles.stream().map(ImporterService.Pair::first)
+                .map(PPNLIST2MyCoReImporter::extractFileName).findFirst().get()
+                : files.get(0).getFileName().toString();
+
+            List<String> classifications;
+            if (fileURLs.isEmpty()) {
+                classifications = List.of("derivate_types:content", "mir_access:ipAddressRange");
+            } else {
+                classifications = List.of("derivate_types:content");
+            }
+
+            String derivateURL = restAPIService.postDerivate(target, mycoreID, "0", maindoc, classifications,
                 Collections.emptyList());
             log.info("Created derivate {} for record {}", derivateURL, record.getId());
             String derivateID = derivateURL.substring(derivateURL.lastIndexOf("/") + 1);
 
-            for (Path p : files) {
-                log.info("Import file {} to {}", p.getFileName(), mycoreID);
-                restAPIService.putFiles(target, mycoreID, derivateID, p.getFileName().toString(),
-                    Files.newInputStream(p));
-                log.info("Imported file {} to {}", p.getFileName(), mycoreID);
+            // prefer files over URL
+            if (!files.isEmpty()) {
+                for (Path p : files) {
+                    log.info("Import file {} to {}", p.getFileName(), mycoreID);
+                    restAPIService.putFiles(target, mycoreID, derivateID, p.getFileName().toString(),
+                        Files.newInputStream(p));
+                    log.info("Imported file {} to {}", p.getFileName(), mycoreID);
+                }
+            } else {
+                for (var fileDownload : downloadedFiles) {
+                    try (InputStream is = new ByteArrayInputStream(fileDownload.second())) {
+                        String realURL = fileDownload.first();
+                        log.info("Import file {} to {}", realURL, mycoreID);
+                        restAPIService.putFiles(target, mycoreID, derivateID,
+                            extractFileName(realURL),
+                            is);
+                        log.info("Imported file {} to {}", realURL, mycoreID);
+                    }
+                }
             }
+
             /*
             Document createdDerivate = restAPIService.getDerivate(target, mycoreID, derivateID);
             MyCoReUtil.setMainFile(createdDerivate, files.get(0).getFileName().toString());
@@ -106,9 +185,61 @@ public class PPNLIST2MyCoReImporter implements Importer {
         return true;
     }
 
-    @Override
-    public boolean updateRecord(MyCoReTargetConfiguration target, ForeignEntity record, MyCoReObjectInfo object) {
-        return false;
+    private static List<Path> resolveFiles(ForeignEntity record, List<String> filePPN, Path path) {
+        List<Path> files = new ArrayList<>();
+        for (String s : filePPN) {
+            String substring = s.substring(0, 2);
+            Path resolve = path.resolve(substring);
+            if (Files.exists(resolve)) {
+                try (var list = Files.list(resolve)) {
+                    list.filter(p -> p.getFileName().toString().startsWith(s + "-"))
+                        .forEach(files::add);
+                } catch (IOException e) {
+                    log.error("Error while listing files for record {}", record.getId(), e);
+                }
+            }
+        }
+        return files;
+    }
+
+    public ImporterService.Pair<String, byte[]> downloadFile(String url, int redirectCount) throws IOException {
+        if(redirectCount > 5) {
+            throw new IOException("Too many redirects");
+        }
+        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+        con.setInstanceFollowRedirects(false);
+        con.setConnectTimeout(4000);
+        con.connect();
+        if (con.getResponseCode() == 301 || con.getResponseCode() == 302 || con.getResponseCode() == 307) {
+            String real = con.getHeaderField("Location");
+            try (InputStream inputStream = con.getInputStream()) {
+                inputStream.readAllBytes();
+            }
+            con.disconnect();
+
+            if (real.startsWith("/") && url.contains("//")) {
+                real = url.substring(0, url.indexOf('/', url.indexOf("//") + 2)) + real.substring(1);
+            }
+            return downloadFile(real, redirectCount+1);
+        } else {
+            try (InputStream is = con.getInputStream()) {
+                byte[] bytes = is.readAllBytes();
+                return new ImporterService.Pair<>(url, bytes);
+            } finally {
+                con.disconnect();
+            }
+        }
+    }
+
+    Stream<String> getPicaField(Document root, String tag, String code) {
+        return root.getRootElement().getChildren("datafield", picaxml)
+            .stream()
+            .filter(e -> e.getAttributeValue("tag").equals(tag))
+            .map(element -> element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals(code))
+                .findFirst())
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(Element::getText);
     }
 
     @SneakyThrows
@@ -123,14 +254,22 @@ public class PPNLIST2MyCoReImporter implements Importer {
         return new XMLOutputter(Format.getPrettyFormat()).outputString(document);
     }
 
+    @SneakyThrows
+    @Override
+    public boolean updateRecord(MyCoReTargetConfiguration target, ForeignEntity record, MyCoReObjectInfo objectInfo) {
+        var mods = convertToMods(target, record);
+        var object = MODSUtil.wrapInMyCoReFrame(mods, config.get("base-id"), config.get("status"));
+        MODSUtil.setRecordInfo(object, record.getForeignId(), record.getConfigId());
+
+        Document metadata = new Document(MODSUtil.getMetadata(object).detach());
+        restAPIService.putObjectMetadata(target, objectInfo.getMycoreId(), metadata);
+
+        return true;
+    }
+
     private String convertToMods(MyCoReTargetConfiguration target, ForeignEntity record) throws TransformerException {
         String resultStr;
-        Document doc1;
-        try (var sr = new StringReader(record.getMetadata())) {
-            doc1 = new SAXBuilder().build(sr);
-        } catch (IOException | JDOMException e) {
-            throw new RuntimeException(e);
-        }
+        Document doc1 = getForeignEntityDocument(record);
 
         Pica2ModsConfig pica2ModsConfig = new Pica2ModsConfig();
         pica2ModsConfig.setUnapiUrl("https://unapi.k10plus.de/");
@@ -146,8 +285,9 @@ public class PPNLIST2MyCoReImporter implements Importer {
 
         ClassLoader var10002 = this.getClass().getClassLoader();
 
-        Source xsl = new StreamSource(var10002.getResourceAsStream("xsl/pica2mods.xsl"));
-        xsl.setSystemId("xsl/pica2mods.xsl");
+        String stylesheetName = config.get("stylesheet");
+        Source xsl = new StreamSource(var10002.getResourceAsStream(stylesheetName));
+        xsl.setSystemId(stylesheetName);
         Transformer transformer = TRANS_FACTORY.newTransformer(xsl);
         transformer.setOutputProperty("indent", "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -163,7 +303,7 @@ public class PPNLIST2MyCoReImporter implements Importer {
 
     @Override
     public List<Mapping> checkMapping(MyCoReTargetConfiguration target, ForeignEntity record) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

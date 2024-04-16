@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.vzg.oai_importer.ImporterConfiguration;
+import de.vzg.oai_importer.ImporterService;
 import de.vzg.oai_importer.JobService;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
@@ -58,11 +59,16 @@ public class JobsController {
 
     @RequestMapping("/{jobID}/update/")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
-    public String showUpdateJob(@PathVariable("jobID") String jobID, Model model,
+    public String showUpdateJob(@PathVariable("jobID") String jobID,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "100") int size,
+                                Model model,
                                 @RequestParam(value = "success", required = false) String success) {
-        Map<ForeignEntity, MyCoReObjectInfo> records = jobService.listUpdateableRecords(jobID);
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records = jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
-
+        model.addAttribute("jobID", jobID);
+        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
+                .boxed());
         if(success != null && (success.equals("true") || success.equals("false"))) {
             model.addAttribute("success", success);
         }
@@ -97,6 +103,16 @@ public class JobsController {
                           RedirectAttributes redirectAttributes) {
         jobService.importSingleDocument(jobID, recordID);
 
+        redirectAttributes.addAttribute("success", "true");
+
+        return "redirect:/jobs/" + jobID + "/update/";
+    }
+
+    @RequestMapping("/{jobID}/update/update")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
+    public String updateJob(@PathVariable("jobID") String jobID,
+                            RedirectAttributes redirectAttributes) {
+        jobService.runUpdateJob(jobID);
         redirectAttributes.addAttribute("success", "true");
 
         return "redirect:/jobs/" + jobID + "/update/";

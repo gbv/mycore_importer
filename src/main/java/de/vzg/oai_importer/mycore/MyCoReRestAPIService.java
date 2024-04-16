@@ -68,7 +68,7 @@ public class MyCoReRestAPIService {
         String authenticate = client.authenticate(url, new MCRRestCredentials(user, password));
 
         if (authenticate != null) {
-            targetTokenMap.put(target, new TokenValidation(authenticate, Instant.now().plusSeconds(10 * 60)));
+            targetTokenMap.put(target, new TokenValidation(authenticate, Instant.now().plusSeconds(8 * 60)));
         }
 
         return authenticate;

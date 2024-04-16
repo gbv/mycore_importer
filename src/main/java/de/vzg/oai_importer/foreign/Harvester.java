@@ -11,6 +11,6 @@ import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 @Service
 public interface Harvester<T extends Configuration>  {
 
-    public List<ForeignEntity> update(String configID, T source) throws IOException, URISyntaxException;
+    public List<ForeignEntity> update(String configID, T source, boolean onlyMissing) throws IOException, URISyntaxException;
 
 }

@@ -33,7 +33,6 @@ import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
 })
 @AutoConfiguration
 @ShellComponent
-
 public class OaiImporterCLIApplication {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -58,7 +57,7 @@ public class OaiImporterCLIApplication {
     }
 
     @ShellMethod(key = "update-source", value = "Updates the source of a job")
-    public void updateSource(@ShellOption() String job) {
+    public void updateSource(@ShellOption() String job, @ShellOption(defaultValue = "false") boolean onlyMissing) {
         if (checkJobPresent(job)) {
             return;
         }
@@ -70,7 +69,7 @@ public class OaiImporterCLIApplication {
 
             Harvester<Configuration> bean
                 = (Harvester<Configuration>) applicationContext.getBean(source.getHarvester());
-            List<ForeignEntity> updatedRecords = bean.update(sourceConfigId, source);
+            List<ForeignEntity> updatedRecords = bean.update(sourceConfigId, source, onlyMissing);
             updatedRecords.forEach(record -> LOGGER.info("Updated record {}", record.getForeignId()));
         } catch (Exception e) {
             LOGGER.error("Error while updating source of job {}", job, e);
@@ -118,4 +117,17 @@ public class OaiImporterCLIApplication {
         }
     }
 
+    @ShellMethod(key = "run-update", value = "Runs the update")
+    public void runUpdate(@ShellOption() String job) {
+        if (checkJobPresent(job)) {
+            return;
+        }
+
+        LOGGER.info("Running update job {}", job);
+        try {
+            jobService.runUpdateJob(job);
+        } catch (Exception e) {
+            LOGGER.error("Error while running update job {}", job, e);
+        }
+    }
 }

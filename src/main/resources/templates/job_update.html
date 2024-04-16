@@ -29,6 +29,7 @@
     <div class="row">
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
+            <a class="btn btn-primary" th:href="@{'/jobs/'+${jobID} +'/update/update'}">Alle Updaten</a>
         </div>
     </div>
     <div class="row">
@@ -45,17 +46,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="record: ${records.entrySet()}">
-                    <td th:text="${record.getKey().getForeignId()}"></td>
-                    <td th:text="${record.getValue().getMycoreId()}"></td>
+                <tr th:each="record: ${records.getContent()}">
+                    <td th:text="${record.first().getForeignId()}"></td>
+                    <td th:text="${record.second().getMycoreId()}"></td>
                     <td>
                         <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                                th:data-bs-target="'#metadata_' + ${record.getKey().getId()}"
+                                th:data-bs-target="'#metadata_' + ${record.first().getId()}"
                                 aria-expanded="false">
                             Metadaten
                         </button>
 
-                        <div class="modal" tabindex="-1" th:id="'metadata_' + ${record.getKey().getId()}">
+                        <div class="modal" tabindex="-1" th:id="'metadata_' + ${record.first().getId()}">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -64,7 +65,7 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <pre th:text="${record.getKey().getMetadata()}"></pre>
+                                        <pre th:text="${record.first().getMetadata()}"></pre>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
@@ -76,20 +77,38 @@
 
 
                     </td>
-                    <td th:text="${record.getKey().getDatestamp()}">
+                    <td th:text="${record.first().getDatestamp()}">
                     </td>
 
-                    <td th:text="${record.getKey().getDeleted()}">
+                    <td th:text="${record.first().getDeleted()}">
 
                     </td>
 
                     <td>
-                        <a th:href="@{'/jobs/'+ ${jobID} + '/test/' + ${record.getKey().getForeignId()}}">Test</a>
-                        <a th:href="@{'/jobs/'+ ${jobID} + '/update/' + ${record.getKey().getForeignId()}}">Update</a>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/test/' + ${record.first().getForeignId()}}">Test</a>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/update/' + ${record.first().getForeignId()}}">Update</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination flex-wrap">
+                    <li class="page-item" th:if="${records.hasPrevious()}"><a class="page-link"
+                                                                              th:href="@{'/jobs/' + ${jobID} + '/update/?page=' +${records.getNumber()-1}}">Vorherige</a>
+                    </li>
+                    <li class="page-item" th:each="page: ${pages}"><a
+                            th:class="'page-link' + (${page} == ${records.getNumber()+1} ? ' active' : '')"
+                            th:href="@{'/jobs/' + ${jobID} + '/update/?page=' + ${page -1}}"
+                            th:text="${page}">1</a></li>
+                    <li class="page-item" th:if="${records.hasNext()}"><a class="page-link"
+                                                                          th:href="@{'/jobs/' + ${jobID} + '/?page=' +${records.getNumber()+1}}">Nächste</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
     <div th:replace="~{fragments/footer :: footer}"></div>

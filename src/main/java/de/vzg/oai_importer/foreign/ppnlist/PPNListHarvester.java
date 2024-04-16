@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.jdom2.Document;
@@ -42,7 +43,7 @@ public class PPNListHarvester implements Harvester<PPNListConfiguration> {
     private ForeignEntityRepository recordRepository;
 
     @Override
-    public List<ForeignEntity> update(String configID, PPNListConfiguration source)
+    public List<ForeignEntity> update(String configID, PPNListConfiguration source, boolean onlyMissing)
         throws IOException, URISyntaxException {
         HashSet<String> ppns = new HashSet<>();
         var result = new ArrayList<ForeignEntity>();
@@ -57,61 +58,77 @@ public class PPNListHarvester implements Harvester<PPNListConfiguration> {
         });
 
         var al = new ArrayList<>(ppns);
-        for (var i = 0; i < al.size(); i++) {
-            var ppn = al.get(i);
-            log.info("Processing PPN " + ppn + " (" + (i + 1) + "/" + al.size() + ")");
-            ForeignEntity record = Optional.ofNullable(recordRepository.findFirstByConfigIdAndForeignId(configID, ppn))
-                .orElseGet(ForeignEntity::new);
-            record.setConfigId(configID);
-            record.setForeignId(ppn);
-            record.setDeleted(false);
-            record.setDatestamp(OffsetDateTime.now());
+        var count1 = new AtomicInteger(al.size());
 
-            try {
-                URL url = new URL("https://unapi.k10plus.de/?id=gvk:ppn:" + ppn + "&format=picaxml");
-                try (var is = url.openStream(); var isr = new InputStreamReader(is); var br = new BufferedReader(isr)) {
-                    String metadata = br.lines().collect(Collectors.joining("\n"));
-                    record.setMetadata(metadata);
-                } catch (IOException e) {
+        List<String> missing = al.stream()
+                .filter(ppn -> {
+                    if(!onlyMissing){
+                        return true;
+                    }
+                    log.info("Checking PPN " + ppn + " (" + count1.decrementAndGet() + " remaining)");
+                    return recordRepository.findFirstByConfigIdAndForeignId(configID, ppn) == null;
+                }).toList();
+
+        var count = new AtomicInteger(missing.size());
+        missing.stream()
+            .parallel()
+            .forEach(ppn -> {
+                log.info("Processing PPN " + ppn + " (" + count.decrementAndGet() + " remaining)");
+                ForeignEntity record
+                    = Optional.ofNullable(recordRepository.findFirstByConfigIdAndForeignId(configID, ppn))
+                        .orElseGet(ForeignEntity::new);
+                record.setConfigId(configID);
+                record.setForeignId(ppn);
+                record.setDeleted(false);
+                record.setDatestamp(OffsetDateTime.now());
+
+                try {
+                    URL url = new URL("https://unapi.k10plus.de/?id=gvk:ppn:" + ppn + "&format=picaxml");
+                    try (var is = url.openStream(); var isr = new InputStreamReader(is);
+                        var br = new BufferedReader(isr)) {
+                        String metadata = br.lines().collect(Collectors.joining("\n"));
+                        record.setMetadata(metadata);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (MalformedURLException e) {
                     throw new RuntimeException(e);
                 }
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
 
-            try (var sr = new StringReader(record.getMetadata())) {
-                Document doc = new SAXBuilder().build(sr);
-                Element rootElement = doc.getRootElement();
-                rootElement.getChildren("datafield", picaxml)
-                    .stream()
-                    .filter(e -> e.getAttributeValue("tag").equals("001B"))
-                    .findFirst().ifPresent(element -> {
-                        String p0 = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("0"))
-                            .findFirst().get().getText();
+                try (var sr = new StringReader(record.getMetadata())) {
+                    Document doc = new SAXBuilder().build(sr);
+                    Element rootElement = doc.getRootElement();
+                    rootElement.getChildren("datafield", picaxml)
+                        .stream()
+                        .filter(e -> e.getAttributeValue("tag").equals("001B"))
+                        .findFirst().ifPresent(element -> {
+                            String p0
+                                = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("0"))
+                                    .findFirst().get().getText();
 
-                        String time
-                            = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("t"))
-                                .findFirst().get().getText();
+                            String time
+                                = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("t"))
+                                    .findFirst().get().getText();
 
-                        String date = p0.split(":")[1];
+                            String date = p0.split(":")[1];
 
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss.SSS");
-                        OffsetDateTime dateTime = LocalDateTime.parse(date + " " + time, formatter)
-                            .atOffset(OffsetDateTime.now().getOffset());
-                        record.setDatestamp(dateTime);
-                    });
-            } catch (IOException | JDOMException e) {
-                throw new RuntimeException(e);
-            }
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss.SSS");
+                            OffsetDateTime dateTime = LocalDateTime.parse(date + " " + time, formatter)
+                                .atOffset(OffsetDateTime.now().getOffset());
+                            record.setDatestamp(dateTime);
+                        });
+                } catch (IOException | JDOMException e) {
+                    throw new RuntimeException(e);
+                }
 
-            if (record.getMetadata().length() > 64000) {
-                log.warn("Metadata too long for PPN " + ppn);
-                continue;
-            }
+                if (record.getMetadata().length() > 512000) {
+                    log.warn("Metadata too long for PPN " + ppn);
+                    return;
+                }
 
-            recordRepository.save(record);
-            result.add(record);
-        }
+                recordRepository.save(record);
+                result.add(record);
+            });
 
         return result;
     }

@@ -26,7 +26,7 @@ public class OAIDatabaseHarvester implements Harvester<OAISourceConfiguration> {
     @Autowired
     private ForeignEntityRepository recordRepository;
 
-    public List<ForeignEntity> update(String configID, OAISourceConfiguration source) throws IOException {
+    public List<ForeignEntity> update(String configID, OAISourceConfiguration source, boolean missingOnly) throws IOException {
         ForeignEntity first = recordRepository.findFirstByConfigIdOrderByDatestampDesc(configID);
 
         List<ForeignEntity> updatedRecords = new ArrayList<>();

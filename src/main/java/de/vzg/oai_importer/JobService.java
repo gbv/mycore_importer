@@ -2,6 +2,7 @@ package de.vzg.oai_importer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class JobService {
         return importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), pageable);
     }
 
-    public Map<ForeignEntity, MyCoReObjectInfo> listUpdateableRecords(String jobID) {
+    public Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> listUpdateableRecords(String jobID,
+        Pageable pageable) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
@@ -67,7 +69,7 @@ public class JobService {
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        return importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl());
+        return importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
     }
 
     public Map<ForeignEntity, List<Mapping>> testMapping(String jobID) {
@@ -118,15 +120,49 @@ public class JobService {
 
         AtomicLong i = new AtomicLong(records.getTotalElements());
         records.forEach(record -> {
-            importer.importRecord(target, record);
             try {
-                myCoReSynchronizeService.synchronize(target);
-            } catch (IOException|URISyntaxException e) {
-                throw new RuntimeException(e);
+                importer.importRecord(target, record);
+                try {
+                    myCoReSynchronizeService.synchronize(target);
+                } catch (IOException | URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+                log.info("{} jobs remaining", i.decrementAndGet());
+            } catch (Exception e) {
+                log.error("Error while importing record {}", record.getForeignId(), e);
             }
-            log.info("{} jobs remaining", i.decrementAndGet());
-
         });
+    }
+
+    public void runUpdateJob(String name) {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
+
+        var updatableEntities
+            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+
+        List<String> errorRecords = new ArrayList<>();
+
+        var count = 0;
+        for (var pair : updatableEntities) {
+            log.info("Updating record {}/{}", count++, updatableEntities.getTotalElements());
+            Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+            importer.setConfig(jobConfig.getImporterConfig());
+            try {
+                importer.updateRecord(target, pair.first(), pair.second());
+                // catch springs application stopped exception
+            } catch (IllegalStateException e) {
+                throw e;
+            } catch (Exception e) {
+                log.error("Error while updating record {}", pair.first().getForeignId(), e);
+                errorRecords.add(pair.first().getForeignId());
+            }
+        }
+
+        log.info("Records with errors: {}", errorRecords);
     }
 
     public void importSingleDocument(String jobID, String recordID) {

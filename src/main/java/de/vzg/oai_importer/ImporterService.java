@@ -1,9 +1,5 @@
 package de.vzg.oai_importer;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,18 +20,13 @@ public class ImporterService {
         return recordRepository.findImportableEntities(configID, configID, targetRepository, pageable);
     }
 
-    public Map<ForeignEntity, MyCoReObjectInfo> detectUpdateableEntities(String configID, Configuration source, String targetRepository) {
-        List<Object[]> updateableEntities = recordRepository.findUpdateableEntities(configID, configID, targetRepository);
-
-        LinkedHashMap<ForeignEntity, MyCoReObjectInfo> result = new LinkedHashMap<>(updateableEntities.size());
-        for (Object[] objects : updateableEntities) {
-            ForeignEntity foreignEntity = (ForeignEntity) objects[0];
-            MyCoReObjectInfo myCoReObjectInfo = (MyCoReObjectInfo) objects[1];
-            result.put(foreignEntity, myCoReObjectInfo);
-        }
-
-        return result;
+    public Page<Pair<ForeignEntity, MyCoReObjectInfo>> detectUpdateableEntities(String configID, Configuration source, String targetRepository, Pageable pageable) {
+        Page<Object[]> updateableEntities = recordRepository.findUpdateableEntities(configID, configID, targetRepository, pageable);
+        return updateableEntities.map(objects -> new Pair<>((ForeignEntity) objects[0], (MyCoReObjectInfo) objects[1]));
     }
 
+
+    public record Pair<T1,T2>(T1 first, T2 second) {
+    }
 
 }

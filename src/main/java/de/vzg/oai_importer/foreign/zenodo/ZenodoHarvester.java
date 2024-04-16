@@ -53,7 +53,7 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
     }
 
     @Override
-    public List<ForeignEntity> update(String configID, ZenodoSourceConfiguration source)
+    public List<ForeignEntity> update(String configID, ZenodoSourceConfiguration source, boolean onlyMissing)
         throws IOException, URISyntaxException {
         List<ForeignEntity> entities = new ArrayList<>();
         ForeignEntity first = recordRepository.findFirstByConfigIdOrderByDatestampDesc(configID);

@@ -1,7 +1,5 @@
 package de.vzg.oai_importer.foreign.jpa;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +19,5 @@ public interface ForeignEntityRepository extends ListPagingAndSortingRepository<
     Page<ForeignEntity> findImportableEntities(String oaiConfig, String oaiSource, String targetRepository, Pageable pageable);
 
     @Query("SELECT fe, oi FROM ForeignEntity fe, MyCoReObjectInfo oi WHERE fe.configId = ?1 AND fe.isDeleted = false AND fe.foreignId = oi.importID AND oi.importURL = ?2 AND oi.repository = ?3 order by fe.datestamp desc")
-    List<Object[]> findUpdateableEntities(String oaiConfig, String oaiSource, String targetRepository);
+    Page<Object[]> findUpdateableEntities(String oaiConfig, String oaiSource, String targetRepository, Pageable pageable);
 }

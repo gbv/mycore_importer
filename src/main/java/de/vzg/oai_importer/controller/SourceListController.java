@@ -74,7 +74,7 @@ public class SourceListController {
         Configuration source = configuration.getCombinedConfig().get(sourceId);
 
         Harvester<Configuration> bean = (Harvester<Configuration>) applicationContext.getBean(source.getHarvester());
-        List<ForeignEntity> updatedRecords = bean.update(sourceId, source);
+        List<ForeignEntity> updatedRecords = bean.update(sourceId, source, false);
         model.addAttribute("records", new PageImpl<ForeignEntity>(updatedRecords));
         model.addAttribute("source", sourceId);
         model.addAttribute("pages", IntStream.rangeClosed(1, 1));
