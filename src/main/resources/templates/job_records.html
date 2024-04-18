@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
-            <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID})}">Zuordnungen Prüfen</a>
+            <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID}, update=false)}">Zuordnungen Prüfen</a>
             <a class="btn btn-primary" th:href="@{/jobs/{jid}/import(jid=${jobID})}">Import Starten</a>
         </div>
     </div>

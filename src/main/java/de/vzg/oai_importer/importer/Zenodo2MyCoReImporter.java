@@ -36,6 +36,7 @@ import org.mycore.libmeta.mods.MODSXMLProcessor;
 import org.mycore.libmeta.mods.model.Mods;
 import org.mycore.libmeta.mods.model._misc.CodeOrText;
 import org.mycore.libmeta.mods.model._misc.DateEncoding;
+import org.mycore.libmeta.mods.model._misc.enums.NameType;
 import org.mycore.libmeta.mods.model._misc.enums.Yes;
 import org.mycore.libmeta.mods.model._toplevel.Abstract;
 import org.mycore.libmeta.mods.model._toplevel.AccessCondition;
@@ -48,6 +49,7 @@ import org.mycore.libmeta.mods.model._toplevel.RecordInfo;
 import org.mycore.libmeta.mods.model._toplevel.RelatedItem;
 import org.mycore.libmeta.mods.model._toplevel.Subject;
 import org.mycore.libmeta.mods.model._toplevel.TitleInfo;
+import org.mycore.libmeta.mods.model._toplevel.TypeOfResource;
 import org.mycore.libmeta.mods.model.location.Url;
 import org.mycore.libmeta.mods.model.location.UrlAccess;
 import org.mycore.libmeta.mods.model.name.Affiliation;
@@ -102,8 +104,11 @@ public class Zenodo2MyCoReImporter implements Importer {
     public static final Namespace MODS_NAMESPACE = Namespace.getNamespace("mods", MODS_NAMESPACE_STRING);
     public static final Namespace XLINK_NAMESPACE = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
     public static final String GENRE_MAPPING_PROPERTY = "genre";
+    public static final String TYPE_MAPPING_PROPERTY = "type";
     public static final String LICENSE_MAPPING_PROPERTY = "license";
     private static final String ROLE_MAPPING_PROPERTY = "role";
+
+    private static final String INSTITUTE_CLASSIFICATION_PROPERTY = "instituteClass";
 
     @Autowired
     MyCoReObjectInfoRepository objectInfoRepository;
@@ -402,6 +407,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         String metadata = record.getMetadata();
         ZenodoRestRecord restRecord = parseMetadata(metadata);
 
+        checkGenreMapping(missingMappings, restRecord);
         checkTypeMapping(missingMappings, restRecord);
         checkLicenseMapping(missingMappings, restRecord);
         checkContributerMapping(missingMappings, restRecord);
@@ -433,7 +439,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         return missingMappings;
     }
 
-    private void checkTypeMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
+    private void checkGenreMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
         ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
 
         String completeType = getZenodoType(resourceType);
@@ -451,6 +457,25 @@ public class Zenodo2MyCoReImporter implements Importer {
             missingMappings.add(mappedValue.get());
         }
 
+    }
+
+    private void checkTypeMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
+        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
+
+        String completeType = getZenodoType(resourceType);
+        String mappingGroupName = config.get(TYPE_MAPPING_PROPERTY);
+        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
+        Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType);
+        Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
+                .filter(m -> !m.getTo().isBlank())
+                .map(Mapping::getTo);
+
+        if (mappedValue.isEmpty()) {
+            Mapping mapping = mappingService.addMapping(mappingGroup, completeType, null);
+            missingMappings.add(mapping);
+        } else if (toOptional.isEmpty()) {
+            missingMappings.add(mappedValue.get());
+        }
     }
 
     private void checkLicenseMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
@@ -518,8 +543,30 @@ public class Zenodo2MyCoReImporter implements Importer {
             return null;
         }
 
+        if(!handleType(restRecord, mods)) {
+            return null;
+        }
+
         if (!handleLicense(restRecord, mods)) {
             return null;
+        }
+
+        String instituteClassification = config.get(INSTITUTE_CLASSIFICATION_PROPERTY);
+        if (instituteClassification != null) {
+            String[] instituteClassificationParts = instituteClassification.split("#", 2);
+            if (instituteClassificationParts.length == 2) {
+                Name.Builder builder = Name.builder();
+                builder.type(NameType.CORPORATE);
+                builder.ID("name_" + instituteClassificationParts[1]);
+                builder.authorityURI(instituteClassificationParts[0]);
+                builder.valueURI(instituteClassification);
+
+                RoleTerm hisRole = RoleTerm.builder().content("his").type(CodeOrText.CODE).authority("marcrelator")
+                    .build();
+                builder.addContent(Role.builder().addRoleTerm(hisRole).build());
+
+                mods.addContent(builder.build());
+            }
         }
 
         if (Objects.equals(config.get("files"), "modsLocation")) {
@@ -647,6 +694,29 @@ public class Zenodo2MyCoReImporter implements Importer {
             .authorityURI("http://www.mycore.org/classifications/mir_genres")
             .valueURI("http://www.mycore.org/classifications/mir_genres#" + genreStrOptional.get()).build();
         mods.addContent(genre);
+        return true;
+    }
+
+    private boolean handleType(ZenodoRestRecord restRecord, Mods.Builder mods) {
+        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
+        String completeType = getZenodoType(resourceType);
+        String mappingGroupName = config.get(TYPE_MAPPING_PROPERTY);
+        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
+        Optional<String> typeStrOptional
+            = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType).filter(m -> m.getTo() != null)
+                .filter(m -> !m.getTo().isBlank())
+                .map(Mapping::getTo);
+
+        if (typeStrOptional.isEmpty()) {
+            log.warn("Could not find type mapping for {} in record {}", completeType, restRecord.getId());
+            return false;
+        }
+
+        TypeOfResource.Builder typeOfResource = TypeOfResource.builderForTypeOfResource();
+
+        typeOfResource.content(typeStrOptional.get());
+        mods.addContent(typeOfResource.build());
+
         return true;
     }
 

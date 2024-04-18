@@ -30,6 +30,7 @@
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
             <a class="btn btn-primary" th:href="@{'/jobs/'+${jobID} +'/update/update'}">Alle Updaten</a>
+            <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID}, update=true)}">Zuordnungen Prüfen</a>
         </div>
     </div>
     <div class="row">

@@ -64,7 +64,8 @@ public class JobsController {
                                 @RequestParam(defaultValue = "100") int size,
                                 Model model,
                                 @RequestParam(value = "success", required = false) String success) {
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records = jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
+                jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
         model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
@@ -79,8 +80,9 @@ public class JobsController {
 
     @RequestMapping("/{jobID}/testMapping")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
-    public String runTestJob(@PathVariable("jobID") String jobID, Model model) {
-        Map<ForeignEntity, List<Mapping>> records = jobService.testMapping(jobID);
+    public String runTestJob(@PathVariable("jobID") String jobID, Model model,
+                             @RequestParam(value = "update", required = false, defaultValue = "false") boolean update) {
+        Map<ForeignEntity, List<Mapping>> records = jobService.testMapping(jobID, update);
 
         model.addAttribute("records", records);
 
@@ -89,7 +91,8 @@ public class JobsController {
 
     @RequestMapping("/{jobID}/test/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
-    public String runTestJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID, Model model) {
+    public String runTestJob(@PathVariable("jobID") String jobID,
+                             @PathVariable("recordID") String recordID, Model model) {
         model.addAttribute("jobID", jobID);
         model.addAttribute("recordID", recordID);
         model.addAttribute("result", jobService.test(jobID, recordID));

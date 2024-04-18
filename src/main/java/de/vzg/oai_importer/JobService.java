@@ -72,7 +72,7 @@ public class JobService {
         return importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
     }
 
-    public Map<ForeignEntity, List<Mapping>> testMapping(String jobID) {
+    public Map<ForeignEntity, List<Mapping>> testMapping(String jobID, boolean updatable) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
@@ -80,7 +80,16 @@ public class JobService {
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        Page<ForeignEntity> foreignEntities = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+        final List<ForeignEntity> foreignEntities = new ArrayList<>();
+        if(updatable) {
+            Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> toUpdate = importerService
+                    .detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+            toUpdate.forEach(pair -> foreignEntities.add(pair.first()));
+        } else {
+            Page<ForeignEntity> toImport = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+            toImport.forEach(foreignEntities::add);
+        }
+
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
 
