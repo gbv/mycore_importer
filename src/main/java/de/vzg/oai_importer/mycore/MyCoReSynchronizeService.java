@@ -38,6 +38,7 @@ public class MyCoReSynchronizeService {
         }
 
         query.setCreatedBy(target.getUser());
+        query.setLimit(Integer.MAX_VALUE-1);
 
         MyCoReObjectList objects = mycoreRest.getObjects(target, query);
         List<MyCoReObjectInfo> infos = new ArrayList<>();
