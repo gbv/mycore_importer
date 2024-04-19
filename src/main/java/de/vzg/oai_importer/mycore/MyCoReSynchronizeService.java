@@ -37,55 +37,63 @@ public class MyCoReSynchronizeService {
             query.setCreatedAfter(created.toInstant());
         }
 
+
         query.setCreatedBy(target.getUser());
-        query.setLimit(Integer.MAX_VALUE-1);
-
-        MyCoReObjectList objects = mycoreRest.getObjects(target, query);
+        boolean hasMore = true;
+        query.setLimit(1000);
+        query.setOffset(0);
         List<MyCoReObjectInfo> infos = new ArrayList<>();
-        for (MyCoReObjectListEntry entry : objects.getEntries()) {
-            MyCoReObjectInfo info = mycoreRepo.findByMycoreIdAndRepository(entry.getObjectID(), target.getUrl());
-            if (info == null) {
-                info = new MyCoReObjectInfo();
-            }
-            info.setMycoreId(entry.getObjectID());
-            info.setRepository(target.getUrl());
 
-            Document object = mycoreRest.getObject(target, entry.getObjectID());
-
-            String parent = MODSUtil.getParent(object);
-            info.setParentMycoreId(parent);
-
-            OffsetDateTime createDate = MODSUtil.getCreateDate(object);
-            info.setCreated(createDate);
-
-            OffsetDateTime lastModified = MODSUtil.getLastModified(object);
-            info.setLastModified(lastModified);
-
-            MODSUtil.MODSRecordInfo recordInfo = MODSUtil.getRecordInfo(object);
-            if (recordInfo != null) {
-                String id = recordInfo.id();
-                if (id != null) {
-                    info.setImportID(id);
+        while (hasMore) {
+            MyCoReObjectList objects = mycoreRest.getObjects(target, query);
+            for (MyCoReObjectListEntry entry : objects.getEntries()) {
+                MyCoReObjectInfo info = mycoreRepo.findByMycoreIdAndRepository(entry.getObjectID(), target.getUrl());
+                if (info == null) {
+                    info = new MyCoReObjectInfo();
                 }
-                String source = recordInfo.url();
-                if (source != null) {
-                    info.setImportURL(source);
+                info.setMycoreId(entry.getObjectID());
+                info.setRepository(target.getUrl());
+
+                Document object = mycoreRest.getObject(target, entry.getObjectID());
+
+                String parent = MODSUtil.getParent(object);
+                info.setParentMycoreId(parent);
+
+                OffsetDateTime createDate = MODSUtil.getCreateDate(object);
+                info.setCreated(createDate);
+
+                OffsetDateTime lastModified = MODSUtil.getLastModified(object);
+                info.setLastModified(lastModified);
+
+                MODSUtil.MODSRecordInfo recordInfo = MODSUtil.getRecordInfo(object);
+                if (recordInfo != null) {
+                    String id = recordInfo.id();
+                    if (id != null) {
+                        info.setImportID(id);
+                    }
+                    String source = recordInfo.url();
+                    if (source != null) {
+                        info.setImportURL(source);
+                    }
                 }
+
+                String createdBy = MODSUtil.getCreatedBy(object);
+                if (createdBy == null) {
+                    log.error("Could not extract createdBy from " + entry.getObjectID());
+                    continue;
+                }
+                info.setCreatedBy(createdBy);
+
+                String state = MODSUtil.getState(object);
+                info.setState(state);
+
+                infos.add(info);
+                mycoreRepo.save(info);
             }
-
-            String createdBy = MODSUtil.getCreatedBy(object);
-            if (createdBy == null) {
-                log.error("Could not extract createdBy from " + entry.getObjectID());
-                continue;
-            }
-            info.setCreatedBy(createdBy);
-
-            String state = MODSUtil.getState(object);
-            info.setState(state);
-
-            infos.add(info);
-            mycoreRepo.save(info);
+            hasMore = objects.getEntries().size() == 1000;
+            query.setOffset(query.getOffset() + 1000);
         }
+
 
         return infos;
     }
