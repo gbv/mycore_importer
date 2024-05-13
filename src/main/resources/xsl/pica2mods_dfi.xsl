@@ -52,7 +52,7 @@
 
     <xsl:template name="modsAccessCondition">
         <xsl:if test="$RestrictedAccess = 'true'">
-            <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#intern" xlink:type="simple"/>
+            <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#ipAddressRange" xlink:type="simple"/>
         </xsl:if>
     </xsl:template>
 
