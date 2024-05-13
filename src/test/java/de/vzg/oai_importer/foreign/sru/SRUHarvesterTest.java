@@ -37,12 +37,13 @@ class SRUHarvesterTest {
         sourceConfiguration.setUrl("http://example.com");
         sourceConfiguration.setQueryPattern("date={date}");
 
-        String link = harvester.buildLink(sourceConfiguration, LocalDate.now(), 1, 10);
+        LocalDate nowLocalDate = LocalDate.now();
+        String link = harvester.buildLink(sourceConfiguration, nowLocalDate, 1, 10);
 
         Assert.notNull(link, "Link should not be null");
 
         Assert.isTrue(link.contains("http://example.com"), "Link should contain the base url");
-        Assert.isTrue(link.contains("date=" + LocalDate.now().toString()), "Link should contain the date");
+        Assert.isTrue(link.contains("date%3D" + nowLocalDate.toString()), "Link should contain the date");
 
         Assert.isTrue(link.contains("startRecord=1"), "Link should contain the startRecord");
         Assert.isTrue(link.contains("maximumRecords=10"), "Link should contain the maximumRecords");
