@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -77,7 +78,7 @@ public class SourceListController {
         List<ForeignEntity> updatedRecords = bean.update(sourceId, source, false);
         model.addAttribute("records", new PageImpl<ForeignEntity>(updatedRecords));
         model.addAttribute("source", sourceId);
-        model.addAttribute("pages", IntStream.rangeClosed(1, 1));
+        model.addAttribute("pages", Stream.of(1));
         return "source_records";
     }
 }

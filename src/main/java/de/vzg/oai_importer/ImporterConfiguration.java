@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import de.vzg.oai_importer.foreign.Configuration;
 import de.vzg.oai_importer.foreign.oai.OAISourceConfiguration;
 import de.vzg.oai_importer.foreign.ppnlist.PPNListConfiguration;
+import de.vzg.oai_importer.foreign.sru.SRUConfiguration;
 import de.vzg.oai_importer.foreign.zenodo.ZenodoSourceConfiguration;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
 import lombok.Data;
@@ -23,6 +24,8 @@ public class ImporterConfiguration {
     private Map<String, ZenodoSourceConfiguration> zenodoSources;
 
     private Map<String, PPNListConfiguration> ppnLists;
+
+    private Map<String, SRUConfiguration> sruSources;
 
     private Map<String, MyCoReTargetConfiguration> targets;
 
@@ -38,11 +41,15 @@ public class ImporterConfiguration {
         Map<String, PPNListConfiguration> ppnLists = Optional.ofNullable(getPpnLists())
                 .orElseGet(Collections::emptyMap);
 
+        Map<String, SRUConfiguration> sruSources = Optional.ofNullable(getSruSources())
+                .orElseGet(Collections::emptyMap);
+
         HashMap<String, Configuration> sourceMap = new HashMap<>();
 
         sourceMap.putAll(oaiSources);
         sourceMap.putAll(zenodoSources);
         sourceMap.putAll(ppnLists);
+        sourceMap.putAll(sruSources);
 
         return sourceMap;
     }

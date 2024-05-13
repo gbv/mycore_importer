@@ -10,9 +10,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,11 +21,11 @@ import java.util.stream.Collectors;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.vzg.oai_importer.PicaUtils;
 import de.vzg.oai_importer.foreign.Harvester;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntityRepository;
@@ -38,7 +36,7 @@ import lombok.extern.log4j.Log4j2;
 public class PPNListHarvester implements Harvester<PPNListConfiguration> {
 
     public static final String PPN_LIST_HARVESTER = "PPNListHarvester";
-    Namespace picaxml = Namespace.getNamespace("info:srw/schema/5/picaXML-v1.0");
+
     @Autowired
     private ForeignEntityRepository recordRepository;
 
@@ -98,25 +96,8 @@ public class PPNListHarvester implements Harvester<PPNListConfiguration> {
                 try (var sr = new StringReader(record.getMetadata())) {
                     Document doc = new SAXBuilder().build(sr);
                     Element rootElement = doc.getRootElement();
-                    rootElement.getChildren("datafield", picaxml)
-                        .stream()
-                        .filter(e -> e.getAttributeValue("tag").equals("001B"))
-                        .findFirst().ifPresent(element -> {
-                            String p0
-                                = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("0"))
-                                    .findFirst().get().getText();
-
-                            String time
-                                = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("t"))
-                                    .findFirst().get().getText();
-
-                            String date = p0.split(":")[1];
-
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss.SSS");
-                            OffsetDateTime dateTime = LocalDateTime.parse(date + " " + time, formatter)
-                                .atOffset(OffsetDateTime.now().getOffset());
-                            record.setDatestamp(dateTime);
-                        });
+                    List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(rootElement);
+                    modifiedList.stream().findFirst().ifPresent(record::setDatestamp);
                 } catch (IOException | JDOMException e) {
                     throw new RuntimeException(e);
                 }

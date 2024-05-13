@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -12,7 +13,14 @@ import java.time.OffsetDateTime;
 
 @Entity()
 @Table(name = "foreign_entities",
-    uniqueConstraints = @UniqueConstraint(columnNames = { "config_id", "foreign_id" }))
+    uniqueConstraints = @UniqueConstraint(columnNames = { "config_id", "foreign_id" }),
+        indexes = {
+            @Index(name = "config_id_idx", columnList = "config_id"),
+            @Index(name = "foreign_id_idx", columnList = "foreign_id"),
+            @Index(name = "datestamp_idx", columnList = "datestamp"),
+            @Index(name = "config_id_datestamp_idx", columnList = "config_id, datestamp")
+        }
+)
 public class ForeignEntity {
 
     @Id

@@ -59,6 +59,19 @@ importer.ppn-lists.file.file-paths[2]=/Users/paschty/Downloads/ppns/2.ppn
 The file-paths are the paths to the ppn files. The importer will import all ppns from the files. The files should just contain one ppn per line.
 It will use the unapi interface to get the data for each ppn.
 
+#### SRU
+
+```properties
+importer.sru-sources.gvk.query-pattern=importer.sru-sources.gvk.query-pattern=pica.aed={date} and ((pica.sge="615" and (pica.exk="dfi aktuell" or pica.exk="afa" or pica.exk="dfi compact" or pica.exk="tondokument" or pica.exk="video" or pica.exk="abschlussarbeit" or pica.exk="Zeitschriftenaufsatz" or pica.exk="Sicherheitskopie" or pica.exk="GFfK" or pica.exk="PA-Volltext")) or (pica.sge="lg 3" and (pica.exk="Karikatur" or pica.exk="PA-Volltext" or pica.exk="Presseartikel" or pica.exk="Sicherheitskopie")))
+importer.sru-sources.gvk.url=https://sru.k10plus.de/gvk
+importer.sru-sources.gvk.date-overwrite=2024-01-01
+importer.sru-sources.gvk.oldest-date=2020-01-01
+```
+
+The importer looks what is the newest record in the database and uses this date as the date parameter for the query. 
+If there is no record in the database, it uses the oldest-date as the date parameter and if date-overwrite is set, it uses this date as the date parameter, regardless of the other two dates.
+
+
 ### Target Configuration
 The target configuration is used to configure the mycore instance to import the data to.
 
@@ -108,10 +121,12 @@ The `Zenodo2MyCoReImporter` supports the following configuration options:
 
 The `PPNList2MyCoReImporter` supports the following configuration options:
 
-| Key     | Description                                                                                                                                          |
-|---------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| base-id | The base id for the objects, that will be imported.                                                                                                  |
-| status  | The status of the objects that will be imported.                                                                                                     |
+| Key           | Description                                                                                                                                     |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| base-id       | The base id for the objects, that will be imported.                                                                                             |
+| status        | The status of the objects that will be imported.                                                                                                |
+| file-path     | The path to a directory wich contains pdf and other files. The directory structure should be {first-2-numbers-of-ppn}/{ppn}-{count}.{extension} |
+| new-file-path | The path to a directory which will be used as a alternative to file-path. The structure should be {ppn}-{count}.{extension}                     |
 
 
 

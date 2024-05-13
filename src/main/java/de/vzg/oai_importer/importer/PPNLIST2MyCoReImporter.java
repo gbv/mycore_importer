@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,7 +28,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
@@ -43,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.ImporterService;
+import de.vzg.oai_importer.PicaUtils;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MODSUtil;
@@ -77,6 +76,35 @@ public class PPNLIST2MyCoReImporter implements Importer {
         return fileName;
     }
 
+    private static List<Path> resolveFiles(ForeignEntity record, List<String> filePPN, Path path, Path newPath) {
+        List<Path> files = new ArrayList<>();
+        for (String s : filePPN) {
+            String substring = s.substring(0, 2);
+            Path resolve = path.resolve(substring);
+            // check if the file is in the old path
+            if (Files.exists(resolve)) {
+                try (var list = Files.list(resolve)) {
+                    list.filter(p -> p.getFileName().toString().startsWith(s + "-"))
+                        .forEach(files::add);
+                } catch (IOException e) {
+                    log.error("Error while listing files for record {}", record.getId(), e);
+                }
+            }
+            // in the new file path we check for the direct file name, because there is no subfolder
+            int count = 1;
+            Path currentFilePath;
+            while (true) {
+                currentFilePath = newPath.resolve(s + "-" + count + ".pdf");
+                if (!Files.exists(currentFilePath)) {
+                    break;
+                }
+                files.add(currentFilePath);
+                count++;
+            }
+        }
+        return files;
+    }
+
     @SneakyThrows
     @Override
     public boolean importRecord(MyCoReTargetConfiguration target, ForeignEntity record) {
@@ -89,28 +117,33 @@ public class PPNLIST2MyCoReImporter implements Importer {
         var davPath = config.get("file-path");
         var path = Paths.get(davPath);
 
+        var newFilesPath = config.get("new-file-path");
+        var newPath = Paths.get(newFilesPath);
+
         // this should be the ppn from the record in the field 003S@0 or 007G@0
         Document picaXML = getForeignEntityDocument(record);
-        var filePPN = Stream.of(getPicaField(picaXML, "003@0", "0"), getPicaField(picaXML, "007G", "0"))
+        var filePPN = Stream.of(PicaUtils.getPicaField(picaXML, "003@0", "0"),
+            PicaUtils.getPicaField(picaXML, "007G", "0"))
             .flatMap(s -> s)
             .distinct()
             .collect(Collectors.toList());
 
-        List<Path> files = resolveFiles(record, filePPN, path);
+        List<Path> files = resolveFiles(record, filePPN, path, newPath);
 
         log.info("Found {} files for record {} in filesystem with ppn {}", files.size(), record.getForeignId(),
             filePPN);
 
-        // transfer everything
-        var location = restAPIService.postObject(target, object);
-        var mycoreID = location.substring(location.lastIndexOf("/") + 1);
-
-        List<String> fileURLs = getPicaField(picaXML, "017C", "u")
+        List<String> fileURLs = PicaUtils.getPicaField(picaXML, "017C", "u")
                 .toList();
 
         List<String> filteredFileURLs = fileURLs.stream()
-                .filter(url -> (url.startsWith("http") || url.startsWith("https")) && (url.toLowerCase(Locale.ROOT).endsWith(".pdf") || url.contains("//www.dfi.de/")))
+            .filter(url -> (url.startsWith("http") || url.startsWith("https")) &&
+                (url.toLowerCase(Locale.ROOT).endsWith(".pdf") || url.contains("//www.dfi.de/")))
                 .toList();
+
+        // transfer everything
+        var location = restAPIService.postObject(target, object);
+        var mycoreID = location.substring(location.lastIndexOf("/") + 1);
 
         // transfer files
         if (!files.isEmpty() || !filteredFileURLs.isEmpty()) {
@@ -185,23 +218,6 @@ public class PPNLIST2MyCoReImporter implements Importer {
         return true;
     }
 
-    private static List<Path> resolveFiles(ForeignEntity record, List<String> filePPN, Path path) {
-        List<Path> files = new ArrayList<>();
-        for (String s : filePPN) {
-            String substring = s.substring(0, 2);
-            Path resolve = path.resolve(substring);
-            if (Files.exists(resolve)) {
-                try (var list = Files.list(resolve)) {
-                    list.filter(p -> p.getFileName().toString().startsWith(s + "-"))
-                        .forEach(files::add);
-                } catch (IOException e) {
-                    log.error("Error while listing files for record {}", record.getId(), e);
-                }
-            }
-        }
-        return files;
-    }
-
     public ImporterService.Pair<String, byte[]> downloadFile(String url, int redirectCount) throws IOException {
         if(redirectCount > 5) {
             throw new IOException("Too many redirects");
@@ -231,16 +247,7 @@ public class PPNLIST2MyCoReImporter implements Importer {
         }
     }
 
-    Stream<String> getPicaField(Document root, String tag, String code) {
-        return root.getRootElement().getChildren("datafield", picaxml)
-            .stream()
-            .filter(e -> e.getAttributeValue("tag").equals(tag))
-            .map(element -> element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals(code))
-                .findFirst())
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(Element::getText);
-    }
+
 
     @SneakyThrows
     @Override
@@ -270,6 +277,8 @@ public class PPNLIST2MyCoReImporter implements Importer {
     private String convertToMods(MyCoReTargetConfiguration target, ForeignEntity record) throws TransformerException {
         String resultStr;
         Document doc1 = getForeignEntityDocument(record);
+        List<String> fileURLs = PicaUtils.getPicaField(doc1, "017C", "u")
+                .toList();
 
         Pica2ModsConfig pica2ModsConfig = new Pica2ModsConfig();
         pica2ModsConfig.setUnapiUrl("https://unapi.k10plus.de/");
@@ -278,21 +287,22 @@ public class PPNLIST2MyCoReImporter implements Importer {
 
         Pica2ModsManager pica2ModsManager = new Pica2ModsManager(pica2ModsConfig);
 
-        TransformerFactory TRANS_FACTORY
+        TransformerFactory transformerFactory
             = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", this.getClass().getClassLoader());
-        TRANS_FACTORY.setURIResolver(new Pica2ModsXSLTURIResolver(pica2ModsManager));
-        TRANS_FACTORY.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
+        transformerFactory.setURIResolver(new Pica2ModsXSLTURIResolver(pica2ModsManager));
+        transformerFactory.setFeature("http://javax.xml.XMLConstants/feature/secure-processing", true);
 
         ClassLoader var10002 = this.getClass().getClassLoader();
 
         String stylesheetName = config.get("stylesheet");
         Source xsl = new StreamSource(var10002.getResourceAsStream(stylesheetName));
         xsl.setSystemId(stylesheetName);
-        Transformer transformer = TRANS_FACTORY.newTransformer(xsl);
+        Transformer transformer = transformerFactory.newTransformer(xsl);
         transformer.setOutputProperty("indent", "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
         transformer.setParameter("WebApplicationBaseURL", pica2ModsConfig.getMycoreUrl());
+        transformer.setParameter("RestrictedAccess", fileURLs.isEmpty() ? "true" : "false");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         javax.xml.transform.Result result = new javax.xml.transform.stream.StreamResult(baos);

@@ -27,6 +27,7 @@
 
     <xsl:param name="MCR.PICA2MODS.CONVERTER_VERSION" select="'Pica2Mods 2.5'" />
     <xsl:param name="MCR.PICA2MODS.DATABASE" select="'gvk'" />
+    <xsl:param name="RestrictedAccess" />
 
     <xsl:template match="p:record">
         <mods:mods>
@@ -37,6 +38,7 @@
             <xsl:call-template name="modsLanguage" />
             <xsl:call-template name="modsPhysicalDescription" />
             <xsl:call-template name="modsOriginInfo" />
+            <xsl:call-template name="modsAccessCondition" />
             <xsl:call-template name="modsGenre" />
             <xsl:call-template name="modsLocation" />
             <xsl:call-template name="modsRecordInfo" />
@@ -46,6 +48,12 @@
             <xsl:call-template name="modsDfiFIVSubject" />
             <xsl:call-template name="modsDfiSpecific" />
         </mods:mods>
+    </xsl:template>
+
+    <xsl:template name="modsAccessCondition">
+        <xsl:if test="$RestrictedAccess = 'true'">
+            <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#intern" xlink:type="simple"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="modsDfiFIVSubject" >

@@ -1,5 +1,8 @@
 package de.vzg.oai_importer.foreign.jpa;
 
+
+import java.time.OffsetDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +23,7 @@ public interface ForeignEntityRepository extends ListPagingAndSortingRepository<
 
     @Query("SELECT fe, oi FROM ForeignEntity fe, MyCoReObjectInfo oi WHERE fe.configId = ?1 AND fe.isDeleted = false AND fe.foreignId = oi.importID AND oi.importURL = ?2 AND oi.repository = ?3 order by fe.datestamp desc")
     Page<Object[]> findUpdateableEntities(String oaiConfig, String oaiSource, String targetRepository, Pageable pageable);
+
+    @Query("SELECT MAX(r.datestamp) FROM ForeignEntity r WHERE r.configId = ?1")
+    OffsetDateTime getNewestDatestamp(String configId);
 }
