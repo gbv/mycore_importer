@@ -1,0 +1,6 @@
+services:
+  app:
+    image: vzgreposis/mycore_importer
+    container_name: mycore_importer
+    ports:
+      - 8080:8080

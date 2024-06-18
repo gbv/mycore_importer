@@ -1,0 +1,71 @@
+name: test
+
+on: [ push, pull_request ]
+
+env:
+  MAVEN_OPTS: -Xmx1024M -Xss128M
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Restore Maven cache
+      uses: skjolber/maven-cache-github-action@v1
+      with:
+        step: restore
+
+    - name: Set current date as env variable
+      run: echo "BUILD_START=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+    - name: Build
+      run: |
+        export $(dbus-launch)
+        mkdir ~/tmp
+        export TMPDIR=~/tmp
+        export FIREFOX_BIN=$(which firefox-esr)
+        export SELENIUM_BROWSER=firefox
+
+        mvn -B -P!standard-with-extra-repos -U clean install
+
+    - name: Login to Docker Hub
+      if: contains('refs/heads/main', github.ref) && github.event_name=='push' && success()
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build the Docker images and push them
+      if: contains('refs/heads/main', github.ref) && github.event_name=='push' && success()
+      run: |
+        docker build . --file Dockerfile --tag vzgreposis/mycore_importer:${GITHUB_REF_NAME} --tag vzgreposis/mycore_importer:${GITHUB_REF_NAME}-${BUILD_START}
+        docker push vzgreposis/mycore_importer:${GITHUB_REF_NAME} 
+        docker push vzgreposis/mycore_importer:${GITHUB_REF_NAME}-${BUILD_START}
+
+    - name: Upload logs on build failure
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: |
+          ./**/surefire-reports
+          ./**/failsafe-reports
+          ./**/screenshots
+          ./**/*error*.log
+          ./**/*test.log
+
+    - name: Save Maven cache
+      uses: skjolber/maven-cache-github-action@v1
+      with:
+        step: save
