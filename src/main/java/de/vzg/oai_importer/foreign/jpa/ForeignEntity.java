@@ -33,7 +33,7 @@ public class ForeignEntity {
     @Column(name = "foreign_id", length = 100, nullable = false)
     private String foreignId;
 
-    @Column(length = 512000, nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String metadata;
 
     @Column(nullable = false)

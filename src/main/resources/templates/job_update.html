@@ -30,6 +30,7 @@
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
             <a class="btn btn-primary" th:href="@{'/jobs/'+${jobID} +'/update/update'}">Alle Updaten</a>
+            <a class="btn btn-primary" th:href="@{/jobs/{jid}/update/fileCheck(jid=${jobID})}"> neue Dateien für den Import anzeigen/prüfen</a>
             <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID}, update=true)}">Zuordnungen Prüfen</a>
         </div>
     </div>
@@ -106,7 +107,7 @@
                             th:href="@{'/jobs/' + ${jobID} + '/update/?page=' + ${page -1}}"
                             th:text="${page}">1</a></li>
                     <li class="page-item" th:if="${records.hasNext()}"><a class="page-link"
-                                                                          th:href="@{'/jobs/' + ${jobID} + '/?page=' +${records.getNumber()+1}}">Nächste</a>
+                                                                          th:href="@{'/jobs/' + ${jobID} + '/update/?page=' +${records.getNumber()+1}}">Nächste</a>
                     </li>
                 </ul>
             </nav>

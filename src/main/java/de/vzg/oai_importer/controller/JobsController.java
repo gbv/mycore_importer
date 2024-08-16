@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import javax.xml.transform.TransformerException;
+
 import org.mycore.oai.pmh.OAIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,6 @@ import de.vzg.oai_importer.JobService;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
-
 
 @Controller
 @RequestMapping("/jobs")
@@ -46,42 +47,68 @@ public class JobsController {
     @RequestMapping("/{jobID}/")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String showJob(@PathVariable("jobID") String jobID,
-                          @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "100") int size,
-                          Model model) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size,
+        Model model) {
         Page<ForeignEntity> records = jobService.listImportableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
         model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
-                .boxed());
+            .boxed());
         return "job_records";
+    }
+
+    @RequestMapping("/{jobID}/fileCheck")
+    public String runFileCheckJob(@PathVariable("jobID") String jobID,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size, Model model) {
+
+        Page<Map.Entry<ForeignEntity, List<String>>> records
+            = jobService.listImportableFiles(jobID, Pageable.ofSize(size).withPage(page));
+        model.addAttribute("records", records);
+        model.addAttribute("jobID", jobID);
+        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages()).boxed());
+
+        return "job_records_file_check";
+    }
+
+    @RequestMapping("/{jobID}/update/fileCheck")
+    public String runFileCheckUpdateJob(@PathVariable("jobID") String jobID,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size, Model model) {
+        Page<Map.Entry<ForeignEntity, List<String>>> records
+            = jobService.runJobFileCheck(jobID, Pageable.ofSize(size).withPage(page));
+        model.addAttribute("records", records);
+        model.addAttribute("jobID", jobID);
+        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages()).boxed());
+
+        return "job_records_file_check_update";
     }
 
     @RequestMapping("/{jobID}/update/")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String showUpdateJob(@PathVariable("jobID") String jobID,
-                                @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "100") int size,
-                                Model model,
-                                @RequestParam(value = "success", required = false) String success) {
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
-                jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size,
+        Model model,
+        @RequestParam(value = "success", required = false) String success) {
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
+            = jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
         model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
-                .boxed());
-        if(success != null && (success.equals("true") || success.equals("false"))) {
+            .boxed());
+        if (success != null && (success.equals("true") || success.equals("false"))) {
             model.addAttribute("success", success);
         }
 
         return "job_update";
     }
 
-
     @RequestMapping("/{jobID}/testMapping")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runTestJob(@PathVariable("jobID") String jobID, Model model,
-                             @RequestParam(value = "update", required = false, defaultValue = "false") boolean update) {
+        @RequestParam(value = "update", required = false, defaultValue = "false") boolean update) {
         Map<ForeignEntity, List<Mapping>> records = jobService.testMapping(jobID, update);
 
         model.addAttribute("records", records);
@@ -92,7 +119,7 @@ public class JobsController {
     @RequestMapping("/{jobID}/test/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runTestJob(@PathVariable("jobID") String jobID,
-                             @PathVariable("recordID") String recordID, Model model) {
+        @PathVariable("recordID") String recordID, Model model) {
         model.addAttribute("jobID", jobID);
         model.addAttribute("recordID", recordID);
         model.addAttribute("result", jobService.test(jobID, recordID));
@@ -103,7 +130,7 @@ public class JobsController {
     @RequestMapping("/{jobID}/import/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID,
-                          RedirectAttributes redirectAttributes) {
+        RedirectAttributes redirectAttributes) throws IOException, URISyntaxException, TransformerException {
         jobService.importSingleDocument(jobID, recordID);
 
         redirectAttributes.addAttribute("success", "true");
@@ -114,7 +141,7 @@ public class JobsController {
     @RequestMapping("/{jobID}/update/update")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String updateJob(@PathVariable("jobID") String jobID,
-                            RedirectAttributes redirectAttributes) {
+        RedirectAttributes redirectAttributes) {
         jobService.runUpdateJob(jobID);
         redirectAttributes.addAttribute("success", "true");
 
@@ -124,7 +151,7 @@ public class JobsController {
     @RequestMapping("/{jobID}/update/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String updateJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID,
-                            RedirectAttributes redirectAttributes) {
+        RedirectAttributes redirectAttributes) {
         jobService.updateSingleDocument(jobID, recordID);
 
         redirectAttributes.addAttribute("success", "true");
@@ -133,7 +160,8 @@ public class JobsController {
     }
 
     @RequestMapping("/{jobID}/import")
-    public String runJob(@PathVariable("jobID") String jobID, Model model) throws IOException, URISyntaxException, OAIException {
+    public String runJob(@PathVariable("jobID") String jobID, Model model)
+        throws IOException, URISyntaxException, OAIException {
         model.addAttribute("jobID", jobID);
         jobService.runJob(jobID);
         return "job_test";

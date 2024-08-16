@@ -7,17 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import javax.xml.transform.TransformerException;
 
 import org.mycore.oai.pmh.OAIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.foreign.Configuration;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntityRepository;
+import de.vzg.oai_importer.importer.FileBased;
 import de.vzg.oai_importer.importer.Importer;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MyCoReSynchronizeService;
@@ -47,7 +52,6 @@ public class JobService {
 
     @Autowired
     ForeignEntityRepository repo;
-
 
     public Page<ForeignEntity> listImportableRecords(String jobID, Pageable pageable) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
@@ -81,12 +85,13 @@ public class JobService {
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
         final List<ForeignEntity> foreignEntities = new ArrayList<>();
-        if(updatable) {
+        if (updatable) {
             Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> toUpdate = importerService
-                    .detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+                .detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
             toUpdate.forEach(pair -> foreignEntities.add(pair.first()));
         } else {
-            Page<ForeignEntity> toImport = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+            Page<ForeignEntity> toImport
+                = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
             toImport.forEach(foreignEntities::add);
         }
 
@@ -110,8 +115,7 @@ public class JobService {
 
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
 
-
-        Configuration source =  configuration.getCombinedConfig().get(sourceConfigId);
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
         Page<ForeignEntity> records = importerService
             .detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
@@ -141,6 +145,141 @@ public class JobService {
                 log.error("Error while importing record {}", record.getForeignId(), e);
             }
         });
+    }
+
+    public Page<Map.Entry<ForeignEntity, List<String>>> listImportableFiles(String name, Pageable pageable){
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
+
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
+                = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+
+        Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+        importer.setConfig(jobConfig.getImporterConfig());
+        log.info("Checking if files are updatable for {} records", records.getTotalElements());
+
+        if (importer instanceof FileBased e) {
+            return records.map(pair -> {
+                ForeignEntity record = pair.first();
+                MyCoReObjectInfo myCoReObjectInfo = pair.second();
+
+                log.info("Checking record {} and mycore object {}", record.getForeignId(),
+                        myCoReObjectInfo.getMycoreId());
+
+                try {
+                    return Map.entry(record, e.listImportableFiles(target, record));
+                } catch (IOException | URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        }
+        return Page.empty();
+    }
+
+    public Map.Entry<ForeignEntity, List<String>> runJobFileCheckFor(String name, String foreignID)
+        throws IOException, URISyntaxException {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
+
+        MyCoReObjectInfo myCoReObjectInfo = mycoreRepo.findFirstByRepositoryAndImportURLAndImportID(target.getUrl(),
+            jobConfig.getSourceConfigId(), foreignID);
+
+        ForeignEntity foreign = repo.findFirstByConfigIdAndForeignId(sourceConfigId, foreignID);
+
+        Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+        importer.setConfig(jobConfig.getImporterConfig());
+        if (importer instanceof FileBased e) {
+            e.listMissingFiles(target, myCoReObjectInfo, foreign);
+            return Map.entry(foreign, e.listMissingFiles(target, myCoReObjectInfo, foreign));
+        }
+        return null;
+    }
+
+    public Page<Map.Entry<ForeignEntity, List<String>>> runJobFileCheck(String name, Pageable pageable) {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
+
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
+            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+
+        Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+        importer.setConfig(jobConfig.getImporterConfig());
+        log.info("Checking if files are updatable for {} records", records.getTotalElements());
+
+        if (importer instanceof FileBased e) {
+            return new PageImpl<>(records.stream().parallel().map(pair -> {
+                ForeignEntity record = pair.first();
+                MyCoReObjectInfo myCoReObjectInfo = pair.second();
+
+                log.info("Checking record {} and mycore object {}", record.getForeignId(),
+                    myCoReObjectInfo.getMycoreId());
+
+                List<String> missingFiles = null;
+                try {
+                    missingFiles = e.listMissingFiles(target, myCoReObjectInfo, record);
+                } catch (IOException | URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+                return Map.entry(record, missingFiles);
+            }).collect(Collectors.toList()));
+        } else {
+            log.info("Importer {} is not a FileBased importer", jobConfig.getImporter());
+        }
+
+        return Page.empty();
+    }
+
+    public Page<Map.Entry<ForeignEntity, List<String>>> runJobFileImport(String name, Pageable pageable) {
+        ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
+        String targetConfigId = jobConfig.getTargetConfigId();
+        String sourceConfigId = jobConfig.getSourceConfigId();
+
+        MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
+
+        Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
+
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
+            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+
+        Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
+        importer.setConfig(jobConfig.getImporterConfig());
+        log.info("Checking if files are updatable for {} records", records.getTotalElements());
+
+        if (importer instanceof FileBased e) {
+            return records.map(pair -> {
+                ForeignEntity record = pair.first();
+                MyCoReObjectInfo myCoReObjectInfo = pair.second();
+
+                log.info("Checking record {} and mycore object {}", record.getForeignId(),
+                    myCoReObjectInfo.getMycoreId());
+
+                try {
+                    List<String> fixedFiles = e.fixMissingFiles(target, myCoReObjectInfo, record);
+                    return Map.entry(record, fixedFiles);
+                } catch (IOException | URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        } else {
+            log.info("Importer {} is not a FileBased importer", jobConfig.getImporter());
+        }
+
+        return Page.empty();
     }
 
     public void runUpdateJob(String name) {
@@ -174,7 +313,7 @@ public class JobService {
         log.info("Records with errors: {}", errorRecords);
     }
 
-    public void importSingleDocument(String jobID, String recordID) {
+    public void importSingleDocument(String jobID, String recordID) throws IOException, URISyntaxException, TransformerException {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String sourceConfigId = jobConfig.getSourceConfigId();
 
@@ -184,6 +323,12 @@ public class JobService {
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
         importer.importRecord(target, testRecord);
+
+        try {
+            myCoReSynchronizeService.synchronize(target);
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void updateSingleDocument(String jobID, String recordID) {

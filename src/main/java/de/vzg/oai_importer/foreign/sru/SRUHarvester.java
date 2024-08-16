@@ -44,6 +44,7 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.PicaUtils;
@@ -56,9 +57,13 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class SRUHarvester implements Harvester<SRUConfiguration> {
 
+    @Autowired
+    ApplicationContext context;
+
     public static final String RECORD_DATA_XPATH = "/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData";
     public static final String SRU_HARVESTER = "SRUHarvester";
     private static final String NUMBER_OF_RECORDS_XPATH = "/zs:searchRetrieveResponse/zs:numberOfRecords";
+
     @Autowired
     private ForeignEntityRepository recordRepository;
 
@@ -72,8 +77,8 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
             "&recordSchema=picaxml&startRecord=" + startRecord;
     }
 
-    public List<LocalDate> getDaysSince(LocalDate since) {
-        LocalDate now = LocalDate.now();
+    public List<LocalDate> getDaysSince(LocalDate since, LocalDate until) {
+        LocalDate now = until == null ? LocalDate.now() : until;
         return since.datesUntil(now).toList();
     }
 
@@ -129,7 +134,7 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
 
         List<ForeignEntity> result = new ArrayList<>();
 
-        List<LocalDate> days = getDaysSince(oldestDate);
+        List<LocalDate> days = getDaysSince(oldestDate, source.getNewestDate());
         for (LocalDate day : days) {
             SRUResponse resp = null;
             String link = null;
@@ -140,7 +145,9 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
                     log.info("Harvesting from {}", link);
                     resp = harvest(link);
                     for (Document picaRecord : resp.records()) {
-                        processRecord(configID, picaRecord, result);
+                        if(filterRecord(source, picaRecord, day)) {
+                            processRecord(configID, picaRecord, result, day);
+                        }
                     }
                     startRecord += 100;
                 } while (resp.numberOfRecords() > startRecord);
@@ -153,12 +160,33 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
         return result;
     }
 
-    private boolean processRecord(String configID, Document picaRecord, List<ForeignEntity> result) {
+    private boolean filterRecord(SRUConfiguration config, Document picaRecord, LocalDate day) {
+        Optional<String> ppnField = PicaUtils.getPicaField(picaRecord, "003@", "0").findFirst();
+        if (ppnField.isEmpty()) {
+            log.warn("No PPN found in record {}", new XMLOutputter().outputString(picaRecord));
+            return false;
+        }
+
+        if (config.getRecordFilterService() == null || config.getRecordFilterService().isBlank()) {
+            return true;
+        }
+
+        SRURecordFilter filter = context.getBean(config.getRecordFilterService(), SRURecordFilter.class);
+        String recordName = ppnField.get();
+        log.info("Checking record {}", recordName);
+        boolean filterResult = filter.filter(picaRecord, day);
+        if (!filterResult) {
+            log.info("Record {} filtered out", recordName);
+        }
+        return filterResult;
+    }
+
+    private boolean processRecord(String configID, Document picaRecord, List<ForeignEntity> result, LocalDate day) {
         String metadata = new XMLOutputter().outputString(picaRecord);
 
         Optional<String> ppnField = PicaUtils.getPicaField(picaRecord, "003@", "0").findFirst();
         if (ppnField.isEmpty()) {
-            log.warn("No PPN found in record {}", metadata);
+            log.warn("No PPN found in record {}", new XMLOutputter().outputString(picaRecord));
             return false;
         }
         String ppn = ppnField.get();
@@ -174,11 +202,6 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
 
         List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(picaRecord.getRootElement());
         modifiedList.stream().findFirst().ifPresent(foreignEntity::setDatestamp);
-
-        if (foreignEntity.getMetadata().length() > 512000) {
-            log.warn("Metadata too long for PPN " + ppn);
-            return false;
-        }
 
         foreignEntity.setDeleted(false);
 
