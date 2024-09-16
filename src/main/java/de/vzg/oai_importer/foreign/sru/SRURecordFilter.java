@@ -18,34 +18,20 @@
 
 package de.vzg.oai_importer.foreign.sru;
 
-import de.vzg.oai_importer.foreign.Configuration;
-import lombok.Data;
+import org.jdom2.Document;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@Data
-public class SRUConfiguration implements Configuration {
+@Service
+public interface SRURecordFilter {
 
-    private String queryPattern;
-
-    private String url;
-
-    private LocalDate oldestDate;
-
-    private LocalDate dateOverwrite;
-
-    private LocalDate newestDate;
-
-    private String recordFilterService;
-
-    @Override
-    public String getName() {
-        return "SRU: " + queryPattern;
-    }
-
-    @Override
-    public String getHarvester() {
-        return SRUHarvester.SRU_HARVESTER;
-    }
-
+    /**
+     * Check if the record should be imported
+     *
+     * @param record the record to check
+     * @param day
+     * @return true if the record should be imported
+     */
+    boolean filter(Document record, LocalDate day);
 }

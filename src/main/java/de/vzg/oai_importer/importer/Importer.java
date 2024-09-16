@@ -1,5 +1,7 @@
 package de.vzg.oai_importer.importer;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +12,12 @@ import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
 import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
 
+import javax.xml.transform.TransformerException;
+
 @Service
 public interface Importer {
 
-    boolean importRecord(MyCoReTargetConfiguration target, ForeignEntity record);
+    boolean importRecord(MyCoReTargetConfiguration target, ForeignEntity record) throws TransformerException, IOException, URISyntaxException;
 
     boolean updateRecord(MyCoReTargetConfiguration target, ForeignEntity record, MyCoReObjectInfo object);
 

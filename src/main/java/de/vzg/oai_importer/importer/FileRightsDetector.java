@@ -16,36 +16,13 @@
  * along with MyCoRe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.vzg.oai_importer.foreign.sru;
+package de.vzg.oai_importer.importer;
 
-import de.vzg.oai_importer.foreign.Configuration;
-import lombok.Data;
+import org.jdom2.Element;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+@Service
+public interface FileRightsDetector {
 
-@Data
-public class SRUConfiguration implements Configuration {
-
-    private String queryPattern;
-
-    private String url;
-
-    private LocalDate oldestDate;
-
-    private LocalDate dateOverwrite;
-
-    private LocalDate newestDate;
-
-    private String recordFilterService;
-
-    @Override
-    public String getName() {
-        return "SRU: " + queryPattern;
-    }
-
-    @Override
-    public String getHarvester() {
-        return SRUHarvester.SRU_HARVESTER;
-    }
-
+    boolean isPublic(Element record);
 }

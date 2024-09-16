@@ -55,61 +55,59 @@ public class PPNListHarvester implements Harvester<PPNListConfiguration> {
             }
         });
 
-        var al = new ArrayList<>(ppns);
+        List<String> al = new ArrayList<>(ppns);
         var count1 = new AtomicInteger(al.size());
 
-        List<String> missing = al.stream()
+        al = al.stream()
                 .filter(ppn -> {
                     if(!onlyMissing){
                         return true;
                     }
-                    log.info("Checking PPN " + ppn + " (" + count1.decrementAndGet() + " remaining)");
+                    //log.info("Checking PPN " + ppn + " (" + count1.decrementAndGet() + " remaining)");
                     return recordRepository.findFirstByConfigIdAndForeignId(configID, ppn) == null;
-                }).toList();
+                }).collect(Collectors.toList());
 
-        var count = new AtomicInteger(missing.size());
-        missing.stream()
-            .parallel()
-            .forEach(ppn -> {
-                log.info("Processing PPN " + ppn + " (" + count.decrementAndGet() + " remaining)");
-                ForeignEntity record
+        var count = new AtomicInteger(al.size());
+        for (String ppn : al) {
+            log.info("Processing PPN " + ppn + " (" + count.decrementAndGet() + " remaining)");
+            ForeignEntity record
                     = Optional.ofNullable(recordRepository.findFirstByConfigIdAndForeignId(configID, ppn))
-                        .orElseGet(ForeignEntity::new);
-                record.setConfigId(configID);
-                record.setForeignId(ppn);
-                record.setDeleted(false);
-                record.setDatestamp(OffsetDateTime.now());
+                    .orElseGet(ForeignEntity::new);
+            record.setConfigId(configID);
+            record.setForeignId(ppn);
+            record.setDeleted(false);
+            record.setDatestamp(OffsetDateTime.now());
 
-                try {
-                    URL url = new URL("https://unapi.k10plus.de/?id=gvk:ppn:" + ppn + "&format=picaxml");
-                    try (var is = url.openStream(); var isr = new InputStreamReader(is);
-                        var br = new BufferedReader(isr)) {
-                        String metadata = br.lines().collect(Collectors.joining("\n"));
-                        record.setMetadata(metadata);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
+            try {
+                URL url = new URL("https://unapi.k10plus.de/?id=gvk:ppn:" + ppn + "&format=picaxml");
+                try (var is = url.openStream(); var isr = new InputStreamReader(is);
+                     var br = new BufferedReader(isr)) {
+                    String metadata = br.lines().collect(Collectors.joining("\n"));
+                    record.setMetadata(metadata);
+                } catch (IOException e) {
+                    log.error("Error while fetching PPN " + ppn, e);
+                    continue;
                 }
+            } catch (MalformedURLException e) {
+                log.error("Error while fetching PPN " + ppn, e);
+                continue;
+            }
 
-                try (var sr = new StringReader(record.getMetadata())) {
-                    Document doc = new SAXBuilder().build(sr);
-                    Element rootElement = doc.getRootElement();
-                    List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(rootElement);
-                    modifiedList.stream().findFirst().ifPresent(record::setDatestamp);
-                } catch (IOException | JDOMException e) {
-                    throw new RuntimeException(e);
-                }
+            try (var sr = new StringReader(record.getMetadata())) {
+                Document doc = new SAXBuilder().build(sr);
+                Element rootElement = doc.getRootElement();
+                List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(rootElement);
+                modifiedList.stream().findFirst().ifPresent(record::setDatestamp);
+            } catch (IOException | JDOMException e) {
+                log.error("Error while parsing PPN " + ppn, e);
+                continue;
+            }
 
-                if (record.getMetadata().length() > 512000) {
-                    log.warn("Metadata too long for PPN " + ppn);
-                    return;
-                }
+            recordRepository.save(record);
+            result.add(record);
+        }
 
-                recordRepository.save(record);
-                result.add(record);
-            });
+        log.info("Completed processing PPNs");
 
         return result;
     }

@@ -1,5 +1,6 @@
 package de.vzg.oai_importer.mycore.api.transfer;
 
+import de.vzg.oai_importer.mycore.api.model.MyCoReFileListDirectory;
 import de.vzg.oai_importer.mycore.api.model.MyCoReObjectList;
 
 import java.io.IOException;
@@ -10,4 +11,5 @@ public interface ResultMapper<T> {
 
     MyCoReObjectList mapObjectList(InputStream is) throws IOException;
 
+    MyCoReFileListDirectory mapFileList(InputStream is) throws IOException;
 }

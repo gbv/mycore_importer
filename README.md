@@ -62,10 +62,11 @@ It will use the unapi interface to get the data for each ppn.
 #### SRU
 
 ```properties
-importer.sru-sources.gvk.query-pattern=importer.sru-sources.gvk.query-pattern=pica.aed={date} and ((pica.sge="615" and (pica.exk="dfi aktuell" or pica.exk="afa" or pica.exk="dfi compact" or pica.exk="tondokument" or pica.exk="video" or pica.exk="abschlussarbeit" or pica.exk="Zeitschriftenaufsatz" or pica.exk="Sicherheitskopie" or pica.exk="GFfK" or pica.exk="PA-Volltext")) or (pica.sge="lg 3" and (pica.exk="Karikatur" or pica.exk="PA-Volltext" or pica.exk="Presseartikel" or pica.exk="Sicherheitskopie")))
+importer.sru-sources.gvk.query-pattern=pica.aed={date} and ((pica.sge="615" and (pica.exk="dfi aktuell" or pica.exk="afa" or pica.exk="dfi compact" or pica.exk="tondokument" or pica.exk="video" or pica.exk="abschlussarbeit" or pica.exk="Zeitschriftenaufsatz" or pica.exk="Sicherheitskopie" or pica.exk="GFfK" or pica.exk="PA-Volltext")) or (pica.sge="lg 3" and (pica.exk="Karikatur" or pica.exk="PA-Volltext" or pica.exk="Presseartikel" or pica.exk="Sicherheitskopie")))
 importer.sru-sources.gvk.url=https://sru.k10plus.de/gvk
 importer.sru-sources.gvk.date-overwrite=2024-01-01
-importer.sru-sources.gvk.oldest-date=2020-01-01
+importer.sru-sources.gvk.oldest-date=2024-05-24
+importer.sru-sources.gvk.newest-date=2024-05-31
 ```
 
 The importer looks what is the newest record in the database and uses this date as the date parameter for the query. 

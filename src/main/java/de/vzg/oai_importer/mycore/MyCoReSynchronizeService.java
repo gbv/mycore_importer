@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import de.vzg.oai_importer.mycore.api.MyCoReObjectQuery;
 import de.vzg.oai_importer.mycore.api.model.MyCoReObjectList;
-import de.vzg.oai_importer.mycore.api.model.MyCoReObjectListEntry;
 import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo;
 import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfoRepository;
 import lombok.extern.log4j.Log4j2;
@@ -46,50 +45,60 @@ public class MyCoReSynchronizeService {
 
         while (hasMore) {
             MyCoReObjectList objects = mycoreRest.getObjects(target, query);
-            for (MyCoReObjectListEntry entry : objects.getEntries()) {
-                MyCoReObjectInfo info = mycoreRepo.findByMycoreIdAndRepository(entry.getObjectID(), target.getUrl());
-                if (info == null) {
-                    info = new MyCoReObjectInfo();
-                }
-                info.setMycoreId(entry.getObjectID());
-                info.setRepository(target.getUrl());
+            objects.getEntries().stream()
+                    .parallel()
+                    .forEach(entry -> {
+                        MyCoReObjectInfo info = mycoreRepo
+                                .findByMycoreIdAndRepository(entry.getObjectID(), target.getUrl());
+                        if (info == null) {
+                            info = new MyCoReObjectInfo();
+                        }
+                        info.setMycoreId(entry.getObjectID());
+                        info.setRepository(target.getUrl());
 
-                Document object = mycoreRest.getObject(target, entry.getObjectID());
+                        Document object = null;
+                        try {
+                            object = mycoreRest.getObject(target, entry.getObjectID());
+                        } catch (IOException|URISyntaxException e) {
+                            log.error("Could not fetch object " + entry.getObjectID(), e);
+                            return;
+                        }
 
-                String parent = MODSUtil.getParent(object);
-                info.setParentMycoreId(parent);
+                        String parent = MODSUtil.getParent(object);
+                        info.setParentMycoreId(parent);
 
-                OffsetDateTime createDate = MODSUtil.getCreateDate(object);
-                info.setCreated(createDate);
+                        OffsetDateTime createDate = MODSUtil.getCreateDate(object);
+                        info.setCreated(createDate);
 
-                OffsetDateTime lastModified = MODSUtil.getLastModified(object);
-                info.setLastModified(lastModified);
+                        OffsetDateTime lastModified = MODSUtil.getLastModified(object);
+                        info.setLastModified(lastModified);
 
-                MODSUtil.MODSRecordInfo recordInfo = MODSUtil.getRecordInfo(object);
-                if (recordInfo != null) {
-                    String id = recordInfo.id();
-                    if (id != null) {
-                        info.setImportID(id);
-                    }
-                    String source = recordInfo.url();
-                    if (source != null) {
-                        info.setImportURL(source);
-                    }
-                }
+                        MODSUtil.MODSRecordInfo recordInfo = MODSUtil.getRecordInfo(object);
+                        if (recordInfo != null) {
+                            String id = recordInfo.id();
+                            if (id != null) {
+                                info.setImportID(id);
+                            }
+                            String source = recordInfo.url();
+                            if (source != null) {
+                                info.setImportURL(source);
+                            }
+                        }
 
-                String createdBy = MODSUtil.getCreatedBy(object);
-                if (createdBy == null) {
-                    log.error("Could not extract createdBy from " + entry.getObjectID());
-                    continue;
-                }
-                info.setCreatedBy(createdBy);
+                        String createdBy = MODSUtil.getCreatedBy(object);
+                        if (createdBy == null) {
+                            log.error("Could not extract createdBy from " + entry.getObjectID());
+                            return;
+                        }
+                        info.setCreatedBy(createdBy);
 
-                String state = MODSUtil.getState(object);
-                info.setState(state);
+                        String state = MODSUtil.getState(object);
+                        info.setState(state);
 
-                infos.add(info);
-                mycoreRepo.save(info);
-            }
+                        infos.add(info);
+                        mycoreRepo.save(info);
+                    });
+
             hasMore = objects.getEntries().size() == 1000;
             query.setOffset(query.getOffset() + 1000);
         }

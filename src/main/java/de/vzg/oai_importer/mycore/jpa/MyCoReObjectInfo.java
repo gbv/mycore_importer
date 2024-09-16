@@ -17,8 +17,20 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "mycore_object_info",
-    uniqueConstraints = { @UniqueConstraint(columnNames = { "mycore_id", "repository" })
-    })
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "mycore_id", "repository" }),
+    },
+    indexes = {
+            @jakarta.persistence.Index(name = "mycore_id_idx", columnList = "mycore_id"),
+            @jakarta.persistence.Index(name = "repository_idx", columnList = "repository"),
+            @jakarta.persistence.Index(name = "parent_mycore_id_idx", columnList = "parent_mycore_id"),
+            @jakarta.persistence.Index(name = "import_id_idx", columnList = "import_id"),
+            @jakarta.persistence.Index(name = "import_source_idx", columnList = "import_source"),
+            @jakarta.persistence.Index(name = "last_modified_idx", columnList = "last_modified"),
+            @jakarta.persistence.Index(name = "created_idx", columnList = "created"),
+            @jakarta.persistence.Index(name = "createdBy_idx", columnList = "createdBy"),
+            @jakarta.persistence.Index(name = "state_idx", columnList = "state")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor

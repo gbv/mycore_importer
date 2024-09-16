@@ -13,6 +13,7 @@ import java.util.Locale;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.vzg.oai_importer.mycore.api.model.MyCoReFileListDirectory;
 import de.vzg.oai_importer.mycore.api.model.MyCoReObjectList;
 import de.vzg.oai_importer.mycore.api.transfer.RequestParameterAdapter;
 import de.vzg.oai_importer.mycore.api.transfer.ResultMapper;
@@ -305,6 +306,29 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         }
         return result.headers().get("Location");
 
+    }
+
+    public MyCoReFileListDirectory getFiles(String url, String objectID, String derivativeID, String authenticate)
+        throws IOException, URISyntaxException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+
+        applyAuth(authenticate, headers);
+        adaptRequestParameters(parameters, headers);
+
+        TransferResult result = transferLayer.get(
+            url + API_V_2_OBJECTS + "/" + objectID + "/derivates/" + derivativeID + "/contents", headers, parameters);
+        int i = result.statusCode();
+
+        if (i != 200) {
+            throw new RuntimeException("Error while getting files: " + result.statusMessage());
+        }
+
+        try (InputStream inputStream = result.inputStream()) {
+            return resultMapper.mapFileList(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void applyQueryParameters(MyCoReObjectQuery query, HashMap<String, List<String>> parameters) {

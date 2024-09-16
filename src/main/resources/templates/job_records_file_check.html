@@ -20,7 +20,6 @@
         <div class="col-12 mb-2">
             <a class="btn btn-secondary" th:href="@{/jobs/}">Zurück</a>
             <a class="btn btn-primary" th:href="@{/jobs/{jid}/testMapping(jid=${jobID}, update=false)}">Zuordnungen Prüfen</a>
-            <a class="btn btn-primary" th:href="@{/jobs/{jid}/fileCheck(jid=${jobID})}">Dateien für den Import anzeigen/prüfen</a>
             <a class="btn btn-primary" th:href="@{/jobs/{jid}/import(jid=${jobID})}">Import Starten</a>
         </div>
     </div>
@@ -38,15 +37,15 @@
                 </thead>
                 <tbody>
                 <tr th:each="record: ${records.getContent()}">
-                    <td th:text="${record.getForeignId()}"></td>
+                    <td th:text="${record.getKey().getForeignId()}"></td>
                     <td>
                         <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                                th:data-bs-target="'#metadata_' + ${record.getId()}"
+                                th:data-bs-target="'#metadata_' + ${record.getKey().getId()}"
                                 aria-expanded="false">
                             Metadaten
                         </button>
 
-                        <div class="modal" tabindex="-1" th:id="'metadata_' + ${record.getId()}">
+                        <div class="modal" tabindex="-1" th:id="'metadata_' + ${record.getKey().getId()}">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -55,7 +54,7 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <pre th:text="${record.getMetadata()}"></pre>
+                                        <pre th:text="${record.getKey().getMetadata()}"></pre>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
@@ -66,17 +65,49 @@
                         </div>
 
 
+                        <button th:if="${record.getValue().size() > 0}" class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                th:data-bs-target="'#files' + ${record.getKey().getId()}"
+                                aria-expanded="false">
+                            Dateien
+                        </button>
+                        <button th:unless="${record.getValue().size() > 0}" class="btn btn-warning" type="button">
+                            Keine Dateien Gefunden
+                        </button>
+
+                        <div class="modal" tabindex="-1" th:id="'files_' + ${record.getKey().getId()}">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Modal title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul>
+                                            <li th:each="file: ${record.getValue()}">
+                                                <span th:text="${file}" />
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </td>
-                    <td th:text="${record.getDatestamp()}">
+                    <td th:text="${record.getKey().getDatestamp()}">
                     </td>
 
-                    <td th:text="${record.getDeleted()}">
+                    <td th:text="${record.getKey().getDeleted()}">
 
                     </td>
 
                     <td>
-                        <a th:href="@{'/jobs/'+ ${jobID} + '/test/' + ${record.getForeignId()}}">Test</a>
-                        <a th:href="@{'/jobs/'+ ${jobID} + '/import/' + ${record.getForeignId()}}">Import</a>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/test/' + ${record.getKey().getForeignId()}}">Test</a>
+                        <a th:href="@{'/jobs/'+ ${jobID} + '/import/' + ${record.getKey().getForeignId()}}">Import</a>
                     </td>
                 </tr>
                 </tbody>
@@ -88,13 +119,13 @@
             <nav>
                 <ul class="pagination flex-wrap">
                     <li class="page-item" th:if="${records.hasPrevious()}"><a class="page-link"
-                                                                             th:href="@{'/jobs/' + ${jobID} + '/?page=' +${records.getNumber()-1}}">Vorherige</a>
+                                                                             th:href="@{'/jobs/' + ${jobID} + '/fileCheck?page=' +${records.getNumber()-1}}">Vorherige</a>
                     </li>
                     <li class="page-item" th:each="page: ${pages}"><a th:class="'page-link' + (${page} == ${records.getNumber()+1} ? ' active' : '')"
-                                                                      th:href="@{'/jobs/' + ${jobID} + '/?page=' + ${page -1}}"
+                                                                      th:href="@{'/jobs/' + ${jobID} + '/fileCheck?page=' + ${page -1}}"
                                                                       th:text="${page}">1</a></li>
                     <li class="page-item" th:if="${records.hasNext()}"><a class="page-link"
-                                                                         th:href="@{'/jobs/' + ${jobID} + '/?page=' +${records.getNumber()+1}}">Nächste</a>
+                                                                         th:href="@{'/jobs/' + ${jobID} + '/fileCheck?page=' +${records.getNumber()+1}}">Nächste</a>
                     </li>
                 </ul>
             </nav>

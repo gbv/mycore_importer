@@ -1,17 +1,20 @@
 package de.vzg.oai_importer.mycore;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import java.util.Optional;
-
 public class MyCoReUtil {
 
-    public static Document createDerivate(String base_id, String parent, String mainFile) {
+    public static Document createDerivate(String baseId, String parent, String mainFile) {
         Element mycorederivateElement = new Element("mycorederivate");
         Document document = new Document(mycorederivateElement);
 
-        mycorederivateElement.setAttribute("ID", base_id + "_00000000");
+        mycorederivateElement.setAttribute("ID", baseId + "_00000000");
 
         Element derivateElement = new Element("derivate");
         mycorederivateElement.addContent(derivateElement);
@@ -53,6 +56,20 @@ public class MyCoReUtil {
         mycorederivateElement.addContent(serviceElement);
 
         return document;
+    }
+
+    public static List<String> getDerivateIDs(Document insertedDerivate) {
+        return Optional.ofNullable(insertedDerivate.getRootElement())
+                .map(e -> e.getChild("structure"))
+                .stream()
+                .map(e -> e.getChild("derobjects"))
+                .filter(Objects::nonNull)
+                .flatMap(e -> e.getChildren("derobject").stream())
+                .filter(Objects::nonNull)
+                .map(e -> e.getAttributeValue("href", MODSUtil.XLINK_NAMESPACE))
+                .filter(Objects::nonNull)
+
+                .collect(Collectors.toList());
     }
 
     public static void setMainFile(Document insertedDerivate, String mainFile) {

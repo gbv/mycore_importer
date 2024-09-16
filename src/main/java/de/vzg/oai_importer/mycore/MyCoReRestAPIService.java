@@ -25,6 +25,7 @@ import de.vzg.oai_importer.mycore.api.MCRRestCredentials;
 import de.vzg.oai_importer.mycore.api.MyCoReObjectQuery;
 import de.vzg.oai_importer.mycore.api.impl.ApacheHttpClientTransferLayer;
 import de.vzg.oai_importer.mycore.api.impl.MyCoReV2JDOMClient;
+import de.vzg.oai_importer.mycore.api.model.MyCoReFileListDirectory;
 import de.vzg.oai_importer.mycore.api.model.MyCoReObjectList;
 
 @Service
@@ -211,6 +212,18 @@ public class MyCoReRestAPIService {
             throw new IOException("Could not authenticate");
         }
         client.putFile(url, objectID, derivativeID, authenticate, "/"+filename, is);
+    }
+
+    public MyCoReFileListDirectory getFiles(MyCoReTargetConfiguration target, String objectID, String derivativeID)
+        throws IOException, URISyntaxException {
+        String url = target.getUrl();
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        String authenticate = authenticate(target);
+        if (authenticate == null) {
+            throw new IOException("Could not authenticate");
+        }
+        return client.getFiles(url, objectID, derivativeID, authenticate);
     }
 
     public List<Category> getClassificationCategories(MyCoReTargetConfiguration target, String classId)

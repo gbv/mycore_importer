@@ -90,26 +90,26 @@
         <xsl:choose>
             <xsl:when test="./p:datafield[@tag='037C']">
                 <xsl:choose>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Habil.')
-                          or contains(./p:datafield[@tag='037C'],'Habilitation')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Habil.')
+                          or contains(./p:datafield[@tag='037C'][0],'Habilitation')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#habilitation"/>
                     </xsl:when>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Diss.')
-                          or contains(./p:datafield[@tag='037C'],'Dissertation')
-                          or contains(./p:datafield[@tag='037C'],'Thèse de doctorat')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Diss.')
+                          or contains(./p:datafield[@tag='037C'][0],'Dissertation')
+                          or contains(./p:datafield[@tag='037C'][0],'Thèse de doctorat')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#dissertation"/>
                     </xsl:when>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Dipl.')
-                          or contains(./p:datafield[@tag='037C'],'Diplom')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Dipl.')
+                          or contains(./p:datafield[@tag='037C'][0],'Diplom')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#diploma_thesis"/>
                     </xsl:when>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Master')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Master')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#master_thesis"/>
                     </xsl:when>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Bachelor')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Bachelor')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#diploma_bachelor"/>
                     </xsl:when>
-                    <xsl:when test="contains(./p:datafield[@tag='037C'],'Magister')">
+                    <xsl:when test="contains(./p:datafield[@tag='037C'][0],'Magister')">
                         <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#diploma_thesis"/>
                     </xsl:when>
                     <xsl:otherwise>
