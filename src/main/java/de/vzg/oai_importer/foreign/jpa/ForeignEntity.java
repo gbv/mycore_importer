@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
             @Index(name = "foreign_id_idx", columnList = "foreign_id"),
             @Index(name = "datestamp_idx", columnList = "datestamp"),
             @Index(name = "config_id_datestamp_idx", columnList = "config_id, datestamp"),
-            @Index(name = "is_deleted_idx", columnList = "is_deleted")
+            @Index(name = "is_deleted_idx", columnList = "isDeleted")
         }
 )
 public class ForeignEntity {
