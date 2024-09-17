@@ -17,8 +17,8 @@ public interface ForeignEntityRepository extends ListPagingAndSortingRepository<
 
     ForeignEntity findFirstByConfigIdAndForeignId(String config, String recordId);
 
-    @Query("SELECT r FROM ForeignEntity r WHERE r.configId = ?1 AND r.isDeleted = false AND r.foreignId NOT IN " +
-        "(SELECT m.importID FROM MyCoReObjectInfo m where m.importURL = ?2 AND m.repository = ?3)")
+    @Query("SELECT r FROM ForeignEntity r LEFT JOIN MyCoReObjectInfo m ON r.foreignId = m.importID " +
+            "WHERE r.configId = ?1 AND r.isDeleted = false AND (m.importID IS NULL OR m.importURL != ?2 OR m.repository != ?3)")
     Page<ForeignEntity> findImportableEntities(String oaiConfig, String oaiSource, String targetRepository, Pageable pageable);
 
     //@Query("SELECT fe, oi FROM ForeignEntity fe, MyCoReObjectInfo oi WHERE fe.configId = ?1 AND fe.isDeleted = false AND fe.foreignId = oi.importID AND oi.importURL = ?2 AND oi.repository = ?3 order by fe.datestamp desc")
