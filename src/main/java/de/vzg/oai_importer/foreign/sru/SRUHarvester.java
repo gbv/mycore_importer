@@ -78,7 +78,7 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
     }
 
     public List<LocalDate> getDaysSince(LocalDate since, LocalDate until) {
-        LocalDate now = until == null ? LocalDate.now() : until.plusDays(1);
+        LocalDate now = until == null ? LocalDate.now().plusDays(1) : until.plusDays(1);
         return since.datesUntil(now).toList();
     }
 

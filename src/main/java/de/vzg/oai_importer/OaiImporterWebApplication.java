@@ -37,7 +37,7 @@ public class OaiImporterWebApplication {
         SpringApplication.run(OaiImporterWebApplication.class, args);
     }
 
-   @Scheduled(fixedDelay = 300000, initialDelay = 3000)
+   @Scheduled(cron = "0 30 23 * * *")
     public void test() {
         configuration.getJobs().entrySet().stream()
             .filter(job -> job.getValue().isAuto())
