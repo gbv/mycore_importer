@@ -145,18 +145,28 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
 
         // check files
         var davPath = config.get("file-path");
-        var path = Paths.get(davPath);
-
         var newFilesPath = config.get("new-file-path");
-        var newPath = Paths.get(newFilesPath);
 
-        var filePPN = Stream.of(PicaUtils.getPicaField(picaXML, "003@", "0"),
-            PicaUtils.getPicaField(picaXML, "007G", "0"))
-            .flatMap(s -> s)
-            .distinct()
-            .collect(Collectors.toList());
+        List<String> filePPN;
+        List<Path> files;
 
-        List<Path> files = resolveFiles(record, filePPN, path, newPath);
+        if (davPath != null && newFilesPath != null) {
+            var path = Paths.get(davPath);
+            var newPath = Paths.get(newFilesPath);
+
+            filePPN = Stream.of(PicaUtils.getPicaField(picaXML, "003@", "0"),
+                            PicaUtils.getPicaField(picaXML, "007G", "0"))
+                    .flatMap(s -> s)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            files = resolveFiles(record, filePPN, path, newPath);
+        } else {
+            filePPN = Collections.emptyList();
+            files = Collections.emptyList();
+        }
+
+
 
         log.info("Found {} files for record {} in filesystem with ppn {}", files.size(), record.getForeignId(),
             filePPN);
