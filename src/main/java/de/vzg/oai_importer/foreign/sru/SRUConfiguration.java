@@ -36,6 +36,8 @@ public class SRUConfiguration implements Configuration {
 
     private LocalDate newestDate;
 
+    private Integer dayOffset = 1;
+
     private String recordFilterService;
 
     @Override

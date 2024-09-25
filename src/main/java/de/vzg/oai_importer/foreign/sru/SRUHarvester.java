@@ -77,9 +77,11 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
             "&recordSchema=picaxml&startRecord=" + startRecord;
     }
 
-    public List<LocalDate> getDaysSince(LocalDate since, LocalDate until) {
-        LocalDate now = until == null ? LocalDate.now().plusDays(1) : until.plusDays(1);
-        return since.datesUntil(now).toList();
+    public List<LocalDate> getDaysSince(LocalDate from, LocalDate until) {
+        if(from.isAfter(until)) {
+            return List.of();
+        }
+        return from.datesUntil(until).toList();
     }
 
     public SRUResponse harvest(String link) throws IOException {
@@ -134,7 +136,8 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
 
         List<ForeignEntity> result = new ArrayList<>();
 
-        List<LocalDate> days = getDaysSince(oldestDate, source.getNewestDate());
+        List<LocalDate> days = getDaysSince(oldestDate, source.getNewestDate() == null ?
+                LocalDate.now().plusDays(source.getDayOffset()) : source.getNewestDate());
         for (LocalDate day : days) {
             SRUResponse resp = null;
             String link = null;
