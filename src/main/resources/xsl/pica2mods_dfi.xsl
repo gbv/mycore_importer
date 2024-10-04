@@ -51,9 +51,14 @@
     </xsl:template>
 
     <xsl:template name="modsAccessCondition">
-        <xsl:if test="$RestrictedAccess = 'true'">
+        <xsl:choose>
+          <xsl:when test="$RestrictedAccess = 'true'">
             <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#ipAddressRange" xlink:type="simple"/>
-        </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#unlimited" xlink:type="simple"/>
+          </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="modsDfiFIVSubject" >
