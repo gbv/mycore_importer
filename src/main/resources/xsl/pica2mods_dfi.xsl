@@ -64,13 +64,13 @@
     <xsl:template name="modsDfiFIVSubject" >
         <xsl:for-each select="./p:datafield[@tag='045N'][not(@occurrence)]" >
             <mods:subject xlink:type="simple">
-                <xsl:variable name="valueURI" select="concat('http://bartoc.org/en/node/20447#',translate(./p:subfield[@code='a'],' ',''))"/>
+                <xsl:variable name="valueURI" select="concat('http://bartoc.org/en/node/20447#',translate(./p:subfield[@code='a'][text()!=' '],' ',''))"/>
                 <mods:geographic authorityURI="http://bartoc.org/en/node/20447" valueURI="{$valueURI}"/>
             </mods:subject>
         </xsl:for-each>
         <xsl:for-each select="./p:datafield[@tag='045N'][@occurrence='01']" >
             <mods:subject xlink:type="simple">
-                <xsl:variable name="valueURI" select="concat('http://bartoc.org/en/node/20446#',translate(./p:subfield[@code='a'],' ',''))"/>
+                <xsl:variable name="valueURI" select="concat('http://bartoc.org/en/node/20446#',translate(./p:subfield[@code='a'][text()!=' '],' ',''))"/>
                 <mods:topic authorityURI="http://bartoc.org/en/node/20446" valueURI="{$valueURI}"/>
             </mods:subject>
         </xsl:for-each>
