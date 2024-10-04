@@ -76,8 +76,8 @@
         </xsl:for-each>
         <xsl:for-each select="./p:datafield[@tag='045N'][@occurrence='02']" >
             <mods:subject xlink:type="simple">
-                <xsl:variable name="valueURI" select="concat('http://repo.dfi.de/api/v1/classifications/fivdfi#',translate(./p:subfield[@code='a'],' ',''))"/>
-                <mods:topic authorityURI="http://repo.dfi.de/api/v1/classifications/fivdfi" valueURI="{$valueURI}"/>
+                <xsl:variable name="valueURI" select="concat('http://repositorium.dfi.de/api/v1/classifications/fivdfi#',translate(./p:subfield[@code='a'][text()!=' '],' ',''))"/>
+                <mods:topic authorityURI="http://repositorium.dfi.de/api/v1/classifications/fivdfi" valueURI="{$valueURI}"/>
             </mods:subject>
         </xsl:for-each>
         <xsl:for-each select="./p:datafield[@tag='045D'][@occurrence='60' or @occurrence='70']" >
