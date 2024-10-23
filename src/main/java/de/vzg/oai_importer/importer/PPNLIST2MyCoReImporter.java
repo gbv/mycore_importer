@@ -320,6 +320,11 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
         MODSUtil.setRecordInfo(object, record.getForeignId(), record.getConfigId());
 
         Document metadata = new Document(MODSUtil.getMetadata(object).detach());
+
+        Document existingMetadata = restAPIService.getObject(target, objectInfo.getMycoreId());
+        List<Element> existingIdentifier = MODSUtil.getRegisteredIdentifier(existingMetadata);
+        MODSUtil.insertIdentifiers(metadata, existingIdentifier);
+
         restAPIService.putObjectMetadata(target, objectInfo.getMycoreId(), metadata);
 
         return true;
