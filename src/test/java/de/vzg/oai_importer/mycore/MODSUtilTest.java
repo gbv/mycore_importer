@@ -11,8 +11,12 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 import org.junit.jupiter.api.Test;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 class MODSUtilTest {
 
     @Test
@@ -74,5 +78,41 @@ class MODSUtilTest {
             assertTrue(insertedIdentifiers.stream().anyMatch(e -> e.getText().equals("urn:test:0000-0000-0000-0002")));
         }
 
+    }
+
+    @Test
+    void testSortMODSInMyCoreObject() throws JDOMException, IOException {
+        // Load the XML file
+        SAXBuilder saxBuilder = new SAXBuilder();
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("test_mods_3.xml")) {
+            Document document = saxBuilder.build(inputStream);
+
+            // Call the method to test
+            MODSUtil.sortMODSInMyCoreObject(document);
+
+            log.info(new XMLOutputter().outputString(document));
+
+            // Verify the output
+            Element modsElement = document.getRootElement()
+                    .getChild("metadata")
+                    .getChild("def.modsContainer")
+                    .getChild("modsContainer")
+                    .getChild("mods", MODSUtil.MODS_NAMESPACE);
+
+            // Check the order of the children elements
+            assertEquals("genre", modsElement.getChildren().get(0).getName());
+            assertEquals("titleInfo", modsElement.getChildren().get(1).getName());
+            assertEquals("name", modsElement.getChildren().get(2).getName());
+            assertEquals("name", modsElement.getChildren().get(3).getName());
+            assertEquals("name", modsElement.getChildren().get(4).getName());
+            assertEquals("originInfo", modsElement.getChildren().get(5).getName());
+            assertEquals("language", modsElement.getChildren().get(6).getName());
+            assertEquals("physicalDescription", modsElement.getChildren().get(7).getName());
+            assertEquals("classification", modsElement.getChildren().get(8).getName());
+            assertEquals("classification", modsElement.getChildren().get(9).getName());
+            assertEquals("classification", modsElement.getChildren().get(10).getName());
+            assertEquals("accessCondition", modsElement.getChildren().get(11).getName());
+            assertEquals("accessCondition", modsElement.getChildren().get(12).getName());
+        }
     }
 }

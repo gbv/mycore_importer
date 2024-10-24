@@ -142,6 +142,7 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
         var mods = convertToMods(target, record, free, picaXML);
         var object = MODSUtil.wrapInMyCoReFrame(mods, config.get("base-id"), config.get("status"));
         MODSUtil.setRecordInfo(object, record.getForeignId(), record.getConfigId());
+        MODSUtil.sortMODSInMyCoreObject(object);
 
         // check files
         var davPath = config.get("file-path");
@@ -302,7 +303,7 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
         Document document = MODSUtil.wrapInMyCoReFrame(mods, config.get("base-id"), config.get("status"));
 
         MODSUtil.setRecordInfo(document, record.getForeignId(), record.getConfigId());
-
+        MODSUtil.sortMODSInMyCoreObject(document);
         return new XMLOutputter(Format.getPrettyFormat()).outputString(document);
     }
 
@@ -324,6 +325,7 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
         Document existingMetadata = restAPIService.getObject(target, objectInfo.getMycoreId());
         List<Element> existingIdentifier = MODSUtil.getRegisteredIdentifier(existingMetadata);
         MODSUtil.insertIdentifiers(metadata, existingIdentifier);
+        MODSUtil.sortMODSInMyCoreObject(metadata);
 
         restAPIService.putObjectMetadata(target, objectInfo.getMycoreId(), metadata);
 

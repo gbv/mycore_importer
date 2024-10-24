@@ -55,6 +55,15 @@ public class MODSUtil {
     private static final String IDENTIFIER_XPATH
         = "/mycoreobject/metadata/def.modsContainer/modsContainer/mods:mods/mods:identifier";
 
+    private static final String[] ORDER = { "genre", "typeofResource", "titleInfo", "nonSort", "subTitle", "title",
+            "partNumber", "partName", "name", "namePart", "displayForm", "role", "affiliation", "originInfo", "place",
+            "publisher", "dateIssued", "dateCreated", "dateModified", "dateValid", "dateOther", "edition", "issuance",
+            "frequency", "relatedItem", "language", "physicalDescription", "abstract", "note", "subject",
+            "classification", "location", "shelfLocator", "url", "accessCondition", "part", "extension",
+            "recordInfo", };
+
+    private static final List<String> ORDER_LIST = List.of(ORDER);
+
     public static List<String> getChildren(Document mycoreObject) {
         XPathExpression<Element> childrenXPath = XPathFactory.instance().compile(CHILDREN_XPATH, Filters.element());
         return childrenXPath.evaluate(mycoreObject).stream()
@@ -265,6 +274,35 @@ public class MODSUtil {
     public static String parseIdentifierFromJsonString(String jsonString) {
         JsonObject rootObj = JsonParser.parseString(jsonString).getAsJsonObject();
         return rootObj.get("identifier").getAsString();
+    }
+
+    public static void sortMODSInMyCoreObject(Document mycoreObject) {
+        XPathExpression<Element> modsXPath = XPathFactory.instance()
+                .compile(MODS_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        Element modsElement = modsXPath.evaluateFirst(mycoreObject);
+        if (modsElement != null) {
+            sortMODSElement(modsElement);
+        }
+    }
+
+    public static void sortMODSElement(Element mods) {
+        mods.sortChildren(MODSUtil::compare);
+    }
+
+    private static int compare(Element e1, Element e2) {
+        int pos1 = getPos(e1);
+        int pos2 = getPos(e2);
+
+        if (pos1 == pos2) {
+            return e1.getName().compareTo(e2.getName());
+        } else {
+            return pos1 - pos2;
+        }
+    }
+
+    private static int getPos(Element e) {
+        String name = e.getName();
+        return ORDER_LIST.contains(name) ? ORDER_LIST.indexOf(name) : ORDER_LIST.size();
     }
 
     public record MODSRecordInfo(String id, String url) {
