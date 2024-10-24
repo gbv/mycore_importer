@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,9 @@ import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 
 public class MODSUtil {
@@ -29,7 +33,13 @@ public class MODSUtil {
     private static final String LOCKED_DELETED_XPATH = "/mycoreobject/service/servstates/servstate[@categid='blocked' or @categid='deleted']";
 
     private static final String CREATED_BY_XPATH = "/mycoreobject/service/servflags/servflag[@type='createdby']";
+
+    public static final String MODS_ELEMENT_XPATH = "/mycoreobject/metadata/def.modsContainer/modsContainer/mods:mods";
+    private static final String PI_SERVFLAG_XPATH
+        = "/mycoreobject/service/servflags[@class='MCRMetaLangText']/servflag[@type='MyCoRe-PI']";
+
     private static final String MODIFIED_BY_XPATH = "/mycoreobject/service/servflags/servflag[@type='modifiedby']";
+
     private static final String STATE_XPATH = "/mycoreobject/service/servstates/servstate";
 
     private static final String MODIFY_DATE_XPATH
@@ -42,6 +52,17 @@ public class MODSUtil {
     private static final String PARENT_XPATH = "/mycoreobject/structure/parents/parent";
 
     private static final String CHILDREN_XPATH = "/mycoreobject/structure/children/child";
+    private static final String IDENTIFIER_XPATH
+        = "/mycoreobject/metadata/def.modsContainer/modsContainer/mods:mods/mods:identifier";
+
+    private static final String[] ORDER = { "genre", "typeofResource", "titleInfo", "nonSort", "subTitle", "title",
+            "partNumber", "partName", "name", "namePart", "displayForm", "role", "affiliation", "originInfo", "place",
+            "publisher", "dateIssued", "dateCreated", "dateModified", "dateValid", "dateOther", "edition", "issuance",
+            "frequency", "relatedItem", "language", "physicalDescription", "abstract", "note", "subject",
+            "classification", "location", "shelfLocator", "url", "accessCondition", "part", "extension",
+            "recordInfo", };
+
+    private static final List<String> ORDER_LIST = List.of(ORDER);
 
     public static List<String> getChildren(Document mycoreObject) {
         XPathExpression<Element> childrenXPath = XPathFactory.instance().compile(CHILDREN_XPATH, Filters.element());
@@ -206,6 +227,82 @@ public class MODSUtil {
         } else {
             element.addContent(new Element("recordContentSource", MODS_NAMESPACE).setText(configId));
         }
+    }
+
+    public static List<Element> getRegisteredIdentifier(Document document) {
+        XPathExpression<Element> piServlfagXpath
+            = XPathFactory.instance().compile(PI_SERVFLAG_XPATH, Filters.element(), null);
+        final List<Element> piFlagElements = piServlfagXpath.evaluate(document);
+
+        if (piFlagElements.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        XPathExpression<Element> identifierXpath
+            = XPathFactory.instance().compile(IDENTIFIER_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        final List<Element> identifierElements = identifierXpath.evaluate(document);
+
+        List<String> identifiersToKeep = piFlagElements.stream()
+            .map(Element::getTextNormalize)
+            .map(MODSUtil::parseIdentifierFromJsonString)
+            .toList();
+
+        return identifierElements.stream()
+            .filter(e -> identifiersToKeep.contains(e.getTextNormalize()))
+            .map(Element::detach)
+            .toList();
+    }
+
+    public static void insertIdentifiers(Document mycoreObject, List<Element> identifiers) {
+        XPathExpression<Element> modsXPath = XPathFactory.instance()
+            .compile(MODS_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        Element modsElement = modsXPath.evaluateFirst(mycoreObject);
+        if (modsElement != null) {
+
+            for (Element identifier : identifiers) {
+                boolean exists = modsElement.getChildren("identifier", MODS_NAMESPACE).stream()
+                    .anyMatch(existingIdentifier -> existingIdentifier.getText().equals(identifier.getText()) &&
+                        existingIdentifier.getAttributeValue("type").equals(identifier.getAttributeValue("type")));
+
+                if (!exists) {
+                    modsElement.addContent(identifier.clone());
+                }
+            }
+        }
+    }
+
+    public static String parseIdentifierFromJsonString(String jsonString) {
+        JsonObject rootObj = JsonParser.parseString(jsonString).getAsJsonObject();
+        return rootObj.get("identifier").getAsString();
+    }
+
+    public static void sortMODSInMyCoreObject(Document mycoreObject) {
+        XPathExpression<Element> modsXPath = XPathFactory.instance()
+                .compile(MODS_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        Element modsElement = modsXPath.evaluateFirst(mycoreObject);
+        if (modsElement != null) {
+            sortMODSElement(modsElement);
+        }
+    }
+
+    public static void sortMODSElement(Element mods) {
+        mods.sortChildren(MODSUtil::compare);
+    }
+
+    private static int compare(Element e1, Element e2) {
+        int pos1 = getPos(e1);
+        int pos2 = getPos(e2);
+
+        if (pos1 == pos2) {
+            return e1.getName().compareTo(e2.getName());
+        } else {
+            return pos1 - pos2;
+        }
+    }
+
+    private static int getPos(Element e) {
+        String name = e.getName();
+        return ORDER_LIST.contains(name) ? ORDER_LIST.indexOf(name) : ORDER_LIST.size();
     }
 
     public record MODSRecordInfo(String id, String url) {
