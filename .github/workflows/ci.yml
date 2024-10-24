@@ -20,12 +20,7 @@ jobs:
       with:
         java-version: 17
         distribution: temurin
-
-    - name: Restore Maven cache
-      if: !(contains('refs/heads/main', github.ref) && github.event_name=='push' && success())
-      uses: skjolber/maven-cache-github-action@v1
-      with:
-        step: restore
+        cache: maven
 
     - name: Set current date as env variable
       run: echo "BUILD_START=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -65,9 +60,3 @@ jobs:
           ./**/screenshots
           ./**/*error*.log
           ./**/*test.log
-
-    - name: Save Maven cache
-      if: !(contains('refs/heads/main', github.ref) && github.event_name=='push' && success())
-      uses: skjolber/maven-cache-github-action@v1
-      with:
-        step: save
