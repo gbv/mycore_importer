@@ -10,5 +10,5 @@ if [ "$EUID" -eq 0 ]
     fixDirectoryRights "/home/spring/logs" "spring"
 fi
 
-exec gosu spring "$@"
+exec gosu spring $@
 exit 0;
