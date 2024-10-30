@@ -5,5 +5,5 @@ USER spring:spring
 WORKDIR /home/spring/
 COPY target/mycore-importer-cli.jar cli.jar
 COPY target/mycore-importer-webapp.jar webapp.jar
-ENTRYPOINT ["java","-jar"]
-CMD ["webapp.jar"]
+# chown /home/spring/logs to spring:spring when starting the container
+CMD bash -c "mkdir -p /home/spring/logs && chown spring:spring /home/spring/logs && java -jar webapp.jar"
