@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mycoreobject xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="datamodel-mods.xsd" ID="test_mods_00000001" version="2023.06.3-SNAPSHOT" label="test_mods_00000001">
+    <structure>
+        <derobjects xmlns:mods="http://www.loc.gov/mods/v3" class="MCRMetaEnrichedLinkID">
+            <derobject inherited="0" xlink:type="locator" xlink:href="test_derivate_00000001">
+                <order>1</order>
+                <maindoc>test_document.pdf</maindoc>
+                <classification classid="derivate_types" categid="content"/>
+            </derobject>
+        </derobjects>
+    </structure>
+    <metadata>
+        <def.modsContainer class="MCRMetaXML" heritable="false" notinherit="true">
+            <modsContainer inherited="0">
+                <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+                    <mods:typeOfResource>text</mods:typeOfResource>
+                    <mods:genre type="intern" authorityURI="http://www.mycore.org/classifications/mir_genres" valueURI="http://www.mycore.org/classifications/mir_genres#test"/>
+                    <mods:titleInfo xml:lang="en" xlink:type="simple">
+                        <mods:nonSort>A</mods:nonSort>
+                        <mods:title>Test Title</mods:title>
+                    </mods:titleInfo>
+                    <mods:classification generator="test_genres2diniPublType2022-mycore" authorityURI="http://www.mycore.org/classifications/diniPublType2022" valueURI="http://www.mycore.org/classifications/diniPublType2022#Test"/>
+                    <mods:classification generator="test_genres2schemaOrg-mycore" authorityURI="http://schema.org/" valueURI="http://schema.org/Test"/>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Doe, John</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+                        </mods:role>
+                        <mods:nameIdentifier type="orcid" typeURI="https://orcid.org/">0000-0000-0000-0000</mods:nameIdentifier>
+                        <mods:namePart type="family">Doe</mods:namePart>
+                        <mods:namePart type="given">John</mods:namePart>
+                    </mods:name>
+                    <mods:originInfo eventType="publication">
+                        <mods:dateIssued encoding="w3cdtf">2024-01-01</mods:dateIssued>
+                        <mods:place>
+                            <mods:placeTerm type="text">Test City</mods:placeTerm>
+                        </mods:place>
+                    </mods:originInfo>
+                    <mods:physicalDescription>
+                        <mods:extent>10 pages</mods:extent>
+                    </mods:physicalDescription>
+                    <mods:language>
+                        <mods:languageTerm authority="rfc5646" type="code">en</mods:languageTerm>
+                    </mods:language>
+                    <mods:classification authority="ddc" displayLabel="ddc">000</mods:classification>
+                    <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#unlimited" xlink:type="simple"/>
+                    <mods:accessCondition type="use and reproduction" xlink:href="http://www.mycore.org/classifications/mir_licenses#cc_by_4.0" xlink:type="simple"/>
+                    <mods:name type="corporate" authorityURI="http://www.mycore.org/classifications/mir_institutes" valueURI="http://www.mycore.org/classifications/mir_institutes#Test_Institute" xlink:type="simple">
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+                        </mods:role>
+                    </mods:name>
+                    <mods:name type="conference" xlink:type="simple">
+                        <mods:displayForm>Test Conference, 01.01.2024, Test City</mods:displayForm>
+                        <mods:namePart>Test Conference, 01.01.2024, Test City</mods:namePart>
+                    </mods:name>
+                </mods:mods>
+            </modsContainer>
+        </def.modsContainer>
+    </metadata>
+    <service>
+        <servdates class="MCRMetaISO8601Date">
+            <servdate type="createdate" inherited="0">2024-01-01T00:00:00.000Z</servdate>
+            <servdate type="modifydate" inherited="0">2024-01-02T00:00:00.000Z</servdate>
+        </servdates>
+        <servflags class="MCRMetaLangText">
+            <servflag type="createdby" inherited="0" form="plain">testuser</servflag>
+            <servflag type="modifiedby" inherited="0" form="plain">testuser</servflag>
+        </servflags>
+        <servstates class="MCRMetaClassification">
+            <servstate inherited="0" classid="state" categid="published"/>
+        </servstates>
+    </service>
+</mycoreobject>
