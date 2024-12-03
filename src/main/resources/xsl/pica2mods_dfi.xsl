@@ -82,7 +82,13 @@
         </xsl:for-each>
         <xsl:for-each select="./p:datafield[@tag='045D'][@occurrence='60' or @occurrence='70']" >
             <mods:subject xlink:type="simple">
-                <mods:topic><xsl:value-of select="./p:subfield[@code='a']"/></mods:topic>
+                <mods:topic>
+                    <xsl:if test="starts-with(./p:subfield[@code='7'],'gnd/')">
+                        <xsl:attribute name="valueURI" value="concate('https://d-nb.info/',./p:subfield[@code='7'])"/>
+                        <xsl:attribute name="authority" value="'gnd'"/>
+                    </xsl:if>
+                    <xsl:value-of select="./p:subfield[@code='a' or @code='A']"/>
+                </mods:topic>
             </mods:subject>
         </xsl:for-each>
     </xsl:template>
