@@ -84,8 +84,8 @@
             <mods:subject xlink:type="simple">
                 <mods:topic>
                     <xsl:if test="starts-with(./p:subfield[@code='7'],'gnd/')">
-                        <xsl:attribute name="valueURI" value="concate('https://d-nb.info/',./p:subfield[@code='7'])"/>
-                        <xsl:attribute name="authority" value="'gnd'"/>
+                        <xsl:attribute name="valueURI"><xsl:value-of select="concat('https://d-nb.info/',./p:subfield[@code='7'])"/></xsl:attribute>
+                        <xsl:attribute name="authority"><xsl:value-of select="'gnd'"/></xsl:attribute>
                     </xsl:if>
                     <xsl:value-of select="./p:subfield[@code='a' or @code='A']"/>
                 </mods:topic>
