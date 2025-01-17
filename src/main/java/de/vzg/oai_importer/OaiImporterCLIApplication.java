@@ -235,4 +235,18 @@ public class OaiImporterCLIApplication {
             LOGGER.error("Error while running update job {}", job, e);
         }
     }
+
+    @ShellMethod(key = "update-single-record", value = "Updates a single record")
+    public void updateSingleRecord(@ShellOption() String job, @ShellOption() String recordId) {
+        if (checkJobPresent(job)) {
+            return;
+        }
+
+        LOGGER.info("Running update job {} for record {}", job, recordId);
+        try {
+            jobService.updateSingleDocument(job, recordId);
+        } catch (Exception e) {
+            LOGGER.error("Error while running update job {} for record {}", job, recordId, e);
+        }
+    }
 }

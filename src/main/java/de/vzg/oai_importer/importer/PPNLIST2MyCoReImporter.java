@@ -104,13 +104,11 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
                 }
             }
             // in the new file path we check for the direct file name, because there is no subfolder
-            try {
-                Files.list(newPath)
-                    .filter(p -> {
-                        String fileNameStr = p.getFileName().toString();
-                        return fileNameStr.startsWith(s + "-") || fileNameStr.startsWith(s + " -");
-                    })
-                    .forEach(files::add);
+            try (var list = Files.list(newPath)) {
+                list.filter(p -> {
+                    String fileNameStr = p.getFileName().toString();
+                    return fileNameStr.startsWith(s + "-") || fileNameStr.startsWith(s + " -");
+                }).forEach(files::add);
             } catch (IOException e) {
                 log.error("Error while listing new files for record {}", record.getId(), e);
             }
@@ -325,7 +323,7 @@ public class PPNLIST2MyCoReImporter implements Importer, FileBased {
         Document existingMetadata = restAPIService.getObject(target, objectInfo.getMycoreId());
         List<Element> existingIdentifier = MODSUtil.getRegisteredIdentifier(existingMetadata);
         MODSUtil.insertIdentifiers(metadata, existingIdentifier);
-        MODSUtil.sortMODSInMyCoreObject(metadata);
+        MODSUtil.sortMODSInMetadataElement(metadata);
 
         restAPIService.putObjectMetadata(target, objectInfo.getMycoreId(), metadata);
 

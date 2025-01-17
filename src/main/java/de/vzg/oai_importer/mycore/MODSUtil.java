@@ -35,6 +35,8 @@ public class MODSUtil {
     private static final String CREATED_BY_XPATH = "/mycoreobject/service/servflags/servflag[@type='createdby']";
 
     public static final String MODS_ELEMENT_XPATH = "/mycoreobject/metadata/def.modsContainer/modsContainer/mods:mods";
+
+    public static final String MODS_FROM_METADATA_ELEMENT_XPATH = "/metadata/def.modsContainer/modsContainer/mods:mods";
     private static final String PI_SERVFLAG_XPATH
         = "/mycoreobject/service/servflags[@class='MCRMetaLangText']/servflag[@type='MyCoRe-PI']";
 
@@ -58,7 +60,7 @@ public class MODSUtil {
     private static final String[] ORDER = { "genre", "typeofResource", "titleInfo", "nonSort", "subTitle", "title",
             "partNumber", "partName", "name", "namePart", "displayForm", "role", "affiliation", "originInfo", "place",
             "publisher", "dateIssued", "dateCreated", "dateModified", "dateValid", "dateOther", "edition", "issuance",
-            "frequency", "relatedItem", "language", "physicalDescription", "abstract", "note", "subject",
+            "frequency", "relatedItem", "identifier", "language", "physicalDescription", "abstract", "note", "subject",
             "classification", "location", "shelfLocator", "url", "accessCondition", "part", "extension",
             "recordInfo", };
 
@@ -247,16 +249,30 @@ public class MODSUtil {
             .map(MODSUtil::parseIdentifierFromJsonString)
             .toList();
 
-        return identifierElements.stream()
-            .filter(e -> identifiersToKeep.contains(e.getTextNormalize()))
-            .map(Element::detach)
-            .toList();
+        List<Element> kept = identifierElements.stream()
+                .filter(e -> identifiersToKeep.contains(e.getTextNormalize()))
+                .map(Element::detach)
+                .collect(Collectors.toList());
+
+
+        /* temp code to restore urns
+        identifiersToKeep.stream()
+                .filter(keptIdentifier -> kept.stream().noneMatch(e -> e.getTextNormalize().equals(keptIdentifier)))
+                .forEach(keptIdentifier -> {
+                    Element identifier = new Element("identifier", MODS_NAMESPACE);
+                    identifier.setText(keptIdentifier);
+                    identifier.setAttribute("type", "urn");
+                    kept.add(identifier);
+                });
+         end temp code */
+
+        return kept;
     }
 
-    public static void insertIdentifiers(Document mycoreObject, List<Element> identifiers) {
+    public static void insertIdentifiers(Document metadataElement, List<Element> identifiers) {
         XPathExpression<Element> modsXPath = XPathFactory.instance()
-            .compile(MODS_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
-        Element modsElement = modsXPath.evaluateFirst(mycoreObject);
+            .compile(MODS_FROM_METADATA_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        Element modsElement = modsXPath.evaluateFirst(metadataElement);
         if (modsElement != null) {
 
             for (Element identifier : identifiers) {
@@ -280,6 +296,15 @@ public class MODSUtil {
         XPathExpression<Element> modsXPath = XPathFactory.instance()
                 .compile(MODS_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
         Element modsElement = modsXPath.evaluateFirst(mycoreObject);
+        if (modsElement != null) {
+            sortMODSElement(modsElement);
+        }
+    }
+
+    public static void sortMODSInMetadataElement(Document metadataElement) {
+        XPathExpression<Element> modsXPath = XPathFactory.instance()
+                .compile(MODS_FROM_METADATA_ELEMENT_XPATH, Filters.element(), null, MODS_NAMESPACE);
+        Element modsElement = modsXPath.evaluateFirst(metadataElement);
         if (modsElement != null) {
             sortMODSElement(modsElement);
         }

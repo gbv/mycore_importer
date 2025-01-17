@@ -67,7 +67,6 @@ class MODSUtilTest {
 
             // Verify the output
             List<Element> insertedIdentifiers = document.getRootElement()
-                    .getChild("metadata")
                     .getChild("def.modsContainer")
                     .getChild("modsContainer")
                     .getChild("mods", MODSUtil.MODS_NAMESPACE)
