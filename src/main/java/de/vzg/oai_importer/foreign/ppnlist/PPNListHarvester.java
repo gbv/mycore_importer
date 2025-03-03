@@ -96,7 +96,7 @@ public class PPNListHarvester implements Harvester<PPNListConfiguration> {
             try (var sr = new StringReader(record.getMetadata())) {
                 Document doc = new SAXBuilder().build(sr);
                 Element rootElement = doc.getRootElement();
-                List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(rootElement);
+                List<OffsetDateTime> modifiedList = PicaUtils.getCreatedDate(rootElement);
                 modifiedList.stream().findFirst().ifPresent(record::setDatestamp);
             } catch (IOException | JDOMException e) {
                 log.error("Error while parsing PPN " + ppn, e);

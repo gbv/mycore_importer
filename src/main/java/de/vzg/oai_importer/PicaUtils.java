@@ -79,7 +79,7 @@ public class PicaUtils {
 
                 String time
                     = element.getChildren().stream().filter(e -> e.getAttributeValue("code").equals("t"))
-                        .findFirst().get().getText();
+                        .findFirst().map(Element::getText).orElse("01:00:00.000");
 
                 String date = p0.split(":")[1];
 

@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jdom2.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class MyCoReSynchronizeService {
         boolean hasMore = true;
         query.setLimit(1000);
         query.setOffset(0);
-        List<MyCoReObjectInfo> infos = new ArrayList<>();
+        ConcurrentLinkedQueue<MyCoReObjectInfo> infos = new ConcurrentLinkedQueue<>();
 
         while (hasMore) {
             MyCoReObjectList objects = mycoreRest.getObjects(target, query);
@@ -104,6 +105,6 @@ public class MyCoReSynchronizeService {
         }
 
 
-        return infos;
+        return new ArrayList<>(infos);
     }
 }

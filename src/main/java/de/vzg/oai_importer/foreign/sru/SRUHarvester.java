@@ -136,8 +136,10 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
 
         List<ForeignEntity> result = new ArrayList<>();
 
-        List<LocalDate> days = getDaysSince(oldestDate, source.getNewestDate() == null ?
-                LocalDate.now().plusDays(source.getDayOffset()) : source.getNewestDate());
+        LocalDate until = source.getNewestDate() == null ?
+                LocalDate.now().plusDays(source.getDayOffset()) : source.getNewestDate();
+        List<LocalDate> days = getDaysSince(oldestDate, until);
+        log.info("Fetch from {} to {}", oldestDate, until);
         for (LocalDate day : days) {
             SRUResponse resp = null;
             String link = null;
@@ -203,7 +205,7 @@ public class SRUHarvester implements Harvester<SRUConfiguration> {
 
         foreignEntity.setForeignId(ppn);
 
-        List<OffsetDateTime> modifiedList = PicaUtils.getModifiedDate(picaRecord.getRootElement());
+        List<OffsetDateTime> modifiedList = PicaUtils.getCreatedDate(picaRecord.getRootElement());
         modifiedList.stream().findFirst().ifPresent(foreignEntity::setDatestamp);
 
         foreignEntity.setDeleted(false);
