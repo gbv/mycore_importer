@@ -62,6 +62,20 @@
     </xsl:template>
 
     <xsl:template name="modsDfiFIVSubject" >
+        <xsl:for-each select="./p:datafield[@tag='044L']" >
+            <mods:subject xlink:type="simple">
+                <mods:topic>
+                    <xsl:if test="starts-with(./p:subfield[@code='7'],'gnd/')">
+                        <xsl:attribute name="valueURI"><xsl:value-of select="concat('https://d-nb.info/',./p:subfield[@code='7'])"/></xsl:attribute>
+                        <xsl:attribute name="authority"><xsl:value-of select="'gnd'"/></xsl:attribute>
+                    </xsl:if>
+                    <xsl:value-of select="./p:subfield[@code='a' or @code='A']"/>
+                    <xsl:if test="./p:subfield[@code='D']">
+                        <xsl:value-of select="concat(', ',./p:subfield[@code='D'])"/>
+                    </xsl:if>
+                </mods:topic>
+            </mods:subject>
+        </xsl:for-each>
         <xsl:for-each select="./p:datafield[@tag='045N'][not(@occurrence)]" >
             <mods:subject xlink:type="simple">
                 <xsl:variable name="valueURI" select="concat('http://bartoc.org/en/node/20447#',translate(./p:subfield[@code='a'][text()!=' '],' ',''))"/>
@@ -88,6 +102,9 @@
                         <xsl:attribute name="authority"><xsl:value-of select="'gnd'"/></xsl:attribute>
                     </xsl:if>
                     <xsl:value-of select="./p:subfield[@code='a' or @code='A']"/>
+                    <xsl:if test="./p:subfield[@code='D']">
+                        <xsl:value-of select="concat(', ',./p:subfield[@code='D'])"/>
+                    </xsl:if>
                 </mods:topic>
             </mods:subject>
         </xsl:for-each>
