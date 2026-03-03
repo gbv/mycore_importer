@@ -56,7 +56,7 @@ public class DFIConditions {
             = new PicaUtils.TagCodeValue("237A", "a", "Karikatur");
 
 
-    public static final PicaUtils.TagCodeValue SIEGEL_615_KOMMENTAR_PA_VOLLLTEXT
+    public static final PicaUtils.TagCodeValue SIEGEL_615_KOMMENTAR_PA_VOLLTEXT
             = new PicaUtils.TagCodeValue("237A", "a", "PA-Volltext");
 
 
@@ -66,19 +66,4 @@ public class DFIConditions {
     public static final PicaUtils.TagCodeValue SIEGEL_615_KOMMENTAR_PRESSEMAPPE
             = new PicaUtils.TagCodeValue("237A", "a", "Pressemappe");
 
-
-    public static final PicaUtils.TagCodeValue SIEGEL_LG3_SICHERHEITSKOPIE
-            = new PicaUtils.TagCodeValue("209A", "a", "Sicherheitskopie");
-
-    public static final PicaUtils.TagCodeValue SIEGEL_LG3_PRESSEARTIKEL
-            = new PicaUtils.TagCodeValue("209A", "a", "Presseartikel");
-
-    public static final PicaUtils.TagCodeValue SIEGEL_LG3_KARIKATUR
-            = new PicaUtils.TagCodeValue("209A", "a", "Karikatur");
-
-    public static final PicaUtils.TagCodeValue SIEGEL_LG3_PA_VOLLLTEXT
-            = new PicaUtils.TagCodeValue("209A", "a", "PA-Volltext");
-
-    public static final PicaUtils.TagCodeValue SIEGEL_LG3_PRESSEMAPPE
-            = new PicaUtils.TagCodeValue("209A", "a", "Pressemappe");
 }
