@@ -25,19 +25,14 @@ import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_DFI_AKT
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_DFI_COMPACT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_GFFK;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_KARIKATUR;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PA_VOLLLTEXT;
+import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PA_VOLLTEXT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PRESSEARTIKEL;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PRESSEMAPPE;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_SICHERHEITSKOPIE;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_TONDOKUMENT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_VIDEO;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_ZEITSCHRIFTENAUFSATZ;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_KARIKATUR;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PA_VOLLLTEXT;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PRESSEARTIKEL;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PRESSEMAPPE;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_SICHERHEITSKOPIE;
+
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -116,7 +111,7 @@ public class DFISRURecordFilter implements SRURecordFilter {
                     return true;
                 }
 
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_615_KOMMENTAR_PA_VOLLLTEXT))){
+                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_615_KOMMENTAR_PA_VOLLTEXT))){
                     return true;
                 }
 
@@ -128,37 +123,6 @@ public class DFISRURecordFilter implements SRURecordFilter {
                     return true;
                 }
             }
-
-            required = new java.util.ArrayList<>();
-            required.add(SIEGEL_LG3);
-            if(day != null) {
-                PicaUtils.TagCodeValue date = new PicaUtils.TagCodeValue("201B", "0",
-                        day.format(DateTimeFormatter.ofPattern("dd-MM-yy")));
-                required.add(date);
-
-            }
-            if(PicaUtils.matchingSubRecord(subRecord, required)) {
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_SICHERHEITSKOPIE))){
-                    return true;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PRESSEARTIKEL))){
-                    return true;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_KARIKATUR))){
-                    return true;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PA_VOLLLTEXT))){
-                    return true;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PRESSEMAPPE))) {
-                    return true;
-                }
-            }
-
         }
 
 

@@ -25,19 +25,13 @@ import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_DFI_AKT
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_DFI_COMPACT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_GFFK;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_KARIKATUR;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PA_VOLLLTEXT;
+import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PA_VOLLTEXT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PRESSEARTIKEL;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_PRESSEMAPPE;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_SICHERHEITSKOPIE;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_TONDOKUMENT;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_VIDEO;
 import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_615_KOMMENTAR_ZEITSCHRIFTENAUFSATZ;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_KARIKATUR;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PA_VOLLLTEXT;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PRESSEARTIKEL;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_PRESSEMAPPE;
-import static de.vzg.oai_importer.dfi.DFIConditions.SIEGEL_LG3_SICHERHEITSKOPIE;
 
 import java.util.List;
 
@@ -112,7 +106,7 @@ public class DFIFileRightsDetector implements FileRightsDetector {
                     return false;
                 }
 
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_615_KOMMENTAR_PA_VOLLLTEXT))){
+                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_615_KOMMENTAR_PA_VOLLTEXT))){
                     log.info("PA-Volltext found");
                     return false;
                 }
@@ -123,34 +117,6 @@ public class DFIFileRightsDetector implements FileRightsDetector {
                 }
 
                 if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_615_KOMMENTAR_PRESSEMAPPE))) {
-                    log.info("Pressemappe found");
-                    return false;
-                }
-            }
-
-
-            if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3))) {
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_SICHERHEITSKOPIE))){
-                    log.info("Sicherheitskopie found");
-                    return false;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PRESSEARTIKEL))){
-                    log.info("Presseartikel found");
-                    return false;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_KARIKATUR))){
-                    log.info("Karikatur found");
-                    return false;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PA_VOLLLTEXT))){
-                    log.info("PA-Volltext found");
-                    return false;
-                }
-
-                if(PicaUtils.matchingSubRecord(subRecord, List.of(SIEGEL_LG3_PRESSEMAPPE))) {
                     log.info("Pressemappe found");
                     return false;
                 }
