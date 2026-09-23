@@ -16,9 +16,9 @@ import de.vzg.oai_importer.mycore.MyCoReAuthenticationProvider;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true)
+    securedEnabled = true,
+    jsr250Enabled = true,
+    prePostEnabled = true)
 @Configuration
 public class SecurityConfigurer {
 
@@ -27,10 +27,9 @@ public class SecurityConfigurer {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder
-            = http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+            http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(myCoReAuthenticationProvider);
-
 
         return authenticationManagerBuilder.build();
     }
@@ -38,17 +37,16 @@ public class SecurityConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**"),
-                                        AntPathRequestMatcher.antMatcher("/")).permitAll() // Erlaubt allen Nutzern den Zugriff auf WebJars und auf die Startseite
-                                .anyRequest().authenticated() // Alle anderen Anfragen müssen authentifiziert werden
-                )
-                .formLogin(formLogin ->
-                        formLogin.loginPage("/login").permitAll() // Konfiguration für das Formular-Login
-                ).logout(logout ->
-                        logout.logoutUrl("/logout").permitAll() // Konfiguration für das Logout
-                );
+            .authorizeRequests(authorizeRequests -> authorizeRequests
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**"),
+                    AntPathRequestMatcher.antMatcher("/css/**"),
+                    AntPathRequestMatcher.antMatcher("/"))
+                .permitAll() // Erlaubt allen Nutzern den Zugriff auf WebJars, das Stylesheet und auf die Startseite
+                .anyRequest().authenticated() // Alle anderen Anfragen müssen authentifiziert werden
+            )
+            .formLogin(formLogin -> formLogin.loginPage("/login").permitAll() // Konfiguration für das Formular-Login
+            ).logout(logout -> logout.logoutUrl("/logout").permitAll() // Konfiguration für das Logout
+            );
 
         return http.build();
     }

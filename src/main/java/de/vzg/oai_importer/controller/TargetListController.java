@@ -3,7 +3,6 @@ package de.vzg.oai_importer.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,15 +44,13 @@ public class TargetListController {
     @RequestMapping("/{targetID}/")
     @PreAuthorize("hasAnyAuthority('target-' + #targetID)")
     public String showTarget(@PathVariable String targetID, Model model,
-                             @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "100") int size) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size) {
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetID);
         Page<MyCoReObjectInfo> objects = objectInfoRepository.findByRepository(target.getUrl(),
-                Pageable.ofSize(size).withPage(page));
+            Pageable.ofSize(size).withPage(page));
         model.addAttribute("target", targetID);
         model.addAttribute("records", objects);
-        model.addAttribute("pages", IntStream.rangeClosed(1, objects.getTotalPages())
-                .boxed());
         return "target_objects";
     }
 
@@ -65,7 +62,6 @@ public class TargetListController {
         List<MyCoReObjectInfo> objects = synchronizeService.synchronize(target);
         model.addAttribute("target", targetID);
         model.addAttribute("records", new PageImpl<>(objects));
-        model.addAttribute("pages", IntStream.rangeClosed(1, 1).boxed());
         return "target_objects";
     }
 }

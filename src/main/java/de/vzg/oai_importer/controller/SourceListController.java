@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -40,7 +38,6 @@ public class SourceListController {
     @Autowired
     private ApplicationContext applicationContext;
 
-
     @GetMapping("/")
     public String listSources(Model model) {
         HashMap<String, Configuration> sourceMap = configuration.getCombinedConfig();
@@ -49,36 +46,32 @@ public class SourceListController {
         return "sources_list_config";
     }
 
-
     @GetMapping("/{source}/")
     @PreAuthorize("hasAnyAuthority('source-' + #sourceId)")
     public String showSource(@PathVariable("source") String sourceId,
-                             Model model,
-                             @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "100") int size) {
+        Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size) {
         Configuration source = configuration.getCombinedConfig().get(sourceId);
 
-
-        Page<ForeignEntity> records
-                = recordRepository.findAllByConfigIdAndIsDeletedOrderByDatestampDesc(sourceId, false,
+        Page<ForeignEntity> records =
+            recordRepository.findAllByConfigIdAndIsDeletedOrderByDatestampDesc(sourceId, false,
                 Pageable.ofSize(size).withPage(page));
         model.addAttribute("source", sourceId);
         model.addAttribute("records", records);
-        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
-                .boxed());
         return "source_records";
     }
 
     @GetMapping("/{source}/update")
     @PreAuthorize("hasAnyAuthority('source-' + #sourceId)")
-    public String updateSource(@PathVariable("source") String sourceId, Model model) throws IOException, URISyntaxException {
+    public String updateSource(@PathVariable("source") String sourceId, Model model)
+        throws IOException, URISyntaxException {
         Configuration source = configuration.getCombinedConfig().get(sourceId);
 
         Harvester<Configuration> bean = (Harvester<Configuration>) applicationContext.getBean(source.getHarvester());
         List<ForeignEntity> updatedRecords = bean.update(sourceId, source, false);
         model.addAttribute("records", new PageImpl<ForeignEntity>(updatedRecords));
         model.addAttribute("source", sourceId);
-        model.addAttribute("pages", Stream.of(1));
         return "source_records";
     }
 }
