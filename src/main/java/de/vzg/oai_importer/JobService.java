@@ -334,6 +334,32 @@ public class JobService {
         }
     }
 
+    /**
+     * Imports the given records of the job one after another. A failing record is logged and does not stop the
+     * import of the remaining records.
+     *
+     * @param jobID the job to import with
+     * @param recordIDs the foreign ids of the records to import
+     * @return the foreign ids of the records that could not be imported
+     */
+    public List<String> importDocuments(String jobID, List<String> recordIDs) {
+        List<String> errorRecords = new ArrayList<>();
+        AtomicLong remaining = new AtomicLong(recordIDs.size());
+        for (String recordID : recordIDs) {
+            try {
+                importSingleDocument(jobID, recordID);
+            } catch (Exception e) {
+                log.error("Error while importing record {}", recordID, e);
+                errorRecords.add(recordID);
+            }
+            log.info("{} selected records remaining", remaining.decrementAndGet());
+        }
+        if (!errorRecords.isEmpty()) {
+            log.info("Records with errors: {}", errorRecords);
+        }
+        return errorRecords;
+    }
+
     public void updateSingleDocument(String jobID, String recordID) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String sourceConfigId = jobConfig.getSourceConfigId();

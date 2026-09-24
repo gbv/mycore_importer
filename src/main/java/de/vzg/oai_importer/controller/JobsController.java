@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -131,6 +132,21 @@ public class JobsController {
         jobService.importSingleDocument(jobID, recordID);
 
         redirectAttributes.addAttribute("success", "true");
+
+        return "redirect:/jobs/" + jobID + "/update/";
+    }
+
+    @PostMapping("/{jobID}/importSelected")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
+    public String importSelected(@PathVariable("jobID") String jobID,
+        @RequestParam(value = "recordID", required = false) List<String> recordIDs,
+        RedirectAttributes redirectAttributes) {
+        if (recordIDs == null || recordIDs.isEmpty()) {
+            return "redirect:/jobs/" + jobID + "/";
+        }
+
+        List<String> errorRecords = jobService.importDocuments(jobID, recordIDs);
+        redirectAttributes.addAttribute("success", String.valueOf(errorRecords.isEmpty()));
 
         return "redirect:/jobs/" + jobID + "/update/";
     }
