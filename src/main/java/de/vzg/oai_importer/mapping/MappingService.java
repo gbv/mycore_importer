@@ -1,5 +1,6 @@
 package de.vzg.oai_importer.mapping;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +28,19 @@ public class MappingService {
         return mappingGroupRepository.findAll(pageable);
     }
 
+    public Page<MappingGroup> getMappingGroupsByTargets(Collection<String> targets, int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        return mappingGroupRepository.findByTargetIn(targets, pageable);
+    }
 
     public MappingGroup getGroup(Long id) {
-        return mappingGroupRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("No group with id " + id));
+        return mappingGroupRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("No group with id " + id));
     }
 
     public MappingGroup getGroupByName(String name) {
-        return mappingGroupRepository.findByName(name).orElseThrow(() -> new IllegalArgumentException("No group with name " + name));
+        return mappingGroupRepository.findByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("No group with name " + name));
     }
 
     public List<MappingGroup> getGroupsByTarget(String target) {
@@ -83,7 +90,8 @@ public class MappingService {
     }
 
     public Mapping getMapping(Long mid) {
-        return mappingRepository.findById(mid).orElseThrow(() -> new IllegalArgumentException("No mapping with id " + mid));
+        return mappingRepository.findById(mid)
+            .orElseThrow(() -> new IllegalArgumentException("No mapping with id " + mid));
     }
 
     public void deleteMapping(Long mid) {
