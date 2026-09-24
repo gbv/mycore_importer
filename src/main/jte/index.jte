@@ -9,20 +9,22 @@ content = @`
             Administrator mitgeteilt.</p>
 
         <h2>Quellen</h2>
-        <p>Quellen sind Datenbanken, aus denen Informationen bezogen werden. Durch Klicken auf 'Anzeigen' können
-            Details zu den Quelleneinträgen eingesehen werden. Zugriff auf die Einträge besteht nur, wenn das
-            Nutzerkonto einer mit der Quelle verknüpften Anwendung zugeordnet ist. 'Aktualisieren' bewirkt das
+        <p>Quellen sind Datenbanken, aus denen Informationen bezogen werden. Angezeigt werden nur Quellen, die über
+            einen Vorgang mit der angemeldeten Anwendung verknüpft sind. Durch Klicken auf 'Anzeigen' können
+            Details zu den Quelleneinträgen eingesehen werden. 'Aktualisieren' bewirkt das
             Einlesen neuer Daten aus der Quelle in die Datenbank.</p>
 
         <h2>Ziele</h2>
-        <p>Ziele beziehen sich auf MyCoRe Anwendungen, in die Daten geschrieben werden. 'Anzeigen' ermöglicht das
+        <p>Ziele beziehen sich auf MyCoRe Anwendungen, in die Daten geschrieben werden. Angezeigt wird nur
+            das Ziel der angemeldeten Anwendung. 'Anzeigen' ermöglicht das
             Betrachten von Daten, die bereits in die Ziele importiert wurden. Die Datenaktualisierung erfolgt durch
             Klicken auf 'Aktualisieren', was das Einlesen der Daten aus dem Ziel in die Datenbank zur Folge hat.
             Sichtbarkeit und Aktualisierung von Einträgen setzt voraus, dass das Nutzerkonto zur entsprechenden
             Zielanwendung gehört.</p>
 
         <h2>Vorgänge</h2>
-        <p>Vorgänge sind Verknüpfungen zwischen Quellen und Zielen. 'Anzeigen' ermöglicht das Betrachten von
+        <p>Vorgänge sind Verknüpfungen zwischen Quellen und Zielen. Angezeigt werden nur Vorgänge, deren Ziel
+            die angemeldete Anwendung ist. 'Anzeigen' ermöglicht das Betrachten von
             Einträgen, die noch nicht in das Ziel importiert wurden. Diese Einträge sind sichtbar, wenn das
             Nutzerkonto zur Zielanwendung gehört. 'Zuordnung Prüfen' erlaubt die Überprüfung der Importierbarkeit
             von Daten und zeigt erforderliche Zuweisungen an. 'Import starten' initiiert den Import der Daten, wobei
@@ -31,7 +33,8 @@ content = @`
         <h2>Zuordnung</h2>
         <p>Zuordnungen sind Verbindungen zwischen Klassifikationen aus Quellen und Zielen, wie beispielsweise
             'Zenodo Typ: Interview' und 'MyCoRe Genre: interview'. Diese
-            werden in Gruppen nach Quell- und Zielklassifikationen organisiert. Bearbeitungen von Zuordnungsgruppen
+            werden in Gruppen nach Quell- und Zielklassifikationen organisiert. Angezeigt werden nur Gruppen,
+            deren Ziel die angemeldete Anwendung ist. Bearbeitungen von Zuordnungsgruppen
             sind ausschließlich durch den
             Administrator möglich.</p>
         <p>

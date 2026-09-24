@@ -27,7 +27,7 @@ content = @`
             <tbody>
             @if(groups.isEmpty())
                 <tr>
-                    <td class="empty" colspan="5">Noch keine Zuordnungsgruppen angelegt.</td>
+                    <td class="empty" colspan="5">Für Ihre Anwendung sind noch keine Zuordnungsgruppen angelegt.</td>
                 </tr>
             @endif
             @for(MappingGroup mappingGroup : groups.getContent())

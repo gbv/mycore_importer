@@ -90,8 +90,8 @@ public class JobService {
                 .detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
             toUpdate.forEach(pair -> foreignEntities.add(pair.first()));
         } else {
-            Page<ForeignEntity> toImport
-                = importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+            Page<ForeignEntity> toImport =
+                importerService.detectImportableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
             toImport.forEach(foreignEntities::add);
         }
 
@@ -102,7 +102,9 @@ public class JobService {
 
         foreignEntities.forEach(record -> {
             List<Mapping> missingMappings = importer.checkMapping(target, record);
-            result.put(record, missingMappings);
+            if (!missingMappings.isEmpty()) {
+                result.put(record, missingMappings);
+            }
         });
 
         return result;
@@ -147,7 +149,7 @@ public class JobService {
         });
     }
 
-    public Page<Map.Entry<ForeignEntity, List<String>>> listImportableFiles(String name, Pageable pageable){
+    public Page<Map.Entry<ForeignEntity, List<String>>> listImportableFiles(String name, Pageable pageable) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
@@ -156,8 +158,8 @@ public class JobService {
 
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
-                = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
+            importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
 
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
@@ -169,7 +171,7 @@ public class JobService {
                 MyCoReObjectInfo myCoReObjectInfo = pair.second();
 
                 log.info("Checking record {} and mycore object {}", record.getForeignId(),
-                        myCoReObjectInfo.getMycoreId());
+                    myCoReObjectInfo.getMycoreId());
 
                 try {
                     return Map.entry(record, e.listImportableFiles(target, record));
@@ -214,8 +216,8 @@ public class JobService {
 
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
-            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
+            importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
 
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
@@ -253,8 +255,8 @@ public class JobService {
 
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
-            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
+            importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), pageable);
 
         Importer importer = context.getBean(jobConfig.getImporter(), Importer.class);
         importer.setConfig(jobConfig.getImporterConfig());
@@ -289,8 +291,8 @@ public class JobService {
         MyCoReTargetConfiguration target = configuration.getTargets().get(targetConfigId);
         Configuration source = configuration.getCombinedConfig().get(sourceConfigId);
 
-        var updatableEntities
-            = importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
+        var updatableEntities =
+            importerService.detectUpdateableEntities(sourceConfigId, source, target.getUrl(), Pageable.unpaged());
 
         List<String> errorRecords = new ArrayList<>();
 
@@ -313,7 +315,8 @@ public class JobService {
         log.info("Records with errors: {}", errorRecords);
     }
 
-    public void importSingleDocument(String jobID, String recordID) throws IOException, URISyntaxException, TransformerException {
+    public void importSingleDocument(String jobID, String recordID)
+        throws IOException, URISyntaxException, TransformerException {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(jobID);
         String sourceConfigId = jobConfig.getSourceConfigId();
 

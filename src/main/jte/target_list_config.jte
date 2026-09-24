@@ -18,8 +18,7 @@ lead = "MyCoRe Anwendungen, in die Daten geschrieben werden.", content = @`
             <tbody>
             @if(targets == null || targets.isEmpty())
                 <tr>
-                    <td class="empty" colspan="3">Keine Ziele konfiguriert. Ziele werden in der
-                        <span class="identifier">application.properties</span> angelegt.</td>
+                    <td class="empty" colspan="3">Für Ihre Anwendung sind keine Ziele eingerichtet.</td>
                 </tr>
             @else
                 @for(Map.Entry<String,MyCoReTargetConfiguration> target : targets.entrySet())
