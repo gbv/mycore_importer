@@ -1,5 +1,6 @@
 @import org.springframework.data.domain.Page
 @import de.vzg.oai_importer.ImporterService
+@import de.vzg.oai_importer.JobResult
 @import de.vzg.oai_importer.foreign.jpa.ForeignEntity
 @import de.vzg.oai_importer.mycore.jpa.MyCoReObjectInfo
 @import static de.vzg.oai_importer.view.UrlHelper.url
@@ -9,7 +10,7 @@
 
 @param Page<ImporterService.Pair<ForeignEntity,MyCoReObjectInfo>> records
 @param String jobID
-@param String success = null
+@param JobResult result = null
 
 @template.layout.page(heading = "Importierte Dokumente",
 lead = "Vorgang " + jobID + ", " + count(records.getTotalElements(), "Datensatz", "Datensätze")
@@ -21,11 +22,21 @@ actions = @`
     <a class="btn btn-primary" href="${url("/jobs/" + jobID + "/update/update")}">Alle aktualisieren</a>
 `,
 content = @`
-    @if("true".equals(success))
-        <div class="notice notice--ok">Import erfolgreich.</div>
-    @endif
-    @if("false".equals(success))
-        <div class="notice notice--bad">Import fehlgeschlagen. Details stehen im Protokoll der Anwendung.</div>
+    @if(result != null)
+        !{var isImport = result.action() == JobResult.Action.IMPORT;}
+        !{var action = isImport ? "Import" : "Aktualisierung";}
+        !{var total = count(result.total(), "Datensatz", "Datensätze");}
+        @if(result.isSuccess())
+            <div class="notice notice--ok">
+                ${action} erfolgreich, ${total} ${isImport ? "importiert" : "aktualisiert"}.
+            </div>
+        @else
+            <div class="notice notice--bad">
+                ${action} bei ${result.errorRecords().size()} von ${total} fehlgeschlagen.
+                Details stehen im Protokoll der Anwendung.
+                <div class="identifier">${String.join(", ", result.errorRecords())}</div>
+            </div>
+        @endif
     @endif
     <div class="tablewrap">
         <table class="data">

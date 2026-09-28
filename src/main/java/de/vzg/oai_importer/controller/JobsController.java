@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.TransformerException;
-
 import org.mycore.oai.pmh.OAIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import de.vzg.oai_importer.AuthorityFilter;
 import de.vzg.oai_importer.ImporterConfiguration;
 import de.vzg.oai_importer.ImporterService;
+import de.vzg.oai_importer.JobResult;
 import de.vzg.oai_importer.JobService;
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
@@ -90,15 +89,11 @@ public class JobsController {
     public String showUpdateJob(@PathVariable("jobID") String jobID,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "100") int size,
-        Model model,
-        @RequestParam(value = "success", required = false) String success) {
+        Model model) {
         Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
             jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
-        if (success != null && (success.equals("true") || success.equals("false"))) {
-            model.addAttribute("success", success);
-        }
 
         return "job_update";
     }
@@ -128,12 +123,8 @@ public class JobsController {
     @RequestMapping("/{jobID}/import/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID,
-        RedirectAttributes redirectAttributes) throws IOException, URISyntaxException, TransformerException {
-        jobService.importSingleDocument(jobID, recordID);
-
-        redirectAttributes.addAttribute("success", "true");
-
-        return "redirect:/jobs/" + jobID + "/update/";
+        RedirectAttributes redirectAttributes) {
+        return showResult(jobID, jobService.importDocuments(jobID, List.of(recordID)), redirectAttributes);
     }
 
     @PostMapping("/{jobID}/importSelected")
@@ -145,40 +136,41 @@ public class JobsController {
             return "redirect:/jobs/" + jobID + "/";
         }
 
-        List<String> errorRecords = jobService.importDocuments(jobID, recordIDs);
-        redirectAttributes.addAttribute("success", String.valueOf(errorRecords.isEmpty()));
-
-        return "redirect:/jobs/" + jobID + "/update/";
+        return showResult(jobID, jobService.importDocuments(jobID, recordIDs), redirectAttributes);
     }
 
     @RequestMapping("/{jobID}/update/update")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String updateJob(@PathVariable("jobID") String jobID,
         RedirectAttributes redirectAttributes) {
-        jobService.runUpdateJob(jobID);
-        redirectAttributes.addAttribute("success", "true");
-
-        return "redirect:/jobs/" + jobID + "/update/";
+        return showResult(jobID, jobService.runUpdateJob(jobID), redirectAttributes);
     }
 
     @RequestMapping("/{jobID}/update/{recordID}")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String updateJob(@PathVariable("jobID") String jobID, @PathVariable("recordID") String recordID,
         RedirectAttributes redirectAttributes) {
-        jobService.updateSingleDocument(jobID, recordID);
-
-        redirectAttributes.addAttribute("success", "true");
-
-        return "redirect:/jobs/" + jobID + "/update/";
+        return showResult(jobID, jobService.updateDocuments(jobID, List.of(recordID)), redirectAttributes);
     }
 
     @RequestMapping("/{jobID}/import")
     @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
-    public String runJob(@PathVariable("jobID") String jobID, Model model)
+    public String runJob(@PathVariable("jobID") String jobID, RedirectAttributes redirectAttributes)
         throws IOException, URISyntaxException, OAIException {
-        model.addAttribute("jobID", jobID);
-        jobService.runJob(jobID);
-        return "job_test";
+        return showResult(jobID, jobService.runJob(jobID), redirectAttributes);
+    }
+
+    /**
+     * Redirects to the imported documents of the job, which then report the outcome of the job.
+     *
+     * @param jobID the job that was run
+     * @param result the outcome of the job
+     * @param redirectAttributes carries the outcome over the redirect
+     * @return the redirect to the imported documents of the job
+     */
+    private String showResult(String jobID, JobResult result, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("result", result);
+        return "redirect:/jobs/" + jobID + "/update/";
     }
 
 }
