@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import de.vzg.oai_importer.AuthorityFilter;
 import de.vzg.oai_importer.ImporterConfiguration;
@@ -45,6 +48,18 @@ public class MappingController {
 
         model.addAttribute("groups", customerPage);
         return "mapping/mapping_groups";
+    }
+
+    @RequestMapping(value = "/groups/classifications/", method = RequestMethod.GET)
+    @PreAuthorize(value = "hasAnyAuthority('mapping-admin')")
+    @ResponseBody
+    public List<MyCoReRestAPIService.ClassificationInfo> listClassifications(@RequestParam("target") String target)
+        throws IOException, URISyntaxException {
+        MyCoReTargetConfiguration targetConfiguration = configuration.getTargets().get(target);
+        if (targetConfiguration == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown target " + target);
+        }
+        return myCoReRestAPIService.getClassifications(targetConfiguration);
     }
 
     @RequestMapping(value = "/groups/{id}/edit/", method = RequestMethod.GET)

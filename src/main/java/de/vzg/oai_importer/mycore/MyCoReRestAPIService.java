@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -226,6 +227,30 @@ public class MyCoReRestAPIService {
         return client.getFiles(url, objectID, derivativeID, authenticate);
     }
 
+    /**
+     * Lists all classifications of the target repository.
+     */
+    public List<ClassificationInfo> getClassifications(MyCoReTargetConfiguration target)
+        throws IOException, URISyntaxException {
+        MyCoReV2JDOMClient client = new MyCoReV2JDOMClient(new ApacheHttpClientTransferLayer());
+
+        Document classifications = client.getClassifications(target.getUrl());
+        return classifications.getRootElement().getChildren().stream()
+            .filter(element -> element.getAttributeValue("ID") != null)
+            .map(element -> {
+                String id = element.getAttributeValue("ID");
+                List<Element> labels = element.getChildren("label");
+                String label = labels.stream()
+                    .filter(l -> "de".equals(l.getAttributeValue("lang", Namespace.XML_NAMESPACE)))
+                    .findFirst().map(l -> l.getAttributeValue("text"))
+                    .or(() -> labels.stream().findFirst().map(l -> l.getAttributeValue("text")))
+                    .orElse(id);
+                return new ClassificationInfo(id, label);
+            })
+            .sorted(Comparator.comparing(ClassificationInfo::id))
+            .toList();
+    }
+
     public List<Category> getClassificationCategories(MyCoReTargetConfiguration target, String classId)
         throws IOException, URISyntaxException {
         String url = target.getUrl();
@@ -249,6 +274,9 @@ public class MyCoReRestAPIService {
     }
 
     record TokenValidation(String token, Instant expires) {
+    }
+
+    public record ClassificationInfo(String id, String label) {
     }
 
     public record Category(String classId, String id, String label) {

@@ -40,7 +40,9 @@ public class MappingService {
 
     public MappingGroup getGroupByName(String name) {
         return mappingGroupRepository.findByName(name)
-            .orElseThrow(() -> new IllegalArgumentException("No group with name " + name));
+            .orElseThrow(() -> new IllegalArgumentException(name == null || name.isBlank()
+                ? "Für den Importer ist keine Zuordnungsgruppe konfiguriert."
+                : "Die Zuordnungsgruppe '" + name + "' existiert noch nicht. Bitte unter Zuordnung anlegen."));
     }
 
     public List<MappingGroup> getGroupsByTarget(String target) {
