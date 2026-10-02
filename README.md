@@ -60,6 +60,17 @@ importer.zenodo-sources.source-id.url=https://zenodo.org/
 importer.zenodo-sources.source-id.community=fli
 ```
 The url is the base url of the Zenodo instance. The community is the community id of the community to import from.
+This source creates one entry per Zenodo version.
+
+#### Zenodo (Concepts)
+This source creates one entry per Zenodo concept (parent record) instead of one entry per version.
+The metadata is always taken from the latest version, a new version updates the existing entry.
+Use it together with the `ZenodoConcept2MyCoReImporter`.
+
+```properties
+importer.zenodo-concept-sources.source-id.url=https://zenodo.org/
+importer.zenodo-concept-sources.source-id.community=fli
+```
 
 #### PPN-List
 The source configuration is used to configure the PPN-List to import the data from.
@@ -133,6 +144,8 @@ The `Zenodo2MyCoReImporter` supports the following configuration options:
 | role    | The name of the mapping group which will be used to map the zenodo type to a specific mycore role                                                    |
 | status  | The status of the objects that will be imported.                                                                                                     |
 
+The `ZenodoConcept2MyCoReImporter` supports the same options. It imports one MyCoRe object per Zenodo concept without
+a grouping object and uses the concept DOI as DOI of the object.
 
 The `PPNList2MyCoReImporter` supports the following configuration options:
 

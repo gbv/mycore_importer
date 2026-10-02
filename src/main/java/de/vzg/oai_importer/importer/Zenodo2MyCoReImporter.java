@@ -119,7 +119,7 @@ public class Zenodo2MyCoReImporter implements Importer {
     @Autowired
     MappingService mappingService;
 
-    private Map<String, String> config;
+    protected Map<String, String> config;
 
     private static void handleTitle(ZenodoRestRecord restRecord, Mods.Builder mods) {
         String title = restRecord.getTitle();
@@ -129,7 +129,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         }
     }
 
-    private static TitleInfo getTitleInfo(String title) {
+    protected static TitleInfo getTitleInfo(String title) {
         return TitleInfo.builder().addContent(Title.builder().content(title).build()).build();
     }
 
@@ -197,7 +197,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         mods.addContent(builder.build());
     }
 
-    private static RecordInfo.Builder getRecordInfoBuilder(String foreignId, String configId) {
+    protected static RecordInfo.Builder getRecordInfoBuilder(String foreignId, String configId) {
         RecordInfo.Builder builder = RecordInfo.builderForRecordInfo();
 
         builder.addContent(RecordIdentifier.builderForRecordIdentifier().content(foreignId).build());
@@ -207,7 +207,7 @@ public class Zenodo2MyCoReImporter implements Importer {
         return builder;
     }
 
-    private static void handleDOI(ZenodoRestRecord restRecord, Mods.Builder mods) {
+    protected void handleDOI(ZenodoRestRecord restRecord, Mods.Builder mods) {
         String doi = restRecord.getMetadata().getDoi();
         if (doi != null) {
             mods.addContent(Identifier.builderForIdentifier().content(doi).type("doi").build());
@@ -584,6 +584,25 @@ public class Zenodo2MyCoReImporter implements Importer {
             mods.addContent(location.build());
         }
 
+        handleGrouping(target, recordEntity, restRecord, mods);
+
+        StringWriter xmlStringWriter = new StringWriter();
+        StreamResult streamResult = new StreamResult(xmlStringWriter);
+        try {
+            MODSXMLProcessor.getInstance().marshal(mods.build(), streamResult, null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        org.jdom2.Document document = MODSUtil.wrapInMyCoReFrame(xmlStringWriter.toString(), config.get("base-id") ,getStatus());
+        return document;
+    }
+
+    /**
+     * Adds a related item to the grouping object which bundles all versions of the record.
+     */
+    protected void handleGrouping(MyCoReTargetConfiguration target, ForeignEntity recordEntity,
+        ZenodoRestRecord restRecord, Mods.Builder mods) {
         ZenodoRestRelations relations = restRecord.getMetadata().getRelations();
         if (relations != null) {
             List<ZenodoRestVersion> version = relations.getVersion();
@@ -636,17 +655,6 @@ public class Zenodo2MyCoReImporter implements Importer {
             }
 
         }
-
-        StringWriter xmlStringWriter = new StringWriter();
-        StreamResult streamResult = new StreamResult(xmlStringWriter);
-        try {
-            MODSXMLProcessor.getInstance().marshal(mods.build(), streamResult, null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        org.jdom2.Document document = MODSUtil.wrapInMyCoReFrame(xmlStringWriter.toString(), config.get("base-id") ,getStatus());
-        return document;
     }
 
     private boolean handleLicense(ZenodoRestRecord restRecord, Mods.Builder mods) {

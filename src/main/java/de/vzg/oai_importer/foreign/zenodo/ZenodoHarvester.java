@@ -81,7 +81,9 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
         while (remainingRequests.get() > 0 && !abort) {
             parameters.put("page", List.of(String.valueOf(currentPage.incrementAndGet())));
             parameters.put("size", List.of(String.valueOf(hitsPerPage)));
-            parameters.put("all_versions", List.of("true"));
+            if (isAllVersions()) {
+                parameters.put("all_versions", List.of("true"));
+            }
             HttpGet get = new HttpGet(buildURIComplete(source.getUrl() + "api/records", parameters));
             log.info("Requesting page {} of {} with url {}", currentPage.get(), maxPages.get() == -1 ? "?" : maxPages.get(), get.getUri());
             get.addHeader("Accept", "application/json");
@@ -112,6 +114,22 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
         }
 
         return entities;
+    }
+
+    /**
+     * @return true if every version of a Zenodo record is harvested, false if only the latest version of each
+     *         record is harvested
+     */
+    protected boolean isAllVersions() {
+        return true;
+    }
+
+    /**
+     * @param hit a single hit of the Zenodo search response
+     * @return the id which is used to identify the hit in the local database
+     */
+    protected String getForeignId(ObjectNode hit) {
+        return String.valueOf(hit.get("id").asInt());
     }
 
     private static Header getSingleHeader(ClassicHttpResponse response, String headerName) {
@@ -150,7 +168,7 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
             String pureMetadata = prettyPrinter.writeValueAsString(hit);
 
             String modifiedText = hit.get("modified").asText();
-            String id = String.valueOf(hit.get("id").asInt());
+            String id = getForeignId(hit);
             Instant modified =Instant.parse(modifiedText);
 
             if (modified.isAfter(datestamp.toInstant())) {

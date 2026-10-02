@@ -11,6 +11,7 @@ import de.vzg.oai_importer.foreign.Configuration;
 import de.vzg.oai_importer.foreign.oai.OAISourceConfiguration;
 import de.vzg.oai_importer.foreign.ppnlist.PPNListConfiguration;
 import de.vzg.oai_importer.foreign.sru.SRUConfiguration;
+import de.vzg.oai_importer.foreign.zenodo.ZenodoConceptSourceConfiguration;
 import de.vzg.oai_importer.foreign.zenodo.ZenodoSourceConfiguration;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
 import lombok.Data;
@@ -22,6 +23,8 @@ public class ImporterConfiguration {
     private Map<String, OAISourceConfiguration> oaiSources;
 
     private Map<String, ZenodoSourceConfiguration> zenodoSources;
+
+    private Map<String, ZenodoConceptSourceConfiguration> zenodoConceptSources;
 
     private Map<String, PPNListConfiguration> ppnLists;
 
@@ -38,6 +41,9 @@ public class ImporterConfiguration {
         Map<String, ZenodoSourceConfiguration> zenodoSources = Optional.ofNullable(getZenodoSources())
                 .orElseGet(Collections::emptyMap);
 
+        Map<String, ZenodoConceptSourceConfiguration> zenodoConceptSources
+            = Optional.ofNullable(getZenodoConceptSources()).orElseGet(Collections::emptyMap);
+
         Map<String, PPNListConfiguration> ppnLists = Optional.ofNullable(getPpnLists())
                 .orElseGet(Collections::emptyMap);
 
@@ -48,6 +54,7 @@ public class ImporterConfiguration {
 
         sourceMap.putAll(oaiSources);
         sourceMap.putAll(zenodoSources);
+        sourceMap.putAll(zenodoConceptSources);
         sourceMap.putAll(ppnLists);
         sourceMap.putAll(sruSources);
 
