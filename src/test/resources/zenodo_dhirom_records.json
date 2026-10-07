@@ -1,0 +1,5303 @@
+[
+  {
+    "id": "21439008",
+    "created": "2026-07-19T08:08:47.465646+00:00",
+    "updated": "2026-07-19T08:08:47.677598+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/21439008",
+      "self_html": "https://zenodo.org/records/21439008",
+      "preview_html": "https://zenodo.org/records/21439008?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.21439008",
+      "self_doi": "https://doi.org/10.5281/zenodo.21439008",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.21439008",
+      "reserve_doi": "https://zenodo.org/api/records/21439008/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/15267530",
+      "parent_html": "https://zenodo.org/records/15267530",
+      "parent_doi": "https://doi.org/10.5281/zenodo.15267530",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15267530",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:21439008/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:21439008/sequence/default",
+      "files": "https://zenodo.org/api/records/21439008/files",
+      "media_files": "https://zenodo.org/api/records/21439008/media-files",
+      "archive": "https://zenodo.org/api/records/21439008/files-archive",
+      "archive_media": "https://zenodo.org/api/records/21439008/media-files-archive",
+      "latest": "https://zenodo.org/api/records/21439008/versions/latest",
+      "latest_html": "https://zenodo.org/records/21439008/latest",
+      "versions": "https://zenodo.org/api/records/21439008/versions",
+      "draft": "https://zenodo.org/api/records/21439008/draft",
+      "access_links": "https://zenodo.org/api/records/21439008/access/links",
+      "access_grants": "https://zenodo.org/api/records/21439008/access/grants",
+      "access_users": "https://zenodo.org/api/records/21439008/access/users",
+      "access_request": "https://zenodo.org/api/records/21439008/access/request",
+      "access": "https://zenodo.org/api/records/21439008/access",
+      "communities": "https://zenodo.org/api/records/21439008/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/21439008/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/21439008/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/21439008/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/21439008/quota-increase",
+      "requests": "https://zenodo.org/api/records/21439008/requests"
+    },
+    "revision_id": 4,
+    "parent": {
+      "id": "15267530",
+      "access": {
+        "owned_by": {
+          "user": "268009"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.15267530",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 3
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.21439008",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:21439008",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "software",
+        "title": {
+          "de": "Software",
+          "en": "Software"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "GRACEFUL17: Article 1 Code (Nepotism/Lead Speed)",
+      "publisher": "Zenodo",
+      "publication_date": "2025-04-02",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/ch-sander/g17-article1",
+          "scheme": "url",
+          "relation_type": {
+            "id": "isidenticalto",
+            "title": {
+              "de": "Ist identisch mit",
+              "en": "Is identical to"
+            }
+          },
+          "resource_type": {
+            "id": "software",
+            "title": {
+              "de": "Software",
+              "en": "Software"
+            }
+          }
+        },
+        {
+          "identifier": "10.5281/zenodo.14945481",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "requires",
+            "title": {
+              "de": "Setzt voraus",
+              "en": "Requires"
+            }
+          },
+          "resource_type": {
+            "id": "dataset",
+            "title": {
+              "de": "Datensatz",
+              "en": "Dataset"
+            }
+          }
+        },
+        {
+          "identifier": "10.1080/01615440.2026.2695591",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "issupplementto",
+            "title": {
+              "de": "Ergänzt",
+              "en": "Is supplement to"
+            }
+          },
+          "resource_type": {
+            "id": "publication-article",
+            "title": {
+              "de": "Zeitschriftenartikel",
+              "en": "Journal article"
+            }
+          }
+        }
+      ],
+      "version": "publication",
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title": {
+            "en": "Creative Commons Attribution 4.0 International"
+          },
+          "description": {
+            "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+          },
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "Code repository for Article 1 in the GRACEFUL17 project"
+    },
+    "custom_fields": {
+      "code:codeRepository": "https://github.com/ch-sander/g17-article1"
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 1,
+      "total_bytes": 12343355,
+      "entries": {
+        "ch-sander/g17-article1-publication.zip": {
+          "id": "d8ff1d6d-9dfd-4df9-b40f-d262674fd626",
+          "checksum": "md5:7a360398ef2f749d2c149387249ef8c2",
+          "ext": "zip",
+          "size": 12343355,
+          "mimetype": "application/zip",
+          "key": "ch-sander/g17-article1-publication.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Apr 2, 2025",
+      "publication_date_l10n_long": "April 2, 2025",
+      "created_date_l10n_long": "July 19, 2026",
+      "updated_date_l10n_long": "July 19, 2026",
+      "resource_type": {
+        "id": "software",
+        "title_l10n": "Software"
+      },
+      "custom_fields": {
+        "code:codeRepository": "https://github.com/ch-sander/g17-article1"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            }
+          }
+        ],
+        "affiliations": []
+      },
+      "description_stripped": "Code repository for Article 1 in the GRACEFUL17 project",
+      "version": "publication",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/ch-sander/g17-article1",
+          "relation_type": {
+            "id": "isidenticalto",
+            "title_l10n": "Is identical to"
+          },
+          "scheme": "url",
+          "resource_type": {
+            "id": "software",
+            "title_l10n": "Software"
+          }
+        },
+        {
+          "identifier": "10.5281/zenodo.14945481",
+          "relation_type": {
+            "id": "requires",
+            "title_l10n": "Requires"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "dataset",
+            "title_l10n": "Dataset"
+          }
+        },
+        {
+          "identifier": "10.1080/01615440.2026.2695591",
+          "relation_type": {
+            "id": "issupplementto",
+            "title_l10n": "Is supplement to"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "publication-article",
+            "title_l10n": "Journal article"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title_l10n": "Creative Commons Attribution 4.0 International",
+          "description_l10n": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited.",
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "21438906",
+    "created": "2026-07-19T08:07:05.013263+00:00",
+    "updated": "2026-07-19T08:10:06.067082+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/21438906",
+      "self_html": "https://zenodo.org/records/21438906",
+      "preview_html": "https://zenodo.org/records/21438906?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.21438906",
+      "self_doi": "https://doi.org/10.5281/zenodo.21438906",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.21438906",
+      "reserve_doi": "https://zenodo.org/api/records/21438906/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/15111774",
+      "parent_html": "https://zenodo.org/records/15111774",
+      "parent_doi": "https://doi.org/10.5281/zenodo.15111774",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15111774",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:21438906/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:21438906/sequence/default",
+      "files": "https://zenodo.org/api/records/21438906/files",
+      "media_files": "https://zenodo.org/api/records/21438906/media-files",
+      "archive": "https://zenodo.org/api/records/21438906/files-archive",
+      "archive_media": "https://zenodo.org/api/records/21438906/media-files-archive",
+      "latest": "https://zenodo.org/api/records/21438906/versions/latest",
+      "latest_html": "https://zenodo.org/records/21438906/latest",
+      "versions": "https://zenodo.org/api/records/21438906/versions",
+      "draft": "https://zenodo.org/api/records/21438906/draft",
+      "access_links": "https://zenodo.org/api/records/21438906/access/links",
+      "access_grants": "https://zenodo.org/api/records/21438906/access/grants",
+      "access_users": "https://zenodo.org/api/records/21438906/access/users",
+      "access_request": "https://zenodo.org/api/records/21438906/access/request",
+      "access": "https://zenodo.org/api/records/21438906/access",
+      "communities": "https://zenodo.org/api/records/21438906/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/21438906/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/21438906/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/21438906/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/21438906/quota-increase",
+      "requests": "https://zenodo.org/api/records/21438906/requests"
+    },
+    "revision_id": 6,
+    "parent": {
+      "id": "15111774",
+      "access": {
+        "owned_by": {
+          "user": "268009"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.15111774",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 2
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.21438906",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:21438906",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "dataset",
+        "title": {
+          "de": "Datensatz",
+          "en": "Dataset"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "researcher",
+            "title": {
+              "de": "WissenschaftlerIn",
+              "en": "Researcher"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Verdone, Valentino",
+            "given_name": "Valentino",
+            "family_name": "Verdone",
+            "identifiers": [
+              {
+                "identifier": "0009-0000-7424-5770",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacollector",
+            "title": {
+              "de": "DatensammlerIn",
+              "en": "Data collector"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "04cvxnb49",
+              "name": "Goethe University Frankfurt",
+              "identifiers": [
+                {
+                  "identifier": "04cvxnb49",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.7839.5",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1936 9721",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Beutler, Naomi",
+            "given_name": "Naomi",
+            "family_name": "Beutler",
+            "identifiers": [
+              {
+                "identifier": "0009-0005-1361-5092",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacollector",
+            "title": {
+              "de": "DatensammlerIn",
+              "en": "Data collector"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "013cjyk83",
+              "name": "Université Paris Sciences et Lettres",
+              "identifiers": [
+                {
+                  "identifier": "013cjyk83",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.440907.e",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1784 3645",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "title": "GRACEFUL17: Article 1 Data (Nepotism/Lead Speed)",
+      "publisher": "Zenodo",
+      "publication_date": "2026-07-19",
+      "subjects": [
+        {
+          "subject": "papacy"
+        },
+        {
+          "subject": "datary"
+        },
+        {
+          "subject": "nepotism"
+        },
+        {
+          "subject": "efficiency"
+        },
+        {
+          "subject": "adminstration"
+        }
+      ],
+      "contributors": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Boute, Bruno",
+            "given_name": "Bruno",
+            "family_name": "Boute",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-0911-3995",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacurator",
+            "title": {
+              "de": "DatenkuratorIn",
+              "en": "Data curator"
+            }
+          }
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sarra, Filippo",
+            "given_name": "Filippo",
+            "family_name": "Sarra",
+            "identifiers": [
+              {
+                "identifier": "0009-0009-4366-4011",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacollector",
+            "title": {
+              "de": "DatensammlerIn",
+              "en": "Data collector"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "013cjyk83",
+              "name": "Université Paris Sciences et Lettres",
+              "identifiers": [
+                {
+                  "identifier": "013cjyk83",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.440907.e",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1784 3645",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Cicerchia, Andrea",
+            "given_name": "Andrea",
+            "family_name": "Cicerchia",
+            "identifiers": [
+              {
+                "identifier": "0000-0002-7291-2354",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacollector",
+            "title": {
+              "de": "DatensammlerIn",
+              "en": "Data collector"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "dates": [
+        {
+          "date": "2026-06-08",
+          "type": {
+            "id": "created",
+            "title": {
+              "de": "Erstellt",
+              "en": "Created"
+            }
+          }
+        }
+      ],
+      "languages": [
+        {
+          "id": "lat",
+          "title": {
+            "en": "Latin"
+          }
+        },
+        {
+          "id": "eng",
+          "title": {
+            "en": "English"
+          }
+        }
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "10.5281/zenodo.14945481",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "ispartof",
+            "title": {
+              "de": "Ist Teil von",
+              "en": "Is part of"
+            }
+          },
+          "resource_type": {
+            "id": "dataset",
+            "title": {
+              "de": "Datensatz",
+              "en": "Dataset"
+            }
+          }
+        },
+        {
+          "identifier": "10.1080/01615440.2026.2695591",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "issupplementto",
+            "title": {
+              "de": "Ergänzt",
+              "en": "Is supplement to"
+            }
+          },
+          "resource_type": {
+            "id": "publication-article",
+            "title": {
+              "de": "Zeitschriftenartikel",
+              "en": "Journal article"
+            }
+          }
+        },
+        {
+          "identifier": "10.5281/zenodo.15267530",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "isrequiredby",
+            "title": {
+              "de": "Wird gefordert von",
+              "en": "Is required by"
+            }
+          },
+          "resource_type": {
+            "id": "software-computationalnotebook",
+            "title": {
+              "de": "Computational Notebook",
+              "en": "Computational notebook"
+            }
+          }
+        }
+      ],
+      "version": "1.0.0",
+      "rights": [
+        {
+          "id": "cc-by-sa-4.0",
+          "title": {
+            "en": "Creative Commons Attribution Share Alike 4.0 International"
+          },
+          "description": {
+            "en": "Permits almost any use subject to providing credit and license notice. Frequently used for media assets and educational materials. The most common license for Open Access scientific publications. Not recommended for software."
+          },
+          "icon": "cc-by-sa-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "<p>Data for a publication with the title \"Lead speed and nepotism in early modern ecclesiastical administration:<br>A new quantitative approach\" published in <a href=\"https://doi.org/10.1080/01615440.2026.2695591\">Historical Methods: A Journal of Quantitative and Interdisciplinary History</a>.</p>\n<p>The repository contains CSV results from two queries, as a fallback for a corresponding live SPARQL query against the <a href=\"https://graph.dhi-roma.it/query\" rel=\"noopener\">endpoint</a>, as used in the <a href=\"https://github.com/ch-sander/g17-article1\">Jupyter Notebook</a>.</p>\n<p>Queries are stored as sq files.</p>"
+    },
+    "custom_fields": {
+      "code:codeRepository": "https://github.com/ch-sander/g17-article1"
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 4,
+      "total_bytes": 20541417,
+      "entries": {
+        "Lead-Speed.sq": {
+          "id": "c1e7f028-ca3f-44cb-80ec-3742464c0d45",
+          "checksum": "md5:decf31c7877658d4713886fa2b9ebd96",
+          "ext": "sq",
+          "size": 2592,
+          "mimetype": "application/octet-stream",
+          "key": "Lead-Speed.sq",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "query_lead_speed.csv": {
+          "id": "83cd6407-2414-41ca-8eef-bd582c47d55b",
+          "checksum": "md5:8d835368615ac65ce64de851e00d27dc",
+          "ext": "csv",
+          "size": 2579117,
+          "mimetype": "text/csv",
+          "key": "query_lead_speed.csv",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Nepotism.sq": {
+          "id": "5e7689f6-5b80-414e-917f-9172127cd5e2",
+          "checksum": "md5:7b1bb4e0c99e855774d660e42811f4bc",
+          "ext": "sq",
+          "size": 2989,
+          "mimetype": "application/octet-stream",
+          "key": "Nepotism.sq",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "query_nepotism.csv": {
+          "id": "6e9cd2fb-b71a-40d8-8210-4d02862c1ff4",
+          "checksum": "md5:fa74b4474ce2ab56f9ce82d2fe346ccc",
+          "ext": "csv",
+          "size": 17956719,
+          "mimetype": "text/csv",
+          "key": "query_nepotism.csv",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Jul 19, 2026",
+      "publication_date_l10n_long": "July 19, 2026",
+      "created_date_l10n_long": "July 19, 2026",
+      "updated_date_l10n_long": "July 19, 2026",
+      "resource_type": {
+        "id": "dataset",
+        "title_l10n": "Dataset"
+      },
+      "custom_fields": {
+        "code:codeRepository": "https://github.com/ch-sander/g17-article1"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "researcher",
+              "title": "Researcher"
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Verdone, Valentino",
+              "given_name": "Valentino",
+              "family_name": "Verdone",
+              "identifiers": [
+                {
+                  "identifier": "0009-0000-7424-5770",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacollector",
+              "title": "Data collector"
+            },
+            "affiliations": [
+              [
+                2,
+                "Goethe University Frankfurt"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Beutler, Naomi",
+              "given_name": "Naomi",
+              "family_name": "Beutler",
+              "identifiers": [
+                {
+                  "identifier": "0009-0005-1361-5092",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacollector",
+              "title": "Data collector"
+            },
+            "affiliations": [
+              [
+                3,
+                "Université Paris Sciences et Lettres"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ],
+          [
+            2,
+            "Goethe University Frankfurt",
+            "04cvxnb49"
+          ],
+          [
+            3,
+            "Université Paris Sciences et Lettres",
+            "013cjyk83"
+          ]
+        ]
+      },
+      "contributors": {
+        "contributors": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Boute, Bruno",
+              "given_name": "Bruno",
+              "family_name": "Boute",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-0911-3995",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacurator",
+              "title": "Data curator"
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sarra, Filippo",
+              "given_name": "Filippo",
+              "family_name": "Sarra",
+              "identifiers": [
+                {
+                  "identifier": "0009-0009-4366-4011",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacollector",
+              "title": "Data collector"
+            },
+            "affiliations": [
+              [
+                1,
+                "Université Paris Sciences et Lettres"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Cicerchia, Andrea",
+              "given_name": "Andrea",
+              "family_name": "Cicerchia",
+              "identifiers": [
+                {
+                  "identifier": "0000-0002-7291-2354",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacollector",
+              "title": "Data collector"
+            },
+            "affiliations": [
+              [
+                2,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Université Paris Sciences et Lettres",
+            "013cjyk83"
+          ],
+          [
+            2,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ]
+        ]
+      },
+      "languages": [
+        {
+          "id": "lat",
+          "title_l10n": "Latin"
+        },
+        {
+          "id": "eng",
+          "title_l10n": "English"
+        }
+      ],
+      "description_stripped": "Data for a publication with the title \"Lead speed and nepotism in early modern ecclesiastical administration:A new quantitative approach\" published in Historical Methods: A Journal of Quantitative and Interdisciplinary History.\n\nThe repository contains CSV results from two queries, as a fallback for a corresponding live SPARQL query against the endpoint, as used in the Jupyter Notebook.\n\nQueries are stored as sq files.",
+      "version": "1.0.0",
+      "related_identifiers": [
+        {
+          "identifier": "10.5281/zenodo.14945481",
+          "relation_type": {
+            "id": "ispartof",
+            "title_l10n": "Is part of"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "dataset",
+            "title_l10n": "Dataset"
+          }
+        },
+        {
+          "identifier": "10.1080/01615440.2026.2695591",
+          "relation_type": {
+            "id": "issupplementto",
+            "title_l10n": "Is supplement to"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "publication-article",
+            "title_l10n": "Journal article"
+          }
+        },
+        {
+          "identifier": "10.5281/zenodo.15267530",
+          "relation_type": {
+            "id": "isrequiredby",
+            "title_l10n": "Is required by"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "software-computationalnotebook",
+            "title_l10n": "Computational notebook"
+          }
+        }
+      ],
+      "dates": [
+        {
+          "date": "2026-06-08",
+          "type": {
+            "id": "created",
+            "title_l10n": "Created"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-sa-4.0",
+          "title_l10n": "Creative Commons Attribution Share Alike 4.0 International",
+          "description_l10n": "Permits almost any use subject to providing credit and license notice. Frequently used for media assets and educational materials. The most common license for Open Access scientific publications. Not recommended for software.",
+          "icon": "cc-by-sa-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "15421307",
+    "created": "2026-04-08T09:33:07.200951+00:00",
+    "updated": "2026-04-08T09:33:09.274548+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/15421307",
+      "self_html": "https://zenodo.org/records/15421307",
+      "preview_html": "https://zenodo.org/records/15421307?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.15421307",
+      "self_doi": "https://doi.org/10.5281/zenodo.15421307",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15421307",
+      "reserve_doi": "https://zenodo.org/api/records/15421307/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/15421306",
+      "parent_html": "https://zenodo.org/records/15421306",
+      "parent_doi": "https://doi.org/10.5281/zenodo.15421306",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15421306",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15421307/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15421307/sequence/default",
+      "files": "https://zenodo.org/api/records/15421307/files",
+      "media_files": "https://zenodo.org/api/records/15421307/media-files",
+      "thumbnails": {
+        "10": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E10,/0/default.jpg",
+        "50": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E50,/0/default.jpg",
+        "100": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E100,/0/default.jpg",
+        "250": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E250,/0/default.jpg",
+        "750": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E750,/0/default.jpg",
+        "1200": "https://zenodo.org/api/iiif/record:15421307:Editionsrichtlinien.pdf/full/%5E1200,/0/default.jpg"
+      },
+      "archive": "https://zenodo.org/api/records/15421307/files-archive",
+      "archive_media": "https://zenodo.org/api/records/15421307/media-files-archive",
+      "latest": "https://zenodo.org/api/records/15421307/versions/latest",
+      "latest_html": "https://zenodo.org/records/15421307/latest",
+      "versions": "https://zenodo.org/api/records/15421307/versions",
+      "draft": "https://zenodo.org/api/records/15421307/draft",
+      "access_links": "https://zenodo.org/api/records/15421307/access/links",
+      "access_grants": "https://zenodo.org/api/records/15421307/access/grants",
+      "access_users": "https://zenodo.org/api/records/15421307/access/users",
+      "access_request": "https://zenodo.org/api/records/15421307/access/request",
+      "access": "https://zenodo.org/api/records/15421307/access",
+      "communities": "https://zenodo.org/api/records/15421307/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/15421307/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/15421307/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/15421307/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/15421307/quota-increase",
+      "requests": "https://zenodo.org/api/records/15421307/requests"
+    },
+    "revision_id": 4,
+    "parent": {
+      "id": "15421306",
+      "access": {
+        "owned_by": {
+          "user": "357639"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.15421306",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 1
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.15421307",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:15421307",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "dataset",
+        "title": {
+          "de": "Datensatz",
+          "en": "Dataset"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Wolf, Hubert",
+            "given_name": "Hubert",
+            "family_name": "Wolf",
+            "identifiers": [
+              {
+                "identifier": "gnd:118191705",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "projectleader",
+            "title": {
+              "de": "ProjektleiterIn",
+              "en": "Project leader"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "edmo:3455",
+              "name": "University Münster",
+              "identifiers": [
+                {
+                  "identifier": "edmo:3455",
+                  "scheme": "edmo"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Hinkel, Sascha",
+            "given_name": "Sascha",
+            "family_name": "Hinkel",
+            "identifiers": [
+              {
+                "identifier": "0000-0001-5917-4740",
+                "scheme": "orcid"
+              },
+              {
+                "identifier": "gnd:142341770",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "projectmanager",
+            "title": {
+              "de": "ProjektmanagerIn",
+              "en": "Project manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Hörnschemeyer, Jörg",
+            "given_name": "Jörg",
+            "family_name": "Hörnschemeyer",
+            "identifiers": [
+              {
+                "identifier": "0000-0001-8788-5718",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datamanager",
+            "title": {
+              "de": "DatenmanagerIn",
+              "en": "Data manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "title": "Critical Online Edition of Eugenio Pacelli's Nunciature Reports (1917-1929).",
+      "publisher": "Zenodo",
+      "publication_date": "2026-04-08",
+      "subjects": [
+        {
+          "subject": "GND"
+        },
+        {
+          "subject": "Vatican"
+        },
+        {
+          "subject": "Church History"
+        },
+        {
+          "subject": "TEI-P5"
+        },
+        {
+          "subject": "Pius XII"
+        },
+        {
+          "subject": "VIAF"
+        }
+      ],
+      "contributors": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Richter, Elisabeth-Marie",
+            "given_name": "Elisabeth-Marie",
+            "family_name": "Richter",
+            "identifiers": [
+              {
+                "identifier": "0000-0002-0553-5229",
+                "scheme": "orcid"
+              },
+              {
+                "identifier": "gnd:1223711498",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Schepers, Judith",
+            "given_name": "Judith",
+            "family_name": "Schepers",
+            "identifiers": [
+              {
+                "identifier": "gnd:1084028050",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Schüler, Barbara",
+            "given_name": "Barbara",
+            "family_name": "Schüler",
+            "identifiers": [
+              {
+                "identifier": "gnd:140853812",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "projectmanager",
+            "title": {
+              "de": "ProjektmanagerIn",
+              "en": "Project manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Bornschlegel, Matthias",
+            "given_name": "Matthias",
+            "family_name": "Bornschlegel"
+          },
+          "role": {
+            "id": "datamanager",
+            "title": {
+              "de": "DatenmanagerIn",
+              "en": "Data manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Griemert, Falk",
+            "given_name": "Falk",
+            "family_name": "Griemert",
+            "identifiers": [
+              {
+                "identifier": "0009-0006-5365-9134",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datamanager",
+            "title": {
+              "de": "DatenmanagerIn",
+              "en": "Data manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Daufratshofer, Matthias",
+            "given_name": "Matthias",
+            "family_name": "Daufratshofer",
+            "identifiers": [
+              {
+                "identifier": "gnd:123080451X",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "De Serio, Giovanna",
+            "given_name": "Giovanna",
+            "family_name": "De Serio"
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Hülsbömer, Raphael",
+            "given_name": "Raphael",
+            "family_name": "Hülsbömer",
+            "identifiers": [
+              {
+                "identifier": "gnd:1046998625",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Jung, Josef",
+            "given_name": "Josef",
+            "family_name": "Jung"
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Lorenz-Filograno, Maria Pia",
+            "given_name": "Maria Pia",
+            "family_name": "Lorenz-Filograno",
+            "identifiers": [
+              {
+                "identifier": "gnd:1099981743",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Nientiedt, Ruth",
+            "given_name": "Ruth",
+            "family_name": "Nientiedt",
+            "identifiers": [
+              {
+                "identifier": "gnd:1081796375",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Pfister, Michael Florian",
+            "given_name": "Michael Florian",
+            "family_name": "Pfister",
+            "identifiers": [
+              {
+                "identifier": "gnd:1223868508",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Oxenius, Slawomir",
+            "given_name": "Slawomir",
+            "family_name": "Oxenius",
+            "identifiers": [
+              {
+                "identifier": "0000-0002-7647-8073",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Reiß, Birgit",
+            "given_name": "Birgit",
+            "family_name": "Reiß"
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Valentin, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Valentin",
+            "identifiers": [
+              {
+                "identifier": "0000-0001-9654-1917",
+                "scheme": "orcid"
+              },
+              {
+                "identifier": "gnd:1219860492",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "03bbqn881",
+              "name": "Gottfried Wilhelm Leibniz Bibliothek",
+              "identifiers": [
+                {
+                  "identifier": "03bbqn881",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.461716.3",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2369 3063",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Zamagni, Gianmaria",
+            "given_name": "Gianmaria",
+            "family_name": "Zamagni",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4672-9123",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "editor",
+            "title": {
+              "de": "EditorIn",
+              "en": "Editor"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00pd74e08",
+              "name": "University of Münster",
+              "identifiers": [
+                {
+                  "identifier": "00pd74e08",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.5949.1",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2172 9288",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "id": "eng",
+          "title": {
+            "en": "English"
+          }
+        },
+        {
+          "id": "ita",
+          "title": {
+            "en": "Italian"
+          }
+        },
+        {
+          "id": "deu",
+          "title": {
+            "en": "German"
+          }
+        },
+        {
+          "id": "lat",
+          "title": {
+            "en": "Latin"
+          }
+        },
+        {
+          "id": "spa",
+          "title": {
+            "en": "Spanish"
+          }
+        },
+        {
+          "id": "pol",
+          "title": {
+            "en": "Polish"
+          }
+        }
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "10.1515/qufiab-2021-0004",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title": {
+              "de": "Wird beschrieben von",
+              "en": "Is described by"
+            }
+          },
+          "resource_type": {
+            "id": "publication-article",
+            "title": {
+              "de": "Zeitschriftenartikel",
+              "en": "Journal article"
+            }
+          }
+        },
+        {
+          "identifier": "10.14277/978-88-6969-092-1",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title": {
+              "de": "Wird beschrieben von",
+              "en": "Is described by"
+            }
+          },
+          "resource_type": {
+            "id": "publication-section",
+            "title": {
+              "de": "Buchkapitel",
+              "en": "Book chapter"
+            }
+          }
+        },
+        {
+          "identifier": "10.14277/978-88-6969-092-1",
+          "scheme": "doi",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title": {
+              "de": "Wird beschrieben von",
+              "en": "Is described by"
+            }
+          },
+          "resource_type": {
+            "id": "publication-section",
+            "title": {
+              "de": "Buchkapitel",
+              "en": "Book chapter"
+            }
+          }
+        },
+        {
+          "identifier": "978-3-506-79106-1",
+          "scheme": "isbn",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title": {
+              "de": "Wird beschrieben von",
+              "en": "Is described by"
+            }
+          },
+          "resource_type": {
+            "id": "publication-book",
+            "title": {
+              "de": "Buch",
+              "en": "Book"
+            }
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title": {
+            "en": "Creative Commons Attribution 4.0 International"
+          },
+          "description": {
+            "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+          },
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "<h2>Documentation</h2>\n<p>This dataset accompanies the \"Critical Online Edition of Eugenio Pacelli's Nunciature Reports (1917-1929)\", an open-access digital scholarly edition that critically edits, annotates, and evaluates the diplomatic correspondence of Eugenio Pacelli, later Pope Pius XII, during his service as apostolic nuncio in Munich (1917-1924) and Berlin (1920-1929).<br><br>https://pacelli-edition.de/</p>\n<p>The documents are exclusively reproduced in the respective original language. The annotation of the documents, biographies and keywords as well as the document's summaries are offered in German throughout.</p>\n<p>The project was academically directed by Prof. Dr. Dr. h.c. Hubert Wolf and closely integrated into the structure of the Department of Medieval and Modern Church History at the University of M&uuml;nster. The German Historical Institute Rome (DHIR)&nbsp;provided the technical infrastructure for the Pacelli edition and hosts the project's homepage.&nbsp;The edition was funded by the German Research Foundation (DFG) as part of a twelve-year long-term project (2008-2019).&nbsp;</p>\n<h2>Dataset Content</h2>\n<p>The dataset contains the following structured TEI-P5 encoded files:</p>\n<ul>\n<li>Documents: approximatly 21,000 (TEI-P5).\n<ul>\n<li>5,400 final reports sent to the Roman Curia.</li>\n<li>5,200 draft versions by Pacelli.</li>\n<li>4,200 instructions from curial authorities.</li>\n<li>5,200 attachments enclosed in correspondence.</li>\n</ul>\n</li>\n<li>Biographies: 5,394 biographical records of referenced persons (TEI-P5).</li>\n<li>Keywords: 4,544 files of controlled vocabulary and thematic descriptors (TEI-P5).</li>\n<li>XSLT Stylesheets: Transformation stylesheets used for the display and processing of the edition.</li>\n<li>XML Schema for validation.</li>\n<li>Editorial guidelines.</li>\n</ul>\n<h2>Data Access via API</h2>\n<p>In addition to this data repository, a REST API is provided to access documents, persons, and topics by ID in XML format (TEI-P5):</p>\n<ul>\n<li>\n<p><strong>Document</strong>: <code>https://pacelli-edition.de/Dokument/{id}?format=xml</code></p>\n</li>\n<li>\n<p><strong>Person</strong>: <code>https://pacelli-edition.de/Personen/{id}?format=xml</code></p>\n</li>\n<li>\n<p><strong>Topic</strong>: <code>https://pacelli-edition.de/Schlagwort/{id}?format=xml</code></p>\n</li>\n</ul>\n<p>Example document: <a href=\"https://pacelli-edition.de/Dokument/9032?format=xml\" target=\"_new\" rel=\"noopener\">https://pacelli-edition.de/Dokument/9032?format=xml</a></p>\n<h2>Metadata</h2>\n<p>All documents, persons, and topics include descriptive metadata in the TEI-Header, ensuring transparency of editorial responsibility, source description, and revision history. The metadata model follows the TEI P5 guidelines and references the <strong>Editorial Guidelines</strong>: <a href=\"https://pacelli-edition.de/editionsrichtlinien.html\" target=\"_new\" rel=\"noopener\">https://pacelli-edition.de/editionsrichtlinien.html</a>.</p>\n<h4>Example Metadata (TEI-Header excerpt):</h4>\n<pre><code>&lt;teiHeader xml:lang=\"de\"&gt;\n      &lt;fileDesc&gt;\n         &lt;titleStmt&gt;\n            &lt;title&gt;Pacelli an Gasparri, Sui beni della diocesi di Breslavia in Cecoslovacchia, 07. Juli 1927&lt;/title&gt;\n            &lt;respStmt&gt;\n               &lt;resp when-iso=\"2022-02-01\"/&gt;\n               &lt;persName&gt;\n                  &lt;idno type=\"gnd\"&gt;118191705&lt;/idno&gt;Hubert Wolf&lt;/persName&gt;\n               &lt;orgName&gt;\n                  &lt;idno type=\"gnd\"&gt;36175-6&lt;/idno&gt;Universit&auml;t M&uuml;nster&lt;/orgName&gt;\n            &lt;/respStmt&gt;\n         &lt;/titleStmt&gt;\n         &lt;editionStmt&gt;\n            &lt;edition&gt;\n               &lt;title&gt;Kritische Online-Edition der Nuntiaturberichte Eugenio Pacellis (1917-1929)&lt;/title&gt;\n            &lt;/edition&gt;\n            &lt;respStmt&gt;\n               &lt;resp&gt;Herausgegeben von&lt;/resp&gt;\n               &lt;persName&gt;\n                  &lt;idno type=\"gnd\"&gt;118191705&lt;/idno&gt;Hubert Wolf&lt;/persName&gt;\n            &lt;/respStmt&gt;\n         &lt;/editionStmt&gt;\n         &lt;publicationStmt&gt;\n            &lt;publisher&gt;\n               &lt;name&gt;\n                  &lt;idno type=\"gnd\"&gt;36175-6&lt;/idno&gt;Universit&auml;t M&uuml;nster,\n                                Katholisch-Theologische Fakult&auml;t, Seminar f&uuml;r Mittlere und Neuere\n                                Kirchengeschichte&lt;/name&gt;\n               &lt;address&gt;\n                  &lt;street&gt;Domplatz 23&lt;/street&gt;\n                  &lt;postCode&gt;48153&lt;/postCode&gt;\n                  &lt;placeName&gt;\n                     &lt;bloc&gt;D&lt;/bloc&gt;\n                     &lt;country&gt;Deutschland&lt;/country&gt;\n                     &lt;settlement&gt;M&uuml;nster&lt;/settlement&gt;\n                  &lt;/placeName&gt;\n               &lt;/address&gt;\n            &lt;/publisher&gt;\n            &lt;publisher&gt;\n               &lt;name&gt;\n                  &lt;idno type=\"gnd\"&gt;2008678-7&lt;/idno&gt;Deutsches Historisches Institut\n                                Rom&lt;/name&gt;\n               &lt;address&gt;\n                  &lt;street&gt;Via Aurelia Antica 391&lt;/street&gt;\n                  &lt;postCode&gt;00165&lt;/postCode&gt;\n                  &lt;placeName&gt;\n                     &lt;bloc&gt;IT&lt;/bloc&gt;\n                     &lt;country&gt;Italien&lt;/country&gt;\n                     &lt;settlement&gt;Rom&lt;/settlement&gt;\n                  &lt;/placeName&gt;\n               &lt;/address&gt;\n            &lt;/publisher&gt;\n            &lt;availability&gt;\n               &lt;licence target=\"http://creativecommons.org/licenses/by-sa/4.0/\"&gt;\n                  &lt;p&gt;Distributed under the Creative Commons Attribution-ShareAlike 4.0\n                                    International license&lt;/p&gt;\n               &lt;/licence&gt;\n            &lt;/availability&gt;\n         &lt;/publicationStmt&gt;\n         &lt;sourceDesc&gt;\n            &lt;msDesc rend=\"typewritten\" type=\"report\" status=\"final\"&gt;\n               &lt;msIdentifier&gt;\n                  &lt;bloc&gt;VA&lt;/bloc&gt;\n                  &lt;country&gt;Vatikanstadt&lt;/country&gt;\n                  &lt;institution&gt;S.RR.SS.&lt;/institution&gt;\n                  &lt;repository&gt;AA.EE.SS., Germania 1923-1939 493 7 8r&lt;/repository&gt;\n                  &lt;idno type=\"originalID\"&gt;10&lt;/idno&gt;\n                  &lt;idno type=\"draft\"&gt;D19911&lt;/idno&gt;\n                  &lt;idno type=\"cifrato\"/&gt;\n                  &lt;idno type=\"cifratoVatican\"/&gt;\n                  &lt;idno type=\"protno\"&gt;37744&lt;/idno&gt;\n                  &lt;idno type=\"protnoVatikan\"&gt;2082/27&lt;/idno&gt;\n                  &lt;idno type=\"protnoExtern\"/&gt;\n               &lt;/msIdentifier&gt;\n            &lt;/msDesc&gt;\n         &lt;/sourceDesc&gt;\n      &lt;/fileDesc&gt;\n      &lt;profileDesc&gt;\n         &lt;abstract xml:lang=\"de\"&gt;\n            &lt;p&gt;Pacelli &uuml;bersendet eine Denkschrift von Oskar Pollak, dem Delegierten des Breslauer F&uuml;rstbischofs Kardinal Bertram f&uuml;r die Verhandlungen mit der Tschechoslowakei. Daraus geht hervor, dass die Gefahr einer Enteignung der G&uuml;ter des F&uuml;rstbistums Breslau f&uuml;r den Moment gebannt erscheint.&lt;/p&gt;\n         &lt;/abstract&gt;\n         &lt;correspDesc n=\"1\"&gt;\n            &lt;correspAction type=\"sent\"&gt;\n               &lt;name&gt;\n                  &lt;persName key=\"#P16027\"&gt;Pacelli, Eugenio&lt;/persName&gt;\n               &lt;/name&gt;\n               &lt;placeName&gt;Berlin&lt;/placeName&gt;\n               &lt;date when=\"1927-07-07\"/&gt;\n            &lt;/correspAction&gt;\n            &lt;correspAction type=\"received\"&gt;\n               &lt;name&gt;\n                  &lt;persName key=\"#P07008\"&gt;Gasparri, Pietro&lt;/persName&gt;\n               &lt;/name&gt;\n            &lt;/correspAction&gt;\n            &lt;correspContext&gt;\n               &lt;ptr type=\"attachment\" target=\"#D00574\"/&gt;\n            &lt;/correspContext&gt;\n         &lt;/correspDesc&gt;\n      &lt;/profileDesc&gt;\n      &lt;revisionDesc&gt;\n         &lt;listChange&gt;\n            &lt;change when=\"2019-02-25\"&gt;Online&lt;/change&gt;\n            &lt;change when=\"2022-02-01\"&gt;Change&lt;/change&gt;\n         &lt;/listChange&gt;\n      &lt;/revisionDesc&gt;\n   &lt;/teiHeader&gt;</code></pre>\n<h3>Authority Data Integration</h3>\n<p>The edition integrates external authority files such as&nbsp;<strong>GND</strong> (Gemeinsame Normdatei) and <strong>VIAF</strong> (Virtual International Authority File). Each person or subject is linked to these identifiers for interoperability and Linked Data compatibility.</p>\n<p>Example:</p>\n<pre><code>&lt;person xml:id=\"P00108\"&gt;\n    &lt;idno type=\"originalID\"&gt;108&lt;/idno&gt;\n    &lt;idno type=\"viaf\"&gt;232758672&lt;/idno&gt;\n    &lt;idno type=\"gnd\"&gt;1020951346&lt;/idno&gt;\n    &lt;persName&gt;\n        &lt;forename&gt;Fritz&lt;/forename&gt;\n        &lt;surname&gt;Beck&lt;/surname&gt;\n    &lt;/persName&gt;\n&lt;/person&gt;</code></pre>",
+      "funding": [
+        {
+          "funder": {
+            "id": "018mejw64",
+            "name": "Deutsche Forschungsgemeinschaft"
+          }
+        }
+      ]
+    },
+    "custom_fields": {},
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "default_preview": "Editorial-Guidelines.pdf",
+      "order": [],
+      "count": 9,
+      "total_bytes": 72956091,
+      "entries": {
+        "Editionsrichtlinien.pdf": {
+          "id": "327b6de7-62cf-45e4-87ac-2209eddc3ee6",
+          "checksum": "md5:1dadb3263e6222737a7dd6f0a9271fb9",
+          "ext": "pdf",
+          "size": 72688,
+          "mimetype": "application/pdf",
+          "key": "Editionsrichtlinien.pdf",
+          "metadata": {
+            "width": 595,
+            "height": 842
+          },
+          "access": {
+            "hidden": false
+          }
+        },
+        "Editorial-Guidelines.pdf": {
+          "id": "5cf638b7-18ed-458e-9b9b-b392ead9c5f3",
+          "checksum": "md5:7909d4823232c9458f7985aa5abe853f",
+          "ext": "pdf",
+          "size": 67613,
+          "mimetype": "application/pdf",
+          "key": "Editorial-Guidelines.pdf",
+          "metadata": {
+            "width": 595,
+            "height": 842
+          },
+          "access": {
+            "hidden": false
+          }
+        },
+        "Editorial-Guidelines.md": {
+          "id": "07fdc73c-e554-4ca5-8082-eccbbda1a48c",
+          "checksum": "md5:78bdb6b1f055cd4d2494a5b8de8edd0d",
+          "ext": "md",
+          "size": 82036,
+          "mimetype": "text/markdown",
+          "key": "Editorial-Guidelines.md",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Editionsrichtlinien.md": {
+          "id": "ab52dedc-67b9-441f-89d5-8f01c46ace9c",
+          "checksum": "md5:dcc5ebee0bc8b589ade6186cf396a503",
+          "ext": "md",
+          "size": 86087,
+          "mimetype": "text/markdown",
+          "key": "Editionsrichtlinien.md",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "TEI-Documents.zip": {
+          "id": "5799829a-cb68-433a-b34c-69b7bdebb038",
+          "checksum": "md5:0b7a41c4b343a8c823b73c92ed111b14",
+          "ext": "zip",
+          "size": 56432521,
+          "mimetype": "application/zip",
+          "key": "TEI-Documents.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "TEI-Keywords.zip": {
+          "id": "63e7aff2-8f8f-43f1-90fb-445487e441b4",
+          "checksum": "md5:6a3d4b2d72e14e021e13e38cf5be4da8",
+          "ext": "zip",
+          "size": 8106092,
+          "mimetype": "application/zip",
+          "key": "TEI-Keywords.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "XSLT.zip": {
+          "id": "ab34da5f-9e39-488c-a82e-b602606c00de",
+          "checksum": "md5:bbd4f0068730f6392cdd566fcce14f79",
+          "ext": "zip",
+          "size": 30190,
+          "mimetype": "application/zip",
+          "key": "XSLT.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "TEI-Biographies.zip": {
+          "id": "53d7409d-5984-4052-b597-a8370472393e",
+          "checksum": "md5:ce85bd6114e2a49c6e0d3bc5d5b6ab57",
+          "ext": "zip",
+          "size": 8065025,
+          "mimetype": "application/zip",
+          "key": "TEI-Biographies.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "XSD.zip": {
+          "id": "6c5ce8f1-3908-409c-844b-c3565b0bcb3c",
+          "checksum": "md5:d390902a70d75f5f210d5e7b410d62d3",
+          "ext": "zip",
+          "size": 13839,
+          "mimetype": "application/zip",
+          "key": "XSD.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": true,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Apr 8, 2026",
+      "publication_date_l10n_long": "April 8, 2026",
+      "created_date_l10n_long": "April 8, 2026",
+      "updated_date_l10n_long": "April 8, 2026",
+      "resource_type": {
+        "id": "dataset",
+        "title_l10n": "Dataset"
+      },
+      "custom_fields": {},
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Wolf, Hubert",
+              "given_name": "Hubert",
+              "family_name": "Wolf",
+              "identifiers": [
+                {
+                  "identifier": "gnd:118191705",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "projectleader",
+              "title": "Project leader"
+            },
+            "affiliations": [
+              [
+                1,
+                "University Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Hinkel, Sascha",
+              "given_name": "Sascha",
+              "family_name": "Hinkel",
+              "identifiers": [
+                {
+                  "identifier": "0000-0001-5917-4740",
+                  "scheme": "orcid"
+                },
+                {
+                  "identifier": "gnd:142341770",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "projectmanager",
+              "title": "Project manager"
+            },
+            "affiliations": [
+              [
+                2,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Hörnschemeyer, Jörg",
+              "given_name": "Jörg",
+              "family_name": "Hörnschemeyer",
+              "identifiers": [
+                {
+                  "identifier": "0000-0001-8788-5718",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datamanager",
+              "title": "Data manager"
+            },
+            "affiliations": [
+              [
+                3,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "University Münster",
+            "edmo:3455"
+          ],
+          [
+            2,
+            "University of Münster",
+            "00pd74e08"
+          ],
+          [
+            3,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ]
+        ]
+      },
+      "contributors": {
+        "contributors": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Richter, Elisabeth-Marie",
+              "given_name": "Elisabeth-Marie",
+              "family_name": "Richter",
+              "identifiers": [
+                {
+                  "identifier": "0000-0002-0553-5229",
+                  "scheme": "orcid"
+                },
+                {
+                  "identifier": "gnd:1223711498",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Schepers, Judith",
+              "given_name": "Judith",
+              "family_name": "Schepers",
+              "identifiers": [
+                {
+                  "identifier": "gnd:1084028050",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Schüler, Barbara",
+              "given_name": "Barbara",
+              "family_name": "Schüler",
+              "identifiers": [
+                {
+                  "identifier": "gnd:140853812",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "projectmanager",
+              "title": "Project manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Bornschlegel, Matthias",
+              "given_name": "Matthias",
+              "family_name": "Bornschlegel"
+            },
+            "role": {
+              "id": "datamanager",
+              "title": "Data manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Griemert, Falk",
+              "given_name": "Falk",
+              "family_name": "Griemert",
+              "identifiers": [
+                {
+                  "identifier": "0009-0006-5365-9134",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datamanager",
+              "title": "Data manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Daufratshofer, Matthias",
+              "given_name": "Matthias",
+              "family_name": "Daufratshofer",
+              "identifiers": [
+                {
+                  "identifier": "gnd:123080451X",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "De Serio, Giovanna",
+              "given_name": "Giovanna",
+              "family_name": "De Serio"
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Hülsbömer, Raphael",
+              "given_name": "Raphael",
+              "family_name": "Hülsbömer",
+              "identifiers": [
+                {
+                  "identifier": "gnd:1046998625",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Jung, Josef",
+              "given_name": "Josef",
+              "family_name": "Jung"
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Lorenz-Filograno, Maria Pia",
+              "given_name": "Maria Pia",
+              "family_name": "Lorenz-Filograno",
+              "identifiers": [
+                {
+                  "identifier": "gnd:1099981743",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Nientiedt, Ruth",
+              "given_name": "Ruth",
+              "family_name": "Nientiedt",
+              "identifiers": [
+                {
+                  "identifier": "gnd:1081796375",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Pfister, Michael Florian",
+              "given_name": "Michael Florian",
+              "family_name": "Pfister",
+              "identifiers": [
+                {
+                  "identifier": "gnd:1223868508",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Oxenius, Slawomir",
+              "given_name": "Slawomir",
+              "family_name": "Oxenius",
+              "identifiers": [
+                {
+                  "identifier": "0000-0002-7647-8073",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Reiß, Birgit",
+              "given_name": "Birgit",
+              "family_name": "Reiß"
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Valentin, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Valentin",
+              "identifiers": [
+                {
+                  "identifier": "0000-0001-9654-1917",
+                  "scheme": "orcid"
+                },
+                {
+                  "identifier": "gnd:1219860492",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                2,
+                "Gottfried Wilhelm Leibniz Bibliothek"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Zamagni, Gianmaria",
+              "given_name": "Gianmaria",
+              "family_name": "Zamagni",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4672-9123",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "editor",
+              "title": "Editor"
+            },
+            "affiliations": [
+              [
+                1,
+                "University of Münster"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "University of Münster",
+            "00pd74e08"
+          ],
+          [
+            2,
+            "Gottfried Wilhelm Leibniz Bibliothek",
+            "03bbqn881"
+          ]
+        ]
+      },
+      "languages": [
+        {
+          "id": "eng",
+          "title_l10n": "English"
+        },
+        {
+          "id": "ita",
+          "title_l10n": "Italian"
+        },
+        {
+          "id": "deu",
+          "title_l10n": "German"
+        },
+        {
+          "id": "lat",
+          "title_l10n": "Latin"
+        },
+        {
+          "id": "spa",
+          "title_l10n": "Spanish"
+        },
+        {
+          "id": "pol",
+          "title_l10n": "Polish"
+        }
+      ],
+      "description_stripped": "Documentation\n\nThis dataset accompanies the \"Critical Online Edition of Eugenio Pacelli's Nunciature Reports (1917-1929)\", an open-access digital scholarly edition that critically edits, annotates, and evaluates the diplomatic correspondence of Eugenio Pacelli, later Pope Pius XII, during his service as apostolic nuncio in Munich (1917-1924) and Berlin (1920-1929).https://pacelli-edition.de/\n\nThe documents are exclusively reproduced in the respective original language. The annotation of the documents, biographies and keywords as well as the document's summaries are offered in German throughout.\n\nThe project was academically directed by Prof. Dr. Dr. h.c. Hubert Wolf and closely integrated into the structure of the Department of Medieval and Modern Church History at the University of Münster. The German Historical Institute Rome (DHIR) provided the technical infrastructure for the Pacelli edition and hosts the project's homepage. The edition was funded by the German Research Foundation (DFG) as part of a twelve-year long-term project (2008-2019). \n\nDataset Content\n\nThe dataset contains the following structured TEI-P5 encoded files:\n\n\n\nDocuments: approximatly 21,000 (TEI-P5).\n\n\n\n5,400 final reports sent to the Roman Curia.\n\n5,200 draft versions by Pacelli.\n\n4,200 instructions from curial authorities.\n\n5,200 attachments enclosed in correspondence.\n\n\n\nBiographies: 5,394 biographical records of referenced persons (TEI-P5).\n\nKeywords: 4,544 files of controlled vocabulary and thematic descriptors (TEI-P5).\n\nXSLT Stylesheets: Transformation stylesheets used for the display and processing of the edition.\n\nXML Schema for validation.\n\nEditorial guidelines.\n\n\nData Access via API\n\nIn addition to this data repository, a REST API is provided to access documents, persons, and topics by ID in XML format (TEI-P5):\n\n\n\n\n\nDocument: https://pacelli-edition.de/Dokument/{id}?format=xml\n\n\n\n\nPerson: https://pacelli-edition.de/Personen/{id}?format=xml\n\n\n\n\nTopic: https://pacelli-edition.de/Schlagwort/{id}?format=xml\n\n\n\nExample document: https://pacelli-edition.de/Dokument/9032?format=xml\n\nMetadata\n\nAll documents, persons, and topics include descriptive metadata in the TEI-Header, ensuring transparency of editorial responsibility, source description, and revision history. The metadata model follows the TEI P5 guidelines and references the Editorial Guidelines: https://pacelli-edition.de/editionsrichtlinien.html.\n\nExample Metadata (TEI-Header excerpt):\n\n<teiHeader xml:lang=\"de\">\n      <fileDesc>\n         <titleStmt>\n            <title>Pacelli an Gasparri, Sui beni della diocesi di Breslavia in Cecoslovacchia, 07. Juli 1927</title>\n            <respStmt>\n               <resp when-iso=\"2022-02-01\"/>\n               <persName>\n                  <idno type=\"gnd\">118191705</idno>Hubert Wolf</persName>\n               <orgName>\n                  <idno type=\"gnd\">36175-6</idno>Universität Münster</orgName>\n            </respStmt>\n         </titleStmt>\n         <editionStmt>\n            <edition>\n               <title>Kritische Online-Edition der Nuntiaturberichte Eugenio Pacellis (1917-1929)</title>\n            </edition>\n            <respStmt>\n               <resp>Herausgegeben von</resp>\n               <persName>\n                  <idno type=\"gnd\">118191705</idno>Hubert Wolf</persName>\n            </respStmt>\n         </editionStmt>\n         <publicationStmt>\n            <publisher>\n               <name>\n                  <idno type=\"gnd\">36175-6</idno>Universität Münster,\n                                Katholisch-Theologische Fakultät, Seminar für Mittlere und Neuere\n                                Kirchengeschichte</name>\n               <address>\n                  <street>Domplatz 23</street>\n                  <postCode>48153</postCode>\n                  <placeName>\n                     <bloc>D</bloc>\n                     <country>Deutschland</country>\n                     <settlement>Münster</settlement>\n                  </placeName>\n               </address>\n            </publisher>\n            <publisher>\n               <name>\n                  <idno type=\"gnd\">2008678-7</idno>Deutsches Historisches Institut\n                                Rom</name>\n               <address>\n                  <street>Via Aurelia Antica 391</street>\n                  <postCode>00165</postCode>\n                  <placeName>\n                     <bloc>IT</bloc>\n                     <country>Italien</country>\n                     <settlement>Rom</settlement>\n                  </placeName>\n               </address>\n            </publisher>\n            <availability>\n               <licence target=\"http://creativecommons.org/licenses/by-sa/4.0/\">\n                  <p>Distributed under the Creative Commons Attribution-ShareAlike 4.0\n                                    International license</p>\n               </licence>\n            </availability>\n         </publicationStmt>\n         <sourceDesc>\n            <msDesc rend=\"typewritten\" type=\"report\" status=\"final\">\n               <msIdentifier>\n                  <bloc>VA</bloc>\n                  <country>Vatikanstadt</country>\n                  <institution>S.RR.SS.</institution>\n                  <repository>AA.EE.SS., Germania 1923-1939 493 7 8r</repository>\n                  <idno type=\"originalID\">10</idno>\n                  <idno type=\"draft\">D19911</idno>\n                  <idno type=\"cifrato\"/>\n                  <idno type=\"cifratoVatican\"/>\n                  <idno type=\"protno\">37744</idno>\n                  <idno type=\"protnoVatikan\">2082/27</idno>\n                  <idno type=\"protnoExtern\"/>\n               </msIdentifier>\n            </msDesc>\n         </sourceDesc>\n      </fileDesc>\n      <profileDesc>\n         <abstract xml:lang=\"de\">\n            <p>Pacelli übersendet eine Denkschrift von Oskar Pollak, dem Delegierten des Breslauer Fürstbischofs Kardinal Bertram für die Verhandlungen mit der Tschechoslowakei. Daraus geht hervor, dass die Gefahr einer Enteignung der Güter des Fürstbistums Breslau für den Moment gebannt erscheint.</p>\n         </abstract>\n         <correspDesc n=\"1\">\n            <correspAction type=\"sent\">\n               <name>\n                  <persName key=\"#P16027\">Pacelli, Eugenio</persName>\n               </name>\n               <placeName>Berlin</placeName>\n               <date when=\"1927-07-07\"/>\n            </correspAction>\n            <correspAction type=\"received\">\n               <name>\n                  <persName key=\"#P07008\">Gasparri, Pietro</persName>\n               </name>\n            </correspAction>\n            <correspContext>\n               <ptr type=\"attachment\" target=\"#D00574\"/>\n            </correspContext>\n         </correspDesc>\n      </profileDesc>\n      <revisionDesc>\n         <listChange>\n            <change when=\"2019-02-25\">Online</change>\n            <change when=\"2022-02-01\">Change</change>\n         </listChange>\n      </revisionDesc>\n   </teiHeader>\n\nAuthority Data Integration\n\nThe edition integrates external authority files such as GND (Gemeinsame Normdatei) and VIAF (Virtual International Authority File). Each person or subject is linked to these identifiers for interoperability and Linked Data compatibility.\n\nExample:\n\n<person xml:id=\"P00108\">\n    <idno type=\"originalID\">108</idno>\n    <idno type=\"viaf\">232758672</idno>\n    <idno type=\"gnd\">1020951346</idno>\n    <persName>\n        <forename>Fritz</forename>\n        <surname>Beck</surname>\n    </persName>\n</person>",
+      "version": "v1",
+      "related_identifiers": [
+        {
+          "identifier": "10.1515/qufiab-2021-0004",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title_l10n": "Is described by"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "publication-article",
+            "title_l10n": "Journal article"
+          }
+        },
+        {
+          "identifier": "10.14277/978-88-6969-092-1",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title_l10n": "Is described by"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "publication-section",
+            "title_l10n": "Book chapter"
+          }
+        },
+        {
+          "identifier": "10.14277/978-88-6969-092-1",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title_l10n": "Is described by"
+          },
+          "scheme": "doi",
+          "resource_type": {
+            "id": "publication-section",
+            "title_l10n": "Book chapter"
+          }
+        },
+        {
+          "identifier": "978-3-506-79106-1",
+          "relation_type": {
+            "id": "isdescribedby",
+            "title_l10n": "Is described by"
+          },
+          "scheme": "isbn",
+          "resource_type": {
+            "id": "publication-book",
+            "title_l10n": "Book"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title_l10n": "Creative Commons Attribution 4.0 International",
+          "description_l10n": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited.",
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false,
+      "funding": [
+        {
+          "funder": {
+            "id": "018mejw64",
+            "name": "Deutsche Forschungsgemeinschaft"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "18540762",
+    "created": "2026-02-09T10:04:14.552552+00:00",
+    "updated": "2026-02-09T10:04:14.751302+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/18540762",
+      "self_html": "https://zenodo.org/records/18540762",
+      "preview_html": "https://zenodo.org/records/18540762?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.18540762",
+      "self_doi": "https://doi.org/10.5281/zenodo.18540762",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18540762",
+      "reserve_doi": "https://zenodo.org/api/records/18540762/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/17549545",
+      "parent_html": "https://zenodo.org/records/17549545",
+      "parent_doi": "https://doi.org/10.5281/zenodo.17549545",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17549545",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18540762/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18540762/sequence/default",
+      "files": "https://zenodo.org/api/records/18540762/files",
+      "media_files": "https://zenodo.org/api/records/18540762/media-files",
+      "archive": "https://zenodo.org/api/records/18540762/files-archive",
+      "archive_media": "https://zenodo.org/api/records/18540762/media-files-archive",
+      "latest": "https://zenodo.org/api/records/18540762/versions/latest",
+      "latest_html": "https://zenodo.org/records/18540762/latest",
+      "versions": "https://zenodo.org/api/records/18540762/versions",
+      "draft": "https://zenodo.org/api/records/18540762/draft",
+      "access_links": "https://zenodo.org/api/records/18540762/access/links",
+      "access_grants": "https://zenodo.org/api/records/18540762/access/grants",
+      "access_users": "https://zenodo.org/api/records/18540762/access/users",
+      "access_request": "https://zenodo.org/api/records/18540762/access/request",
+      "access": "https://zenodo.org/api/records/18540762/access",
+      "communities": "https://zenodo.org/api/records/18540762/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/18540762/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/18540762/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/18540762/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/18540762/quota-increase",
+      "requests": "https://zenodo.org/api/records/18540762/requests"
+    },
+    "revision_id": 4,
+    "parent": {
+      "id": "17549545",
+      "access": {
+        "owned_by": {
+          "user": "268009"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.17549545",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 2
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.18540762",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:18540762",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "software",
+        "title": {
+          "de": "Software",
+          "en": "Software"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          }
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Beutler, Naomi",
+            "given_name": "Naomi",
+            "family_name": "Beutler"
+          }
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sarra, Filippo",
+            "given_name": "Filippo",
+            "family_name": "Sarra"
+          }
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Verdone, Valentino",
+            "given_name": "Valentino",
+            "family_name": "Verdone"
+          }
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Boute, Bruno",
+            "given_name": "Bruno",
+            "family_name": "Boute"
+          }
+        }
+      ],
+      "title": "GRACEFUL17 Notebooks",
+      "publisher": "Zenodo",
+      "publication_date": "2026-02-09",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/DHI-Roma/g17-notebooks/tree/v1.0.1",
+          "scheme": "url",
+          "relation_type": {
+            "id": "issupplementto",
+            "title": {
+              "de": "Ergänzt",
+              "en": "Is supplement to"
+            }
+          },
+          "resource_type": {
+            "id": "software",
+            "title": {
+              "de": "Software",
+              "en": "Software"
+            }
+          }
+        }
+      ],
+      "version": "v1.0.1",
+      "rights": [
+        {
+          "id": "mit",
+          "title": {
+            "en": "MIT License"
+          },
+          "description": {
+            "en": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code."
+          },
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "<p>New data, small fixes to hide warnings</p>",
+      "additional_descriptions": [
+        {
+          "description": "If you use this software, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title": {
+              "de": "Anmerkungen",
+              "en": "Notes"
+            }
+          }
+        }
+      ]
+    },
+    "custom_fields": {
+      "code:codeRepository": "https://github.com/DHI-Roma/g17-notebooks"
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 1,
+      "total_bytes": 3071322,
+      "entries": {
+        "DHI-Roma/g17-notebooks-v1.0.1.zip": {
+          "id": "e05fb316-b449-4cdc-b6ee-495451af83db",
+          "checksum": "md5:6767ce99dabf7c46dc32347f18c316fe",
+          "ext": "zip",
+          "size": 3071322,
+          "mimetype": "application/zip",
+          "key": "DHI-Roma/g17-notebooks-v1.0.1.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Feb 9, 2026",
+      "publication_date_l10n_long": "February 9, 2026",
+      "created_date_l10n_long": "February 9, 2026",
+      "updated_date_l10n_long": "February 9, 2026",
+      "resource_type": {
+        "id": "software",
+        "title_l10n": "Software"
+      },
+      "custom_fields": {
+        "code:codeRepository": "https://github.com/DHI-Roma/g17-notebooks"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Beutler, Naomi",
+              "given_name": "Naomi",
+              "family_name": "Beutler"
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sarra, Filippo",
+              "given_name": "Filippo",
+              "family_name": "Sarra"
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Verdone, Valentino",
+              "given_name": "Valentino",
+              "family_name": "Verdone"
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Boute, Bruno",
+              "given_name": "Bruno",
+              "family_name": "Boute"
+            }
+          }
+        ],
+        "affiliations": []
+      },
+      "description_stripped": "New data, small fixes to hide warnings",
+      "version": "v1.0.1",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/DHI-Roma/g17-notebooks/tree/v1.0.1",
+          "relation_type": {
+            "id": "issupplementto",
+            "title_l10n": "Is supplement to"
+          },
+          "scheme": "url",
+          "resource_type": {
+            "id": "software",
+            "title_l10n": "Software"
+          }
+        }
+      ],
+      "additional_descriptions": [
+        {
+          "description": "If you use this software, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title_l10n": "Notes"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "mit",
+          "title_l10n": "MIT License",
+          "description_l10n": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "17550450",
+    "created": "2025-11-07T16:36:21.246987+00:00",
+    "updated": "2025-12-15T12:56:54.129169+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/17550450",
+      "self_html": "https://zenodo.org/records/17550450",
+      "preview_html": "https://zenodo.org/records/17550450?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.17550450",
+      "self_doi": "https://doi.org/10.5281/zenodo.17550450",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17550450",
+      "reserve_doi": "https://zenodo.org/api/records/17550450/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/14945480",
+      "parent_html": "https://zenodo.org/records/14945480",
+      "parent_doi": "https://doi.org/10.5281/zenodo.14945480",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.14945480",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17550450/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17550450/sequence/default",
+      "files": "https://zenodo.org/api/records/17550450/files",
+      "media_files": "https://zenodo.org/api/records/17550450/media-files",
+      "archive": "https://zenodo.org/api/records/17550450/files-archive",
+      "archive_media": "https://zenodo.org/api/records/17550450/media-files-archive",
+      "latest": "https://zenodo.org/api/records/17550450/versions/latest",
+      "latest_html": "https://zenodo.org/records/17550450/latest",
+      "versions": "https://zenodo.org/api/records/17550450/versions",
+      "draft": "https://zenodo.org/api/records/17550450/draft",
+      "access_links": "https://zenodo.org/api/records/17550450/access/links",
+      "access_grants": "https://zenodo.org/api/records/17550450/access/grants",
+      "access_users": "https://zenodo.org/api/records/17550450/access/users",
+      "access_request": "https://zenodo.org/api/records/17550450/access/request",
+      "access": "https://zenodo.org/api/records/17550450/access",
+      "communities": "https://zenodo.org/api/records/17550450/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/17550450/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/17550450/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/17550450/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/17550450/quota-increase",
+      "requests": "https://zenodo.org/api/records/17550450/requests"
+    },
+    "revision_id": 6,
+    "parent": {
+      "id": "14945480",
+      "access": {
+        "owned_by": {
+          "user": "357639"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.14945480",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 2
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.17550450",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:17550450",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "dataset",
+        "title": {
+          "de": "Datensatz",
+          "en": "Dataset"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Beutler, Naomi",
+            "given_name": "Naomi",
+            "family_name": "Beutler",
+            "identifiers": [
+              {
+                "identifier": "0009-0005-1361-5092",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "013cjyk83",
+              "name": "Université Paris Sciences et Lettres",
+              "identifiers": [
+                {
+                  "identifier": "013cjyk83",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.440907.e",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1784 3645",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sarra, Filippo",
+            "given_name": "Filippo",
+            "family_name": "Sarra",
+            "identifiers": [
+              {
+                "identifier": "0009-0009-4366-4011",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "013cjyk83",
+              "name": "Université Paris Sciences et Lettres",
+              "identifiers": [
+                {
+                  "identifier": "013cjyk83",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.440907.e",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1784 3645",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Verdone, Valentino",
+            "given_name": "Valentino",
+            "family_name": "Verdone",
+            "identifiers": [
+              {
+                "identifier": "0009-0000-7424-5770",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "04cvxnb49",
+              "name": "Goethe University Frankfurt",
+              "identifiers": [
+                {
+                  "identifier": "04cvxnb49",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.7839.5",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1936 9721",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Cicerchia, Andrea",
+            "given_name": "Andrea",
+            "family_name": "Cicerchia",
+            "identifiers": [
+              {
+                "identifier": "0000-0002-7291-2354",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "03b9snr86",
+              "name": "Universidade Católica Portuguesa",
+              "identifiers": [
+                {
+                  "identifier": "03b9snr86",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.7831.d",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 0410 653X",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Boute, Bruno",
+            "given_name": "Bruno",
+            "family_name": "Boute",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-0911-3995",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "id": "04cvxnb49",
+              "name": "Goethe University Frankfurt",
+              "identifiers": [
+                {
+                  "identifier": "04cvxnb49",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.7839.5",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0004 1936 9721",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Hörnschemeyer, Jörg",
+            "given_name": "Jörg",
+            "family_name": "Hörnschemeyer",
+            "identifiers": [
+              {
+                "identifier": "0000-0001-8788-5718",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "name": "Deutsches Historisches Institut in Rom"
+            }
+          ]
+        }
+      ],
+      "title": "Graceful17: Main Data Repository",
+      "publisher": "Zenodo",
+      "publication_date": "2025-11-07",
+      "subjects": [
+        {
+          "subject": "Graceful17"
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title": {
+            "en": "Creative Commons Attribution 4.0 International"
+          },
+          "description": {
+            "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+          },
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "<p>This dataset originates from the project <a href=\"http://dhi-roma.it/index.php?id=digital_humanities_singleview0&amp;L=24&amp;tx_ttnews%5Byear%5D=1970&amp;tx_ttnews%5Bmonth%5D=01&amp;tx_ttnews%5Bday%5D=01&amp;tx_ttnews%5Btt_news%5D=4284&amp;cHash=9ff9e82502eb7ba56008822f844e5008\">GRACEFUL17: Global Governance, Local Dynamics. The transnational Regimes of Grace in the Roman Dataria Apostolica in the 17th century in focus</a>. <br><br>It provides information on ecclesiastical offices awarded by the Roman Apostolic Datary, an office of the early-modern Catholic Church. It contain data from dioceses from all over Roman Catholic Europe, focusing on the years 1622/23 and 1677/78.&nbsp;</p>\n<p>Content of this Repo:<br><br><strong>Graceful17-Graph-Data.zip</strong></p>\n<ul>\n<li>&nbsp;A static data dump of the knowledge graph data provided in N-Triples, N-Quads, TriG, RDF, Turtle (ttl) and JSON-LD format, separated according to the main ontologies used (GRACE, CIDOC CRM, RiC-O).</li>\n<li>A full dump including all all named graphs (GRACE, CIDOC CRM, RiC-O) in N-Quads and TriG format.</li>\n<li>All controlled vocabularies and thesauri&mdash;e.g. categories of benefices, churches, religious orders, and ecclesiastical provinces&mdash;as hierarchically structured taxonomies in SKOS format.</li>\n</ul>\n<p><strong>Graceful17-Dioceses.geojson</strong></p>\n<ul>\n<li>Geodata&mdash;in particular for boundaries of dioceses and ecclesiastical provinces&mdash;derived from public geospatial sources, primarily the <a href=\"https://earthworks.stanford.edu/\">Earthworks project</a> at Stanford University as as GeoJSON.</li>\n</ul>\n<p><strong>Graceful17-Transcriptions.tsv</strong></p>\n<ul>\n<li>Basic transcriptions of the archival sources, along with metadata describing archival storage conditions and creation dates that are provided in Tab-separated Values (TSV) format.</li>\n</ul>\n<p>The <a href=\"https://w3id.org/grace/ontology\">GRACE ontology</a>&nbsp;used to model the data in the Knowledge Graph is published separately and can be found <a href=\"https://doi.org/10.5281/zenodo.15301756\">here</a>.</p>\n<p>The Graceful17 knowledge graph can also be queried directly via the SPARQL Enpoint (<a href=\"https://graph.dhi-roma.it/query\">https://graph.dhi-roma.it/query</a>) or a graphical&nbsp;<a href=\"https://dhi-roma.github.io/g17-explorer/ask/\">query builder</a>.</p>\n<p>A more detailed description, including the methodological background and instructions on how to query the Knowledge Graph, can be found in the forthcoming data paper.</p>"
+    },
+    "custom_fields": {},
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "default_preview": "Graceful17-Transcriptions.tsv",
+      "order": [],
+      "count": 3,
+      "total_bytes": 1004792356,
+      "entries": {
+        "Graceful17-Dioceses.geojson": {
+          "id": "66e87eba-d25f-4bab-96f3-d6cea4772ea8",
+          "checksum": "md5:3ccf22226be819706b1824e2bd5bab4d",
+          "ext": "bin",
+          "size": 1808352,
+          "mimetype": "application/octet-stream",
+          "key": "Graceful17-Dioceses.geojson",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Graceful17-Graph-Data.zip": {
+          "id": "f220bdc3-70ce-4117-a26f-d20169689c3c",
+          "checksum": "md5:cd1c6ce04ddd7b91d4c7d1287b5c3357",
+          "ext": "zip",
+          "size": 997227358,
+          "mimetype": "application/zip",
+          "key": "Graceful17-Graph-Data.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Graceful17-Transcriptions.tsv": {
+          "id": "1673f6cb-8d59-4017-8453-b2bc682bc9df",
+          "checksum": "md5:02c88b4f4374fee2290c0390228bdea2",
+          "ext": "tsv",
+          "size": 5756646,
+          "mimetype": "text/tab-separated-values",
+          "key": "Graceful17-Transcriptions.tsv",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Nov 7, 2025",
+      "publication_date_l10n_long": "November 7, 2025",
+      "created_date_l10n_long": "November 7, 2025",
+      "updated_date_l10n_long": "December 15, 2025",
+      "resource_type": {
+        "id": "dataset",
+        "title_l10n": "Dataset"
+      },
+      "custom_fields": {},
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Beutler, Naomi",
+              "given_name": "Naomi",
+              "family_name": "Beutler",
+              "identifiers": [
+                {
+                  "identifier": "0009-0005-1361-5092",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                2,
+                "Université Paris Sciences et Lettres"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sarra, Filippo",
+              "given_name": "Filippo",
+              "family_name": "Sarra",
+              "identifiers": [
+                {
+                  "identifier": "0009-0009-4366-4011",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                2,
+                "Université Paris Sciences et Lettres"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Verdone, Valentino",
+              "given_name": "Valentino",
+              "family_name": "Verdone",
+              "identifiers": [
+                {
+                  "identifier": "0009-0000-7424-5770",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                3,
+                "Goethe University Frankfurt"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Cicerchia, Andrea",
+              "given_name": "Andrea",
+              "family_name": "Cicerchia",
+              "identifiers": [
+                {
+                  "identifier": "0000-0002-7291-2354",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                4,
+                "Universidade Católica Portuguesa"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Boute, Bruno",
+              "given_name": "Bruno",
+              "family_name": "Boute",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-0911-3995",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                3,
+                "Goethe University Frankfurt"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Hörnschemeyer, Jörg",
+              "given_name": "Jörg",
+              "family_name": "Hörnschemeyer",
+              "identifiers": [
+                {
+                  "identifier": "0000-0001-8788-5718",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                5,
+                "Deutsches Historisches Institut in Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ],
+          [
+            2,
+            "Université Paris Sciences et Lettres",
+            "013cjyk83"
+          ],
+          [
+            3,
+            "Goethe University Frankfurt",
+            "04cvxnb49"
+          ],
+          [
+            4,
+            "Universidade Católica Portuguesa",
+            "03b9snr86"
+          ],
+          [
+            5,
+            "Deutsches Historisches Institut in Rom",
+            null
+          ]
+        ]
+      },
+      "description_stripped": "This dataset originates from the project GRACEFUL17: Global Governance, Local Dynamics. The transnational Regimes of Grace in the Roman Dataria Apostolica in the 17th century in focus. It provides information on ecclesiastical offices awarded by the Roman Apostolic Datary, an office of the early-modern Catholic Church. It contain data from dioceses from all over Roman Catholic Europe, focusing on the years 1622/23 and 1677/78. \n\nContent of this Repo:Graceful17-Graph-Data.zip\n\n\n\n A static data dump of the knowledge graph data provided in N-Triples, N-Quads, TriG, RDF, Turtle (ttl) and JSON-LD format, separated according to the main ontologies used (GRACE, CIDOC CRM, RiC-O).\n\nA full dump including all all named graphs (GRACE, CIDOC CRM, RiC-O) in N-Quads and TriG format.\n\nAll controlled vocabularies and thesauri—e.g. categories of benefices, churches, religious orders, and ecclesiastical provinces—as hierarchically structured taxonomies in SKOS format.\n\n\nGraceful17-Dioceses.geojson\n\n\n\nGeodata—in particular for boundaries of dioceses and ecclesiastical provinces—derived from public geospatial sources, primarily the Earthworks project at Stanford University as as GeoJSON.\n\n\nGraceful17-Transcriptions.tsv\n\n\n\nBasic transcriptions of the archival sources, along with metadata describing archival storage conditions and creation dates that are provided in Tab-separated Values (TSV) format.\n\n\nThe GRACE ontology used to model the data in the Knowledge Graph is published separately and can be found here.\n\nThe Graceful17 knowledge graph can also be queried directly via the SPARQL Enpoint (https://graph.dhi-roma.it/query) or a graphical query builder.\n\nA more detailed description, including the methodological background and instructions on how to query the Knowledge Graph, can be found in the forthcoming data paper.",
+      "version": "v2",
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title_l10n": "Creative Commons Attribution 4.0 International",
+          "description_l10n": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited.",
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "17423441",
+    "created": "2025-10-23T09:59:20.010060+00:00",
+    "updated": "2025-11-27T12:32:01.990753+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/17423441",
+      "self_html": "https://zenodo.org/records/17423441",
+      "preview_html": "https://zenodo.org/records/17423441?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.17423441",
+      "self_doi": "https://doi.org/10.5281/zenodo.17423441",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17423441",
+      "reserve_doi": "https://zenodo.org/api/records/17423441/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/17423440",
+      "parent_html": "https://zenodo.org/records/17423440",
+      "parent_doi": "https://doi.org/10.5281/zenodo.17423440",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17423440",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17423441/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17423441/sequence/default",
+      "files": "https://zenodo.org/api/records/17423441/files",
+      "media_files": "https://zenodo.org/api/records/17423441/media-files",
+      "archive": "https://zenodo.org/api/records/17423441/files-archive",
+      "archive_media": "https://zenodo.org/api/records/17423441/media-files-archive",
+      "latest": "https://zenodo.org/api/records/17423441/versions/latest",
+      "latest_html": "https://zenodo.org/records/17423441/latest",
+      "versions": "https://zenodo.org/api/records/17423441/versions",
+      "draft": "https://zenodo.org/api/records/17423441/draft",
+      "access_links": "https://zenodo.org/api/records/17423441/access/links",
+      "access_grants": "https://zenodo.org/api/records/17423441/access/grants",
+      "access_users": "https://zenodo.org/api/records/17423441/access/users",
+      "access_request": "https://zenodo.org/api/records/17423441/access/request",
+      "access": "https://zenodo.org/api/records/17423441/access",
+      "communities": "https://zenodo.org/api/records/17423441/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/17423441/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/17423441/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/17423441/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/17423441/quota-increase",
+      "requests": "https://zenodo.org/api/records/17423441/requests"
+    },
+    "revision_id": 6,
+    "parent": {
+      "id": "17423440",
+      "access": {
+        "owned_by": {
+          "user": "357639"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.17423440",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 1
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.17423441",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:17423441",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "dataset",
+        "title": {
+          "de": "Datensatz",
+          "en": "Dataset"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Engelhardt, Markus",
+            "given_name": "Markus",
+            "family_name": "Engelhardt",
+            "identifiers": [
+              {
+                "identifier": "gnd:123254582",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "projectmanager",
+            "title": {
+              "de": "ProjektmanagerIn",
+              "en": "Project manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Tillinger, Christian",
+            "given_name": "Christian",
+            "family_name": "Tillinger"
+          },
+          "role": {
+            "id": "datamanager",
+            "title": {
+              "de": "DatenmanagerIn",
+              "en": "Data manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Magniez, Anne-Claire",
+            "given_name": "Anne-Claire",
+            "family_name": "Magniez",
+            "identifiers": [
+              {
+                "identifier": "gnd:143474774",
+                "scheme": "gnd"
+              }
+            ]
+          },
+          "role": {
+            "id": "datacollector",
+            "title": {
+              "de": "DatensammlerIn",
+              "en": "Data collector"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "title": "Libretti of the Music History Department of the German Historical Institute in Rome",
+      "publisher": "Zenodo",
+      "publication_date": "2025-10-23",
+      "subjects": [
+        {
+          "id": "euroscivoc:1403",
+          "subject": "Musicology",
+          "scheme": "EuroSciVoc",
+          "props": {
+            "parents": "euroscivoc:31,euroscivoc:109"
+          },
+          "identifiers": [
+            {
+              "identifier": "http://data.europa.eu/8mn/euroscivoc/47eb9d78-a29d-4759-8c86-d7d4a8065997",
+              "scheme": "url"
+            }
+          ]
+        },
+        {
+          "subject": "Opera"
+        }
+      ],
+      "contributors": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Grünewälder, Jan-Peter",
+            "given_name": "Jan-Peter",
+            "family_name": "Grünewälder",
+            "identifiers": [
+              {
+                "identifier": "0009-0006-9112-4042",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "role": {
+            "id": "datamanager",
+            "title": {
+              "de": "DatenmanagerIn",
+              "en": "Data manager"
+            }
+          },
+          "affiliations": [
+            {
+              "id": "00ewnj302",
+              "name": "Deutsches Historisches Institut Rom",
+              "identifiers": [
+                {
+                  "identifier": "00ewnj302",
+                  "scheme": "ror"
+                },
+                {
+                  "identifier": "grid.469443.8",
+                  "scheme": "grid"
+                },
+                {
+                  "identifier": "0000 0001 2324 6976",
+                  "scheme": "isni"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "dates": [
+        {
+          "date": "2009",
+          "type": {
+            "id": "collected",
+            "title": {
+              "de": "Gesammelt",
+              "en": "Collected"
+            }
+          }
+        }
+      ],
+      "languages": [
+        {
+          "id": "ita",
+          "title": {
+            "en": "Italian"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title": {
+            "en": "Creative Commons Attribution 4.0 International"
+          },
+          "description": {
+            "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+          },
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "<p>Metadat-Set of 1,340 records of the shelfmark group \"Rar. Libr.\" (including the 1,162 libretti from the Giazotto Collection, 655 of which form the holdings of early Venetian prints). A further 200 libretti were donated 2007 and have never been catalogued before.&nbsp;<br>Financed by the Deutsche Forschungsgemeinschaft (DFG) and executed in cooperation with the DHI Rome and the Bavarian State Library in Munich, the project aimed at a digitisation of the Music History Department&rsquo;s Libretti-Collection. In 1979, the DFG had made the acquisition of an anthology of librettos from private collectors possible. Including rare librettos of operas, oratorios, cantatas and festive music from the 17th, 18th and 19th Century, the anthology documents the early phase of public opera in Venice (1637-1734) almost completely. Due to its elevated source value, the libretti inventory is in high demand by library users. Thanks to this project, the libretti holdings have been inserted in the online catalogue of the DHI Rome&rsquo;s Music History Department and the Virtual Library of Musicology.</p>",
+      "funding": [
+        {
+          "funder": {
+            "id": "018mejw64",
+            "name": "Deutsche Forschungsgemeinschaft"
+          },
+          "award": {
+            "number": "68257540",
+            "title": {
+              "en": "Retrokonversion und Digitalisierung des Teilbestandes Libretti der Musikgeschichtlichen Bibliothek des Deutschen Historischen Instituts in Rom"
+            },
+            "identifiers": [
+              {
+                "identifier": "https://gepris.dfg.de/gepris/projekt/68257540",
+                "scheme": "url"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "custom_fields": {},
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "default_preview": "readme.txt",
+      "order": [],
+      "count": 5,
+      "total_bytes": 17674570,
+      "entries": {
+        "Libretti.mrc": {
+          "id": "6236a763-b112-45b0-b38f-33de0626e0ae",
+          "checksum": "md5:f0082e21670396a0ebf950ec01e786f4",
+          "ext": "mrc",
+          "size": 2381653,
+          "mimetype": "application/octet-stream",
+          "key": "Libretti.mrc",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Libretti.mrk": {
+          "id": "51d7e92d-441a-48a3-a56d-c9091d16420a",
+          "checksum": "md5:bab430cdac2bd9f9fbf9cee2d251d0c4",
+          "ext": "mrk",
+          "size": 2167762,
+          "mimetype": "application/octet-stream",
+          "key": "Libretti.mrk",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "readme.txt": {
+          "id": "57574132-f0e5-4df4-993c-0593611e0b46",
+          "checksum": "md5:88354c266efea3d87681fc8dd4f75af1",
+          "ext": "txt",
+          "size": 5597,
+          "mimetype": "text/plain",
+          "key": "readme.txt",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Libretti.json": {
+          "id": "0e2d37c7-cc99-4e02-8b77-543be2403f54",
+          "checksum": "md5:6e2cd90925680dcef3057a30edc6eeb4",
+          "ext": "json",
+          "size": 4746845,
+          "mimetype": "application/json",
+          "key": "Libretti.json",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        },
+        "Libretti.xml": {
+          "id": "06639e96-0f9c-40ad-8eb3-bef52144c175",
+          "checksum": "md5:34afe57fb3ea6930373408c8747bc88f",
+          "ext": "xml",
+          "size": 8372713,
+          "mimetype": "text/xml",
+          "key": "Libretti.xml",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Oct 23, 2025",
+      "publication_date_l10n_long": "October 23, 2025",
+      "created_date_l10n_long": "October 23, 2025",
+      "updated_date_l10n_long": "November 27, 2025",
+      "resource_type": {
+        "id": "dataset",
+        "title_l10n": "Dataset"
+      },
+      "custom_fields": {},
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Engelhardt, Markus",
+              "given_name": "Markus",
+              "family_name": "Engelhardt",
+              "identifiers": [
+                {
+                  "identifier": "gnd:123254582",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "projectmanager",
+              "title": "Project manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Tillinger, Christian",
+              "given_name": "Christian",
+              "family_name": "Tillinger"
+            },
+            "role": {
+              "id": "datamanager",
+              "title": "Data manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Magniez, Anne-Claire",
+              "given_name": "Anne-Claire",
+              "family_name": "Magniez",
+              "identifiers": [
+                {
+                  "identifier": "gnd:143474774",
+                  "scheme": "gnd"
+                }
+              ]
+            },
+            "role": {
+              "id": "datacollector",
+              "title": "Data collector"
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ]
+        ]
+      },
+      "contributors": {
+        "contributors": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Grünewälder, Jan-Peter",
+              "given_name": "Jan-Peter",
+              "family_name": "Grünewälder",
+              "identifiers": [
+                {
+                  "identifier": "0009-0006-9112-4042",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "role": {
+              "id": "datamanager",
+              "title": "Data manager"
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Deutsches Historisches Institut Rom",
+            "00ewnj302"
+          ]
+        ]
+      },
+      "languages": [
+        {
+          "id": "ita",
+          "title_l10n": "Italian"
+        }
+      ],
+      "description_stripped": "Metadat-Set of 1,340 records of the shelfmark group \"Rar. Libr.\" (including the 1,162 libretti from the Giazotto Collection, 655 of which form the holdings of early Venetian prints). A further 200 libretti were donated 2007 and have never been catalogued before. Financed by the Deutsche Forschungsgemeinschaft (DFG) and executed in cooperation with the DHI Rome and the Bavarian State Library in Munich, the project aimed at a digitisation of the Music History Department’s Libretti-Collection. In 1979, the DFG had made the acquisition of an anthology of librettos from private collectors possible. Including rare librettos of operas, oratorios, cantatas and festive music from the 17th, 18th and 19th Century, the anthology documents the early phase of public opera in Venice (1637-1734) almost completely. Due to its elevated source value, the libretti inventory is in high demand by library users. Thanks to this project, the libretti holdings have been inserted in the online catalogue of the DHI Rome’s Music History Department and the Virtual Library of Musicology.",
+      "version": "v1",
+      "dates": [
+        {
+          "date": "2009",
+          "type": {
+            "id": "collected",
+            "title_l10n": "Collected"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "cc-by-4.0",
+          "title_l10n": "Creative Commons Attribution 4.0 International",
+          "description_l10n": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited.",
+          "icon": "cc-by-icon",
+          "props": {
+            "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false,
+      "funding": [
+        {
+          "award": {
+            "title_l10n": "Retrokonversion und Digitalisierung des Teilbestandes Libretti der Musikgeschichtlichen Bibliothek des Deutschen Historischen Instituts in Rom",
+            "number": "68257540",
+            "identifiers": [
+              {
+                "identifier": "https://gepris.dfg.de/gepris/projekt/68257540",
+                "scheme": "url"
+              }
+            ]
+          },
+          "funder": {
+            "id": "018mejw64",
+            "name": "Deutsche Forschungsgemeinschaft"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "17420005",
+    "created": "2025-10-22T21:49:31.220779+00:00",
+    "updated": "2025-12-15T12:58:27.111421+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/17420005",
+      "self_html": "https://zenodo.org/records/17420005",
+      "preview_html": "https://zenodo.org/records/17420005?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.17420005",
+      "self_doi": "https://doi.org/10.5281/zenodo.17420005",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17420005",
+      "reserve_doi": "https://zenodo.org/api/records/17420005/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/15274590",
+      "parent_html": "https://zenodo.org/records/15274590",
+      "parent_doi": "https://doi.org/10.5281/zenodo.15274590",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15274590",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17420005/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17420005/sequence/default",
+      "files": "https://zenodo.org/api/records/17420005/files",
+      "media_files": "https://zenodo.org/api/records/17420005/media-files",
+      "archive": "https://zenodo.org/api/records/17420005/files-archive",
+      "archive_media": "https://zenodo.org/api/records/17420005/media-files-archive",
+      "latest": "https://zenodo.org/api/records/17420005/versions/latest",
+      "latest_html": "https://zenodo.org/records/17420005/latest",
+      "versions": "https://zenodo.org/api/records/17420005/versions",
+      "draft": "https://zenodo.org/api/records/17420005/draft",
+      "access_links": "https://zenodo.org/api/records/17420005/access/links",
+      "access_grants": "https://zenodo.org/api/records/17420005/access/grants",
+      "access_users": "https://zenodo.org/api/records/17420005/access/users",
+      "access_request": "https://zenodo.org/api/records/17420005/access/request",
+      "access": "https://zenodo.org/api/records/17420005/access",
+      "communities": "https://zenodo.org/api/records/17420005/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/17420005/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/17420005/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/17420005/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/17420005/quota-increase",
+      "requests": "https://zenodo.org/api/records/17420005/requests"
+    },
+    "revision_id": 6,
+    "parent": {
+      "id": "15274590",
+      "access": {
+        "owned_by": {
+          "user": "268009"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.15274590",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 3
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.17420005",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:17420005",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "software",
+        "title": {
+          "de": "Software",
+          "en": "Software"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "name": "Deutsches Historisches Institut in Rom"
+            }
+          ]
+        },
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Boute, Bruno",
+            "given_name": "Bruno",
+            "family_name": "Boute",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-0911-3995",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "name": "Goethe Universität Frankfurt"
+            }
+          ]
+        }
+      ],
+      "title": "GRACE Ontology",
+      "publisher": "Zenodo",
+      "publication_date": "2025-10-22",
+      "subjects": [
+        {
+          "subject": "ontology"
+        },
+        {
+          "subject": "RDF"
+        },
+        {
+          "subject": "OWL"
+        },
+        {
+          "subject": "Graceful17"
+        }
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/DHI-Roma/grace-ontology/tree/v1.0.3",
+          "scheme": "url",
+          "relation_type": {
+            "id": "issupplementto",
+            "title": {
+              "de": "Ergänzt",
+              "en": "Is supplement to"
+            }
+          },
+          "resource_type": {
+            "id": "software",
+            "title": {
+              "de": "Software",
+              "en": "Software"
+            }
+          }
+        }
+      ],
+      "version": "v1.0.3",
+      "rights": [
+        {
+          "id": "mit",
+          "title": {
+            "en": "MIT License"
+          },
+          "description": {
+            "en": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code."
+          },
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "The official GRACE ontology",
+      "additional_descriptions": [
+        {
+          "description": "If you use this dataset, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title": {
+              "de": "Anmerkungen",
+              "en": "Notes"
+            }
+          }
+        }
+      ]
+    },
+    "custom_fields": {
+      "code:codeRepository": "https://github.com/DHI-Roma/grace-ontology"
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 1,
+      "total_bytes": 5712252,
+      "entries": {
+        "DHI-Roma/grace-ontology-v1.0.3.zip": {
+          "id": "587badd6-eee4-4c65-9724-65312a676a58",
+          "checksum": "md5:f1c444ff486b6fe77a3bbf17c93f6eef",
+          "ext": "zip",
+          "size": 5712252,
+          "mimetype": "application/zip",
+          "key": "DHI-Roma/grace-ontology-v1.0.3.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": {
+      "swhid": "swh:1:dir:0075b79e4b3fa663e1e1d522892b8e50d0da68cd;origin=https://doi.org/10.5281/zenodo.15274590;visit=swh:1:snp:69ef50e398f3e8cce21e08f33c18ae2f00a38dd6;anchor=swh:1:rel:f6de8155ff8d2e63ec728b4c915cda9117a43d84;path=DHI-Roma-grace-ontology-c4847d4"
+    },
+    "ui": {
+      "publication_date_l10n_medium": "Oct 22, 2025",
+      "publication_date_l10n_long": "October 22, 2025",
+      "created_date_l10n_long": "October 22, 2025",
+      "updated_date_l10n_long": "December 15, 2025",
+      "resource_type": {
+        "id": "software",
+        "title_l10n": "Software"
+      },
+      "custom_fields": {
+        "code:codeRepository": "https://github.com/DHI-Roma/grace-ontology"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                1,
+                "Deutsches Historisches Institut in Rom"
+              ]
+            ]
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Boute, Bruno",
+              "given_name": "Bruno",
+              "family_name": "Boute",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-0911-3995",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                2,
+                "Goethe Universität Frankfurt"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "Deutsches Historisches Institut in Rom",
+            null
+          ],
+          [
+            2,
+            "Goethe Universität Frankfurt",
+            null
+          ]
+        ]
+      },
+      "description_stripped": "The official GRACE ontology",
+      "version": "v1.0.3",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/DHI-Roma/grace-ontology/tree/v1.0.3",
+          "relation_type": {
+            "id": "issupplementto",
+            "title_l10n": "Is supplement to"
+          },
+          "scheme": "url",
+          "resource_type": {
+            "id": "software",
+            "title_l10n": "Software"
+          }
+        }
+      ],
+      "additional_descriptions": [
+        {
+          "description": "If you use this dataset, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title_l10n": "Notes"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "mit",
+          "title_l10n": "MIT License",
+          "description_l10n": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "17253726",
+    "created": "2025-10-02T20:54:59.557719+00:00",
+    "updated": "2025-12-15T12:59:03.027713+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/17253726",
+      "self_html": "https://zenodo.org/records/17253726",
+      "preview_html": "https://zenodo.org/records/17253726?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.17253726",
+      "self_doi": "https://doi.org/10.5281/zenodo.17253726",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17253726",
+      "reserve_doi": "https://zenodo.org/api/records/17253726/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/15267861",
+      "parent_html": "https://zenodo.org/records/15267861",
+      "parent_doi": "https://doi.org/10.5281/zenodo.15267861",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15267861",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17253726/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17253726/sequence/default",
+      "files": "https://zenodo.org/api/records/17253726/files",
+      "media_files": "https://zenodo.org/api/records/17253726/media-files",
+      "archive": "https://zenodo.org/api/records/17253726/files-archive",
+      "archive_media": "https://zenodo.org/api/records/17253726/media-files-archive",
+      "latest": "https://zenodo.org/api/records/17253726/versions/latest",
+      "latest_html": "https://zenodo.org/records/17253726/latest",
+      "versions": "https://zenodo.org/api/records/17253726/versions",
+      "draft": "https://zenodo.org/api/records/17253726/draft",
+      "access_links": "https://zenodo.org/api/records/17253726/access/links",
+      "access_grants": "https://zenodo.org/api/records/17253726/access/grants",
+      "access_users": "https://zenodo.org/api/records/17253726/access/users",
+      "access_request": "https://zenodo.org/api/records/17253726/access/request",
+      "access": "https://zenodo.org/api/records/17253726/access",
+      "communities": "https://zenodo.org/api/records/17253726/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/17253726/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/17253726/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/17253726/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/17253726/quota-increase",
+      "requests": "https://zenodo.org/api/records/17253726/requests"
+    },
+    "revision_id": 8,
+    "parent": {
+      "id": "15267861",
+      "access": {
+        "owned_by": {
+          "user": "268009"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.15267861",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 4
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.17253726",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:17253726",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "software",
+        "title": {
+          "de": "Software",
+          "en": "Software"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Sander, Christoph",
+            "given_name": "Christoph",
+            "family_name": "Sander",
+            "identifiers": [
+              {
+                "identifier": "0000-0003-4452-0107",
+                "scheme": "orcid"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "DATAria Python Utils",
+      "publisher": "Zenodo",
+      "publication_date": "2025-10-02",
+      "subjects": [
+        {
+          "subject": "Graceful17"
+        }
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/ch-sander/dataria-py-utils/tree/v0.4.2",
+          "scheme": "url",
+          "relation_type": {
+            "id": "issupplementto",
+            "title": {
+              "de": "Ergänzt",
+              "en": "Is supplement to"
+            }
+          },
+          "resource_type": {
+            "id": "software",
+            "title": {
+              "de": "Software",
+              "en": "Software"
+            }
+          }
+        }
+      ],
+      "version": "v0.4.2",
+      "rights": [
+        {
+          "id": "mit",
+          "title": {
+            "en": "MIT License"
+          },
+          "description": {
+            "en": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code."
+          },
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "description": "Dataria Python Package",
+      "additional_descriptions": [
+        {
+          "description": "If you use this software, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title": {
+              "de": "Anmerkungen",
+              "en": "Notes"
+            }
+          }
+        }
+      ]
+    },
+    "custom_fields": {
+      "code:codeRepository": "https://github.com/ch-sander/dataria-py-utils"
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 1,
+      "total_bytes": 20928,
+      "entries": {
+        "ch-sander/dataria-py-utils-v0.4.2.zip": {
+          "id": "7f105ee5-e9f4-4aba-8d85-5c6a64023fa3",
+          "checksum": "md5:9f333e0ba39528f21256be884c0ec461",
+          "ext": "zip",
+          "size": 20928,
+          "mimetype": "application/zip",
+          "key": "ch-sander/dataria-py-utils-v0.4.2.zip",
+          "metadata": {},
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": false,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": {
+      "swhid": "swh:1:dir:995799c2c61d8b9c137092d2ea716bed9b2455c4;origin=https://doi.org/10.5281/zenodo.15267861;visit=swh:1:snp:5f925f22441f85132b1aac282e2ca65c061a84c6;anchor=swh:1:rel:23631ff9d4a31f1f42ff067cabb68ab89a4bacf6;path=ch-sander-dataria-py-utils-833dc3e"
+    },
+    "ui": {
+      "publication_date_l10n_medium": "Oct 2, 2025",
+      "publication_date_l10n_long": "October 2, 2025",
+      "created_date_l10n_long": "October 2, 2025",
+      "updated_date_l10n_long": "December 15, 2025",
+      "resource_type": {
+        "id": "software",
+        "title_l10n": "Software"
+      },
+      "custom_fields": {
+        "code:codeRepository": "https://github.com/ch-sander/dataria-py-utils"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Sander, Christoph",
+              "given_name": "Christoph",
+              "family_name": "Sander",
+              "identifiers": [
+                {
+                  "identifier": "0000-0003-4452-0107",
+                  "scheme": "orcid"
+                }
+              ]
+            }
+          }
+        ],
+        "affiliations": []
+      },
+      "description_stripped": "Dataria Python Package",
+      "version": "v0.4.2",
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/ch-sander/dataria-py-utils/tree/v0.4.2",
+          "relation_type": {
+            "id": "issupplementto",
+            "title_l10n": "Is supplement to"
+          },
+          "scheme": "url",
+          "resource_type": {
+            "id": "software",
+            "title_l10n": "Software"
+          }
+        }
+      ],
+      "additional_descriptions": [
+        {
+          "description": "If you use this software, please cite it using the metadata from this file.",
+          "type": {
+            "id": "notes",
+            "title_l10n": "Notes"
+          }
+        }
+      ],
+      "rights": [
+        {
+          "id": "mit",
+          "title_l10n": "MIT License",
+          "description_l10n": "A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+          "props": {
+            "url": "https://opensource.org/licenses/MIT",
+            "scheme": "spdx"
+          }
+        }
+      ],
+      "is_draft": false
+    }
+  },
+  {
+    "id": "6610846",
+    "created": "2022-06-03T13:11:24.645986+00:00",
+    "updated": "2024-07-16T16:11:52.345373+00:00",
+    "links": {
+      "self": "https://zenodo.org/api/records/6610846",
+      "self_html": "https://zenodo.org/records/6610846",
+      "preview_html": "https://zenodo.org/records/6610846?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.6610846",
+      "self_doi": "https://doi.org/10.5281/zenodo.6610846",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6610846",
+      "reserve_doi": "https://zenodo.org/api/records/6610846/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/6610845",
+      "parent_html": "https://zenodo.org/records/6610845",
+      "parent_doi": "https://doi.org/10.5281/zenodo.6610845",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6610845",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:6610846/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:6610846/sequence/default",
+      "files": "https://zenodo.org/api/records/6610846/files",
+      "media_files": "https://zenodo.org/api/records/6610846/media-files",
+      "thumbnails": {
+        "10": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E10,/0/default.jpg",
+        "50": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E50,/0/default.jpg",
+        "100": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E100,/0/default.jpg",
+        "250": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E250,/0/default.jpg",
+        "750": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E750,/0/default.jpg",
+        "1200": "https://zenodo.org/api/iiif/record:6610846:FascismThroughTheLenseOfInternationalNewspapers.png/full/%5E1200,/0/default.jpg"
+      },
+      "archive": "https://zenodo.org/api/records/6610846/files-archive",
+      "archive_media": "https://zenodo.org/api/records/6610846/media-files-archive",
+      "latest": "https://zenodo.org/api/records/6610846/versions/latest",
+      "latest_html": "https://zenodo.org/records/6610846/latest",
+      "versions": "https://zenodo.org/api/records/6610846/versions",
+      "draft": "https://zenodo.org/api/records/6610846/draft",
+      "access_links": "https://zenodo.org/api/records/6610846/access/links",
+      "access_grants": "https://zenodo.org/api/records/6610846/access/grants",
+      "access_users": "https://zenodo.org/api/records/6610846/access/users",
+      "access_request": "https://zenodo.org/api/records/6610846/access/request",
+      "access": "https://zenodo.org/api/records/6610846/access",
+      "communities": "https://zenodo.org/api/records/6610846/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/6610846/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/6610846/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/6610846/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/6610846/quota-increase",
+      "requests": "https://zenodo.org/api/records/6610846/requests"
+    },
+    "revision_id": 5,
+    "parent": {
+      "id": "6610845",
+      "access": {
+        "owned_by": {
+          "user": "357639"
+        },
+        "settings": {
+          "allow_user_requests": false,
+          "allow_guest_requests": false,
+          "accept_conditions_text": null,
+          "secret_link_expiration": 0
+        }
+      },
+      "pids": {
+        "doi": {
+          "identifier": "10.5281/zenodo.6610845",
+          "provider": "datacite",
+          "client": "datacite"
+        }
+      }
+    },
+    "versions": {
+      "is_latest": true,
+      "index": 1
+    },
+    "is_published": true,
+    "is_draft": false,
+    "pids": {
+      "doi": {
+        "identifier": "10.5281/zenodo.6610846",
+        "provider": "datacite",
+        "client": "datacite"
+      },
+      "oai": {
+        "identifier": "oai:zenodo.org:6610846",
+        "provider": "oai"
+      }
+    },
+    "metadata": {
+      "resource_type": {
+        "id": "poster",
+        "title": {
+          "de": "Poster",
+          "en": "Poster"
+        }
+      },
+      "creators": [
+        {
+          "person_or_org": {
+            "type": "personal",
+            "name": "Jörg Hörnschemeyer",
+            "family_name": "Jörg Hörnschemeyer",
+            "identifiers": [
+              {
+                "identifier": "0000-0001-8788-5718",
+                "scheme": "orcid"
+              }
+            ]
+          },
+          "affiliations": [
+            {
+              "name": "DHI Rom"
+            }
+          ]
+        }
+      ],
+      "title": "Fascism Through the Lense off (Inter)national Newspapers - Poster",
+      "publisher": "Zenodo",
+      "publication_date": "2022-06-03",
+      "rights": [
+        {
+          "title": {
+            "en": ""
+          }
+        }
+      ],
+      "description": "<p>The significant influence that the fascist and National Socialist regimes have had on the national press and publication landscape has been well documented in international research. Nevertheless, the perception and representation of political actions took place not only at home, but also abroad and thus outside the direct sphere of influence of the two regimes. An important example of this is the Digital Exile Press &ndash; German-language exile journals 1933&ndash;1945 hosted by the German National Library.&nbsp;With the help of quantitative text analyses of the German-language Exile Press and a set of contrastive contemporary German and Italian Press, the corpora will be examined with regard to:&nbsp;</p>\n\n<ul>\n\t<li>Perception of Fascism and National Socialism from the perspective of the exiled citizens.</li>\n\t<li>Reconstruction of media strategies in the political discourse.</li>\n\t<li>Characteristic topics of the various press publications.&nbsp;</li>\n</ul>"
+    },
+    "custom_fields": {
+      "meeting:meeting": {
+        "dates": "June 2 to 4, 2022",
+        "title": "DATAFICATION IN THE HISTORICAL HUMANITIES. Reconsidering Traditional Understandings of Sources and Data",
+        "url": "https://datafication.hypotheses.org/"
+      }
+    },
+    "access": {
+      "record": "public",
+      "files": "public",
+      "embargo": {
+        "active": false,
+        "reason": null
+      },
+      "status": "open"
+    },
+    "files": {
+      "enabled": true,
+      "order": [],
+      "count": 1,
+      "total_bytes": 13711491,
+      "entries": {
+        "FascismThroughTheLenseOfInternationalNewspapers.png": {
+          "id": "c22d7d80-ae9b-46f5-a601-c00b626cb315",
+          "checksum": "md5:1e40169c679271ee50fb28a57126242c",
+          "ext": "png",
+          "size": 13711491,
+          "mimetype": "image/png",
+          "key": "FascismThroughTheLenseOfInternationalNewspapers.png",
+          "metadata": {
+            "width": 9182,
+            "height": 15638
+          },
+          "access": {
+            "hidden": false
+          }
+        }
+      }
+    },
+    "media_files": {
+      "enabled": true,
+      "order": [],
+      "count": 0,
+      "total_bytes": 0,
+      "entries": {}
+    },
+    "status": "published",
+    "deletion_status": {
+      "is_deleted": false,
+      "status": "P"
+    },
+    "swh": null,
+    "ui": {
+      "publication_date_l10n_medium": "Jun 3, 2022",
+      "publication_date_l10n_long": "June 3, 2022",
+      "created_date_l10n_long": "June 3, 2022",
+      "updated_date_l10n_long": "July 16, 2024",
+      "resource_type": {
+        "id": "poster",
+        "title_l10n": "Poster"
+      },
+      "custom_fields": {
+        "meeting:meeting": {
+          "dates": "June 2 to 4, 2022",
+          "title": "DATAFICATION IN THE HISTORICAL HUMANITIES. Reconsidering Traditional Understandings of Sources and Data",
+          "url": "https://datafication.hypotheses.org/"
+        }
+      },
+      "conference": {
+        "dates": "June 2 to 4, 2022",
+        "title": "DATAFICATION IN THE HISTORICAL HUMANITIES. Reconsidering Traditional Understandings of Sources and Data",
+        "url": "https://datafication.hypotheses.org/"
+      },
+      "access_status": {
+        "id": "open",
+        "title_l10n": "Open",
+        "description_l10n": "The record and files are publicly accessible.",
+        "icon": "unlock",
+        "embargo_date_l10n": null,
+        "message_class": ""
+      },
+      "creators": {
+        "creators": [
+          {
+            "person_or_org": {
+              "type": "personal",
+              "name": "Jörg Hörnschemeyer",
+              "family_name": "Jörg Hörnschemeyer",
+              "identifiers": [
+                {
+                  "identifier": "0000-0001-8788-5718",
+                  "scheme": "orcid"
+                }
+              ]
+            },
+            "affiliations": [
+              [
+                1,
+                "DHI Rom"
+              ]
+            ]
+          }
+        ],
+        "affiliations": [
+          [
+            1,
+            "DHI Rom",
+            null
+          ]
+        ]
+      },
+      "description_stripped": "The significant influence that the fascist and National Socialist regimes have had on the national press and publication landscape has been well documented in international research. Nevertheless, the perception and representation of political actions took place not only at home, but also abroad and thus outside the direct sphere of influence of the two regimes. An important example of this is the Digital Exile Press – German-language exile journals 1933–1945 hosted by the German National Library. With the help of quantitative text analyses of the German-language Exile Press and a set of contrastive contemporary German and Italian Press, the corpora will be examined with regard to: \n\n\n\n\t\nPerception of Fascism and National Socialism from the perspective of the exiled citizens.\n\t\nReconstruction of media strategies in the political discourse.\n\t\nCharacteristic topics of the various press publications. ",
+      "version": "v1",
+      "rights": [
+        {
+          "title_l10n": ""
+        }
+      ],
+      "is_draft": false
+    }
+  }
+]

@@ -26,12 +26,9 @@ public class ZenodoConceptHarvester extends ZenodoHarvester {
 
     @Override
     protected String getForeignId(ObjectNode hit) {
-        return Optional.ofNullable(hit.get("conceptrecid"))
+        return Optional.of(hit.at("/parent/id"))
             .filter(JsonNode::isValueNode)
             .map(JsonNode::asText)
-            .or(() -> Optional.ofNullable(hit.at("/metadata/relations/version/0/parent/pid_value"))
-                .filter(JsonNode::isValueNode)
-                .map(JsonNode::asText))
             .orElseGet(() -> {
                 log.warn("Could not find concept id of record {}, using the record id", hit.get("id"));
                 return super.getForeignId(hit);

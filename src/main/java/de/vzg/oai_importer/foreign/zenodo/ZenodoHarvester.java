@@ -41,6 +41,12 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
 
     public static final String ZENODO_HARVESTER = "ZenodoHarvester";
 
+    /**
+     * The records are requested and stored in the InvenioRDM format, because the legacy format of Zenodo lacks some
+     * information, e.g. subjects of controlled vocabularies and the type of creators.
+     */
+    private static final String INVENIORDM_MEDIA_TYPE = "application/vnd.inveniordm.v1+json";
+
     @Autowired
     private ForeignEntityRepository recordRepository;
 
@@ -77,7 +83,6 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
         int hitsPerPage = 25;
         boolean abort = false;
 
-
         while (remainingRequests.get() > 0 && !abort) {
             parameters.put("page", List.of(String.valueOf(currentPage.incrementAndGet())));
             parameters.put("size", List.of(String.valueOf(hitsPerPage)));
@@ -85,8 +90,9 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
                 parameters.put("all_versions", List.of("true"));
             }
             HttpGet get = new HttpGet(buildURIComplete(source.getUrl() + "api/records", parameters));
-            log.info("Requesting page {} of {} with url {}", currentPage.get(), maxPages.get() == -1 ? "?" : maxPages.get(), get.getUri());
-            get.addHeader("Accept", "application/json");
+            log.info("Requesting page {} of {} with url {}", currentPage.get(),
+                maxPages.get() == -1 ? "?" : maxPages.get(), get.getUri());
+            get.addHeader("Accept", INVENIORDM_MEDIA_TYPE);
             get.addHeader("User-Agent", "MyCoRe Importer");
             try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
                 abort = !httpclient.execute(get, (ClassicHttpResponse response) -> {
@@ -96,7 +102,7 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
                     Header rateLimitResetHeader = getSingleHeader(response, "x-ratelimit-reset");
                     rateLimitReset.set(Integer.parseInt(rateLimitResetHeader.getValue()));
 
-                    if(response.getCode() == 200) {
+                    if (response.getCode() == 200) {
                         InputStream content = response.getEntity().getContent();
                         int max = processForeignEntities(configID, datestamp, content, entities);
                         maxPages.set((int) Math.ceil(((double) max) / 25.0));
@@ -107,7 +113,7 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
                         return false;
                     }
                 });
-                if(remainingRequests.get()<0){
+                if (remainingRequests.get() < 0) {
                     log.warn("Rate limit exceeded! Resets in {}", rateLimitReset.get());
                 }
             }
@@ -129,7 +135,7 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
      * @return the id which is used to identify the hit in the local database
      */
     protected String getForeignId(ObjectNode hit) {
-        return String.valueOf(hit.get("id").asInt());
+        return hit.get("id").asText();
     }
 
     private static Header getSingleHeader(ClassicHttpResponse response, String headerName) {
@@ -163,19 +169,17 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
                 .map(ObjectNode.class::cast)
                 .orElseThrow(() -> new IOException("Hit is not an object"));
 
-
-
             String pureMetadata = prettyPrinter.writeValueAsString(hit);
 
-            String modifiedText = hit.get("modified").asText();
+            String modifiedText = hit.get("updated").asText();
             String id = getForeignId(hit);
-            Instant modified =Instant.parse(modifiedText);
+            Instant modified = Instant.parse(modifiedText);
 
             if (modified.isAfter(datestamp.toInstant())) {
                 String recordId = String.valueOf(id);
                 // check if record already exists in database, to prevent duplicates
-                ForeignEntity entity
-                    = Optional.ofNullable(recordRepository.findFirstByConfigIdAndForeignId(configID, recordId))
+                ForeignEntity entity =
+                    Optional.ofNullable(recordRepository.findFirstByConfigIdAndForeignId(configID, recordId))
                         .orElseGet(ForeignEntity::new);
 
                 entity.setConfigId(configID);
@@ -190,5 +194,6 @@ public class ZenodoHarvester implements Harvester<ZenodoSourceConfiguration> {
         return total;
     }
 
-    record Result(int hitsInRequest, int maxHits){}
+    record Result(int hitsInRequest, int maxHits) {
+    }
 }

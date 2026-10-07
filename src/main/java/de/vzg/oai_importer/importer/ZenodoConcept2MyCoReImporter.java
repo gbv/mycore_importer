@@ -4,8 +4,9 @@ import org.mycore.libmeta.mods.model.Mods;
 import org.mycore.libmeta.mods.model._toplevel.Identifier;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestRecord;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
 import lombok.extern.log4j.Log4j2;
 
@@ -19,10 +20,10 @@ import lombok.extern.log4j.Log4j2;
 public class ZenodoConcept2MyCoReImporter extends Zenodo2MyCoReImporter {
 
     @Override
-    protected void handleDOI(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        String doi = restRecord.getConceptdoi();
+    protected void handleDOI(JsonNode restRecord, Mods.Builder mods) {
+        String doi = text(restRecord.at("/parent/pids/doi/identifier"));
         if (doi == null) {
-            log.warn("Record {} has no concept DOI, using the DOI of the version", restRecord.getId());
+            log.warn("Record {} has no concept DOI, using the DOI of the version", restRecord.path("id").asText());
             super.handleDOI(restRecord, mods);
             return;
         }
@@ -31,7 +32,7 @@ public class ZenodoConcept2MyCoReImporter extends Zenodo2MyCoReImporter {
 
     @Override
     protected void handleGrouping(MyCoReTargetConfiguration target, ForeignEntity recordEntity,
-        ZenodoRestRecord restRecord, Mods.Builder mods) {
+        JsonNode restRecord, Mods.Builder mods) {
         // no versions, no grouping
     }
 }
