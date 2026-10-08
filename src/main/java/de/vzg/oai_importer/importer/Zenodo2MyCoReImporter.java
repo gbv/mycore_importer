@@ -6,20 +6,21 @@ import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.logging.log4j.util.Strings;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -36,12 +37,14 @@ import org.mycore.libmeta.mods.MODSXMLProcessor;
 import org.mycore.libmeta.mods.model.Mods;
 import org.mycore.libmeta.mods.model._misc.CodeOrText;
 import org.mycore.libmeta.mods.model._misc.DateEncoding;
+import org.mycore.libmeta.mods.model._misc.enums.NamePartType;
 import org.mycore.libmeta.mods.model._misc.enums.NameType;
 import org.mycore.libmeta.mods.model._misc.enums.Yes;
 import org.mycore.libmeta.mods.model._toplevel.Abstract;
 import org.mycore.libmeta.mods.model._toplevel.AccessCondition;
 import org.mycore.libmeta.mods.model._toplevel.Genre;
 import org.mycore.libmeta.mods.model._toplevel.Identifier;
+import org.mycore.libmeta.mods.model._toplevel.Language;
 import org.mycore.libmeta.mods.model._toplevel.Location;
 import org.mycore.libmeta.mods.model._toplevel.Name;
 import org.mycore.libmeta.mods.model._toplevel.OriginInfo;
@@ -50,11 +53,13 @@ import org.mycore.libmeta.mods.model._toplevel.RelatedItem;
 import org.mycore.libmeta.mods.model._toplevel.Subject;
 import org.mycore.libmeta.mods.model._toplevel.TitleInfo;
 import org.mycore.libmeta.mods.model._toplevel.TypeOfResource;
+import org.mycore.libmeta.mods.model.language.LanguageTerm;
 import org.mycore.libmeta.mods.model.location.Url;
 import org.mycore.libmeta.mods.model.location.UrlAccess;
 import org.mycore.libmeta.mods.model.name.Affiliation;
 import org.mycore.libmeta.mods.model.name.DisplayForm;
 import org.mycore.libmeta.mods.model.name.NameIdentifier;
+import org.mycore.libmeta.mods.model.name.NamePart;
 import org.mycore.libmeta.mods.model.name.Role;
 import org.mycore.libmeta.mods.model.name.RoleTerm;
 import org.mycore.libmeta.mods.model.origininfo.DateIssued;
@@ -68,19 +73,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import de.vzg.oai_importer.foreign.jpa.ForeignEntity;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestFileMetadata;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestLicense;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestMetadata;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestPerson;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestRecord;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestRelations;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestResourceType;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestSubjects;
-import de.vzg.oai_importer.foreign.zenodo.ZenodoRestVersion;
 import de.vzg.oai_importer.mapping.MappingService;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
 import de.vzg.oai_importer.mapping.jpa.MappingGroup;
@@ -96,6 +92,9 @@ import jakarta.xml.bind.Marshaller;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
+/**
+ * Converts Zenodo records to MyCoRe objects. The records are expected in the InvenioRDM format, see ZenodoHarvester.
+ */
 @Service("Zenodo2MyCoReImporter")
 @Log4j2
 public class Zenodo2MyCoReImporter implements Importer {
@@ -121,8 +120,16 @@ public class Zenodo2MyCoReImporter implements Importer {
 
     protected Map<String, String> config;
 
-    private static void handleTitle(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        String title = restRecord.getTitle();
+    /**
+     * @return the text of the node, null if the node is missing, null or blank
+     */
+    protected static String text(JsonNode node) {
+        String text = node.asText(null);
+        return text == null || text.isBlank() ? null : text;
+    }
+
+    private static void handleTitle(JsonNode restRecord, Mods.Builder mods) {
+        String title = text(restRecord.at("/metadata/title"));
         if (title != null) {
             TitleInfo titleInfo = getTitleInfo(title);
             mods.addContent(titleInfo);
@@ -155,41 +162,37 @@ public class Zenodo2MyCoReImporter implements Importer {
         document.setBaseUri("http://test.de/receive/placeholder");
     }
 
-    private static void handleSubject(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        ZenodoRestMetadata zenodoRestMetadata = restRecord.getMetadata();
-        List<ZenodoRestSubjects> subjects = zenodoRestMetadata.getSubjects();
+    /**
+     * Adds free keywords and subjects of controlled vocabularies (e.g. EuroSciVoc). The latter have a valueURI, if
+     * the vocabulary provides one.
+     */
+    private static void handleSubject(JsonNode restRecord, Mods.Builder mods) {
         HashSet<String> processedSubjects = new HashSet<>();
 
-        if (subjects != null) {
-            for (ZenodoRestSubjects subject : subjects) {
-                String scheme = subject.getScheme();
-                String identifier = subject.getIdentifier();
-                String term = subject.getTerm();
-                if (scheme.equals("url")) {
-                    SubjectTopic content = new SubjectTopic();
-                    content.setValueURI(identifier);
-                    content.setContent(term);
-                    processedSubjects.add(term);
-                    Subject subjectMods = new Subject();
-                    subjectMods.getContent().add(content);
-                    mods.addContent(subjectMods);
-                }
+        for (JsonNode subject : restRecord.at("/metadata/subjects")) {
+            String term = text(subject.path("subject"));
+            if (term == null || !processedSubjects.add(term)) {
+                continue;
+            }
+            SubjectTopic content = new SubjectTopic();
+            content.setValueURI(getIdentifier(subject, "url"));
+            content.setContent(term);
+            Subject subjectMods = new Subject();
+            subjectMods.getContent().add(content);
+            mods.addContent(subjectMods);
+        }
+    }
+
+    /**
+     * @return the first identifier with the scheme in the identifiers of the node, null if there is none
+     */
+    private static String getIdentifier(JsonNode node, String scheme) {
+        for (JsonNode identifier : node.path("identifiers")) {
+            if (scheme.equals(identifier.path("scheme").asText())) {
+                return text(identifier.path("identifier"));
             }
         }
-        List<String> keywords = zenodoRestMetadata.getKeywords();
-
-        if (keywords != null) {
-            for (String keyword : keywords) {
-                if (!processedSubjects.contains(keyword)) {
-                    SubjectTopic content = new SubjectTopic();
-                    content.setContent(keyword);
-                    Subject subjectMods = new Subject();
-                    subjectMods.getContent().add(content);
-                    mods.addContent(subjectMods);
-                }
-            }
-        }
-
+        return null;
     }
 
     private static void handleRecordInfo(Mods.Builder mods, String foreignId, String configId) {
@@ -207,35 +210,49 @@ public class Zenodo2MyCoReImporter implements Importer {
         return builder;
     }
 
-    protected void handleDOI(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        String doi = restRecord.getMetadata().getDoi();
+    protected void handleDOI(JsonNode restRecord, Mods.Builder mods) {
+        String doi = text(restRecord.at("/pids/doi/identifier"));
         if (doi != null) {
             mods.addContent(Identifier.builderForIdentifier().content(doi).type("doi").build());
         }
     }
 
-    private static ZenodoRestRecord parseMetadata(String metadata) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        ZenodoRestRecord restRecord;
+    private static JsonNode parseMetadata(String metadata) {
+        JsonNode restRecord;
 
         try {
-            restRecord = objectMapper.readValue(metadata, ZenodoRestRecord.class);
+            restRecord = new ObjectMapper().readTree(metadata);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+        if (restRecord.at("/metadata/resource_type/id").isMissingNode()) {
+            // the legacy format of Zenodo has resource_type/type instead
+            throw new IllegalArgumentException("Der Datensatz " + restRecord.path("id").asText()
+                + " liegt nicht im InvenioRDM-Format vor. Bitte den Datensatz löschen und neu harvesten.");
         }
         return restRecord;
     }
 
-    private static String getZenodoType(ZenodoRestResourceType resourceType) {
-        String type = Optional.ofNullable(resourceType.getType()).orElse(Strings.EMPTY);
-        String subtype = Optional.ofNullable(resourceType.getSubtype()).orElse(Strings.EMPTY);
-        return Stream.of(type, subtype).filter(s -> !s.isBlank()).collect(Collectors.joining("_"));
+    private static String getZenodoType(JsonNode restRecord) {
+        return restRecord.at("/metadata/resource_type/id").asText();
     }
 
-    private void handlePublicationInfo(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        String publicationDate = restRecord.getMetadata().getPublication_date();
+    /**
+     * @return the ids of the licenses of the record, licenses without id (custom licenses) are ignored
+     */
+    private static Set<String> getLicenseIds(JsonNode restRecord) {
+        Set<String> licenseIds = new LinkedHashSet<>();
+        for (JsonNode right : restRecord.at("/metadata/rights")) {
+            String id = text(right.path("id"));
+            if (id != null) {
+                licenseIds.add(id);
+            }
+        }
+        return licenseIds;
+    }
+
+    private void handlePublicationInfo(JsonNode restRecord, Mods.Builder mods) {
+        String publicationDate = text(restRecord.at("/metadata/publication_date"));
         OriginInfo.Builder originInfo = OriginInfo.builderForOriginInfo();
 
         if (publicationDate != null) {
@@ -248,89 +265,135 @@ public class Zenodo2MyCoReImporter implements Importer {
         mods.addContent(originInfo.build());
     }
 
-    private void handleCreators(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        List<ZenodoRestPerson> creators = restRecord.getMetadata().getCreators();
-        if (creators == null) {
-            return;
-        }
-        for (ZenodoRestPerson creator : creators) {
-            String name = creator.getName();
-            String affiliation = creator.getAffiliation();
-            String orcid = creator.getOrcid();
-            Name.Builder builder = Name.builder();
-
-            if (name != null) {
-                builder.addContent(DisplayForm.builder().content(name).build());
-            }
-
-            if (affiliation != null) {
-                builder.addContent(Affiliation.builder().content(affiliation).build());
-            }
-
-            if (orcid != null) {
-                builder.addContent(NameIdentifier.builder().content(orcid).type("orcid").build());
-            }
-
-            if (name != null || affiliation != null || orcid != null) {
-                mods.addContent(builder.build());
-            }
-
-            RoleTerm roleTerm
-                = RoleTerm.builder().type(CodeOrText.CODE).authority("marcrelator").content("aut").build();
-            Role role = Role.builder().addRoleTerm(roleTerm).build();
-            builder.addContent(role);
+    private void handleCreators(JsonNode restRecord, Mods.Builder mods) {
+        for (JsonNode creator : restRecord.at("/metadata/creators")) {
+            addName(mods, creator, "aut");
         }
     }
 
-    private boolean handleContributors(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        List<ZenodoRestPerson> contributors = restRecord.getMetadata().getContributors();
-        if (contributors == null) {
-            return true;
-        }
-        for (ZenodoRestPerson contributor : contributors) {
-            String name = contributor.getName();
-            String affiliation = contributor.getAffiliation();
-            String orcid = contributor.getOrcid();
-            Name.Builder builder = Name.builder();
-
-            if (name != null) {
-                builder.addContent(DisplayForm.builder().content(name).build());
-            }
-
-            if (affiliation != null) {
-                builder.addContent(Affiliation.builder().content(affiliation).build());
-            }
-
-            if (orcid != null) {
-                builder.addContent(NameIdentifier.builder().content(orcid).type("orcid").build());
-            }
-
-            String zenodoRole = contributor.getType();
+    private boolean handleContributors(JsonNode restRecord, Mods.Builder mods) {
+        for (JsonNode contributor : restRecord.at("/metadata/contributors")) {
+            String zenodoRole = text(contributor.at("/role/id"));
             String mappingResult = "ctb";
             if (zenodoRole != null) {
-                String roleMappingName = config.get(ROLE_MAPPING_PROPERTY);
-                MappingGroup roleMappingGroup = mappingService.getGroupByName(roleMappingName);
-
-                Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(roleMappingGroup, zenodoRole);
-                Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
-                    .filter(m -> !m.getTo().isBlank())
-                    .map(Mapping::getTo);
+                Optional<String> toOptional = getMappingTarget(ROLE_MAPPING_PROPERTY, zenodoRole);
                 if (toOptional.isEmpty()) {
-                    log.warn("Could not find role mapping for {} in record {}", zenodoRole, restRecord.getId());
+                    log.warn("Could not find role mapping for {} in record {}", zenodoRole, getId(restRecord));
                     return false;
                 }
+                mappingResult = toOptional.get();
             }
 
-            RoleTerm roleTerm
-                = RoleTerm.builder().type(CodeOrText.CODE).authority("marcrelator").content(mappingResult).build();
-            Role role = Role.builder().addRoleTerm(roleTerm).build();
-            builder.addContent(role);
-
-            if (name != null || affiliation != null || orcid != null) {
-                mods.addContent(builder.build());
-            }
+            addName(mods, contributor, mappingResult);
         }
         return true;
+    }
+
+    /**
+     * Adds a mods:name for a creator or contributor, if it has a name, an affiliation or an identifier.
+     * @param marcRelatorRole the role of the person or organization as MARC relator code
+     */
+    private static void addName(Mods.Builder mods, JsonNode creatorOrContributor, String marcRelatorRole) {
+        JsonNode personOrOrg = creatorOrContributor.path("person_or_org");
+        boolean personal = !"organizational".equals(personOrOrg.path("type").asText());
+        String name = text(personOrOrg.path("name"));
+        String orcid = getIdentifier(personOrOrg, "orcid");
+        String gnd = getIdentifier(personOrOrg, "gnd");
+        List<String> affiliations = new ArrayList<>();
+        for (JsonNode affiliation : creatorOrContributor.path("affiliations")) {
+            Optional.ofNullable(text(affiliation.path("name"))).ifPresent(affiliations::add);
+        }
+        if (name == null && affiliations.isEmpty() && orcid == null && gnd == null) {
+            return;
+        }
+
+        Name.Builder builder = Name.builder();
+        builder.type(personal ? NameType.PERSONAL : NameType.CORPORATE);
+
+        if (personal) {
+            String familyName = text(personOrOrg.path("family_name"));
+            String givenName = text(personOrOrg.path("given_name"));
+            if (familyName != null) {
+                builder.addContent(NamePart.builder().type(NamePartType.FAMILY).content(familyName).build());
+            }
+            if (givenName != null) {
+                builder.addContent(NamePart.builder().type(NamePartType.GIVEN).content(givenName).build());
+            }
+        }
+
+        if (name != null) {
+            builder.addContent(DisplayForm.builder().content(name).build());
+        }
+
+        for (String affiliation : affiliations) {
+            builder.addContent(Affiliation.builder().content(affiliation).build());
+        }
+
+        if (orcid != null) {
+            builder.addContent(NameIdentifier.builder().content(orcid).type("orcid").build());
+        }
+
+        if (gnd != null) {
+            // Zenodo prefixes the identifier with the scheme, e.g. gnd:123254582
+            String gndId = gnd.startsWith("gnd:") ? gnd.substring("gnd:".length()) : gnd;
+            builder.addContent(NameIdentifier.builder().content(gndId).type("gnd").build());
+        }
+
+        RoleTerm roleTerm =
+            RoleTerm.builder().type(CodeOrText.CODE).authority("marcrelator").content(marcRelatorRole).build();
+        builder.addContent(Role.builder().addRoleTerm(roleTerm).build());
+
+        mods.addContent(builder.build());
+    }
+
+    private static void handleLanguage(JsonNode restRecord, Mods.Builder mods) {
+        for (JsonNode language : restRecord.at("/metadata/languages")) {
+            String id = text(language.path("id"));
+            if (id == null) {
+                continue;
+            }
+            LanguageTerm languageTerm = LanguageTerm.builderForLanguageTerm().type(CodeOrText.CODE)
+                .authority(LanguageTerm.AUTHORITY__RFC5646).content(toRFC5646(id)).build();
+            mods.addContent(Language.builderForLanguage().addLanguageTerm(languageTerm).build());
+        }
+    }
+
+    /**
+     * Zenodo uses the three-letter codes of ISO 639, RFC 5646 requires the two-letter code if there is one.
+     */
+    protected static String toRFC5646(String iso639Code) {
+        return Arrays.stream(Locale.getISOLanguages())
+            .filter(code -> Locale.forLanguageTag(code).getISO3Language().equals(iso639Code))
+            .findFirst()
+            .orElse(iso639Code);
+    }
+
+    private static String getId(JsonNode restRecord) {
+        return restRecord.path("id").asText();
+    }
+
+    /**
+     * @return the target of the mapping in the mapping group of the config property, empty if there is no mapping or
+     *         the mapping has no target yet
+     */
+    private Optional<String> getMappingTarget(String mappingProperty, String from) {
+        MappingGroup mappingGroup = mappingService.getGroupByName(config.get(mappingProperty));
+        return mappingService.getMappingByGroupAndFrom(mappingGroup, from)
+            .map(Mapping::getTo)
+            .filter(to -> !to.isBlank());
+    }
+
+    /**
+     * Adds the mapping to the missing mappings if it has no target. The mapping is created if it does not exist.
+     */
+    private void checkMapping(List<Mapping> missingMappings, String mappingProperty, String from) {
+        MappingGroup mappingGroup = mappingService.getGroupByName(config.get(mappingProperty));
+        Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(mappingGroup, from);
+        if (mappedValue.isEmpty()) {
+            missingMappings.add(mappingService.addMapping(mappingGroup, from, null));
+        } else if (mappedValue.map(Mapping::getTo).filter(to -> !to.isBlank()).isEmpty()) {
+            missingMappings.add(mappedValue.get());
+        }
     }
 
     @SneakyThrows
@@ -363,12 +426,11 @@ public class Zenodo2MyCoReImporter implements Importer {
         return true;
     }
 
-
     private void updateGroupingState(MyCoReTargetConfiguration target, org.jdom2.Document object, String mycoreID)
         throws IOException, URISyntaxException {
         String xp = ".//mods:relatedItem[@xlink:href and @otherType='has_grouping']";
-        XPathExpression<Element> parentXPath
-            = XPathFactory.instance().compile(xp, Filters.element(), null, MODS_NAMESPACE, XLINK_NAMESPACE);
+        XPathExpression<Element> parentXPath =
+            XPathFactory.instance().compile(xp, Filters.element(), null, MODS_NAMESPACE, XLINK_NAMESPACE);
         List<Element> evaluate = parentXPath.evaluate(object);
         if (!evaluate.isEmpty()
             && evaluate.stream().anyMatch(e -> e.getAttributeValue("href", XLINK_NAMESPACE).endsWith("00000000"))) {
@@ -404,133 +466,34 @@ public class Zenodo2MyCoReImporter implements Importer {
     public List<Mapping> checkMapping(MyCoReTargetConfiguration target, ForeignEntity record) {
         List<Mapping> missingMappings = new ArrayList<>();
 
-        String metadata = record.getMetadata();
-        ZenodoRestRecord restRecord = parseMetadata(metadata);
+        JsonNode restRecord = parseMetadata(record.getMetadata());
 
-        checkGenreMapping(missingMappings, restRecord);
-        checkTypeMapping(missingMappings, restRecord);
-        checkLicenseMapping(missingMappings, restRecord);
-        checkContributerMapping(missingMappings, restRecord);
-
-        /*
-         * Controlled vocabulary:
-         * open: Open Access
-         * embargoed: Embargoed Access
-         * restricted: Restricted Access
-         * closed: Closed Access
-        
-        String accessRight = restRecord.getMetadata().getAccess_right();
-        if (accessRight != null) {
-            String accessRightMappingGroupName = config.get("accessRight");
-            MappingGroup accessRightMappingGroup = mappingService.getGroupByName(accessRightMappingGroupName);
-            Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(accessRightMappingGroup,
-                accessRight);
-            Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
-            if (mappedValue.isEmpty()) {
-                Mapping mapping = mappingService.addMapping(accessRightMappingGroup, accessRight, null);
-                missingMappings.add(mapping);
-            } else if (toOptional.isEmpty()) {
-                missingMappings.add(mappedValue.get());
-            }
-        }    */
+        String zenodoType = getZenodoType(restRecord);
+        checkMapping(missingMappings, GENRE_MAPPING_PROPERTY, zenodoType);
+        checkMapping(missingMappings, TYPE_MAPPING_PROPERTY, zenodoType);
+        for (String licenseId : getLicenseIds(restRecord)) {
+            checkMapping(missingMappings, LICENSE_MAPPING_PROPERTY, licenseId);
+        }
+        Set<String> roles = new LinkedHashSet<>();
+        for (JsonNode contributor : restRecord.at("/metadata/contributors")) {
+            Optional.ofNullable(text(contributor.at("/role/id"))).ifPresent(roles::add);
+        }
+        for (String role : roles) {
+            checkMapping(missingMappings, ROLE_MAPPING_PROPERTY, role);
+        }
 
         return missingMappings;
     }
 
-    private void checkGenreMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
-        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
-
-        String completeType = getZenodoType(resourceType);
-        String mappingGroupName = config.get(GENRE_MAPPING_PROPERTY);
-        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
-        Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType);
-        Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
-            .filter(m -> !m.getTo().isBlank())
-            .map(Mapping::getTo);
-
-        if (mappedValue.isEmpty()) {
-            Mapping mapping = mappingService.addMapping(mappingGroup, completeType, null);
-            missingMappings.add(mapping);
-        } else if (toOptional.isEmpty()) {
-            missingMappings.add(mappedValue.get());
-        }
-
-    }
-
-    private void checkTypeMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
-        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
-
-        String completeType = getZenodoType(resourceType);
-        String mappingGroupName = config.get(TYPE_MAPPING_PROPERTY);
-        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
-        Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType);
-        Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
-
-        if (mappedValue.isEmpty()) {
-            Mapping mapping = mappingService.addMapping(mappingGroup, completeType, null);
-            missingMappings.add(mapping);
-        } else if (toOptional.isEmpty()) {
-            missingMappings.add(mappedValue.get());
-        }
-    }
-
-    private void checkLicenseMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
-        ZenodoRestLicense license = restRecord.getMetadata().getLicense();
-        if (license != null) {
-            String licenseID = license.getId();
-            String licenseMappingGroupName = config.get(LICENSE_MAPPING_PROPERTY);
-            MappingGroup licenseMappingGroup = mappingService.getGroupByName(licenseMappingGroupName);
-            Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(licenseMappingGroup, licenseID);
-            Optional<String> toOptional = mappedValue
-                .filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
-            if (mappedValue.isEmpty()) {
-                Mapping mapping = mappingService.addMapping(licenseMappingGroup, licenseID, null);
-                missingMappings.add(mapping);
-            } else if (toOptional.isEmpty()) {
-                missingMappings.add(mappedValue.get());
-            }
-        }
-    }
-
-    private void checkContributerMapping(List<Mapping> missingMappings, ZenodoRestRecord restRecord) {
-        List<ZenodoRestPerson> contributors = restRecord.getMetadata().getContributors();
-        if (contributors == null) {
-            return;
-        }
-        String roleMappingName = config.get(ROLE_MAPPING_PROPERTY);
-        for (ZenodoRestPerson contributor : contributors) {
-            String type = contributor.getType();
-            if (type != null) {
-                MappingGroup roleMappingGroup = mappingService.getGroupByName(roleMappingName);
-                Optional<Mapping> mappingOptional = mappingService.getMappingByGroupAndFrom(roleMappingGroup, type);
-                Optional<String> mappingTargetOptional = mappingOptional.filter(m -> m.getTo() != null)
-                    .filter(m -> !m.getTo().isBlank())
-                    .map(Mapping::getTo);
-                if (mappingOptional.isEmpty()) {
-                    Mapping addedMapping = mappingService.addMapping(roleMappingGroup, type, null);
-                    missingMappings.add(addedMapping);
-                } else if (mappingTargetOptional.isEmpty()) {
-                    missingMappings.add(mappingOptional.get());
-                }
-            }
-        }
-    }
-
     private org.jdom2.Document convertEntity(MyCoReTargetConfiguration target, ForeignEntity recordEntity) {
-        String metadata = recordEntity.getMetadata();
-        ZenodoRestRecord restRecord = parseMetadata(metadata);
+        JsonNode restRecord = parseMetadata(recordEntity.getMetadata());
 
         Mods.Builder mods = Mods.builder();
 
         handleTitle(restRecord, mods);
         handleAbstract(restRecord, mods);
         handleSubject(restRecord, mods);
+        handleLanguage(restRecord, mods);
         handleCreators(restRecord, mods);
         if (!handleContributors(restRecord, mods)) {
             return null;
@@ -543,7 +506,7 @@ public class Zenodo2MyCoReImporter implements Importer {
             return null;
         }
 
-        if(!handleType(restRecord, mods)) {
+        if (!handleType(restRecord, mods)) {
             return null;
         }
 
@@ -572,11 +535,11 @@ public class Zenodo2MyCoReImporter implements Importer {
         if (Objects.equals(config.get("files"), "modsLocation")) {
             Location.Builder location = Location.builderForLocation();
 
-            for (ZenodoRestFileMetadata file : restRecord.getFiles()) {
-                String link = file.getLinks().getSelf();
-                String name = file.getKey();
+            String recordUrl = restRecord.at("/links/self").asText();
+            for (JsonNode file : restRecord.at("/files/entries")) {
+                String name = file.path("key").asText();
 
-                location.addUrl(Url.builderForUrl().content(link)
+                location.addUrl(Url.builderForUrl().content(recordUrl + "/files/" + name + "/content")
                     .access(UrlAccess.RAW_OBJECT)
                     .displayLabel(name).build());
             }
@@ -594,107 +557,82 @@ public class Zenodo2MyCoReImporter implements Importer {
             throw new RuntimeException(e);
         }
 
-        org.jdom2.Document document = MODSUtil.wrapInMyCoReFrame(xmlStringWriter.toString(), config.get("base-id") ,getStatus());
-        return document;
+        return MODSUtil.wrapInMyCoReFrame(xmlStringWriter.toString(), config.get("base-id"), getStatus());
     }
 
     /**
      * Adds a related item to the grouping object which bundles all versions of the record.
      */
     protected void handleGrouping(MyCoReTargetConfiguration target, ForeignEntity recordEntity,
-        ZenodoRestRecord restRecord, Mods.Builder mods) {
-        ZenodoRestRelations relations = restRecord.getMetadata().getRelations();
-        if (relations != null) {
-            List<ZenodoRestVersion> version = relations.getVersion();
-            if (version != null) {
-                Optional<ZenodoRestVersion> first = version.stream().findFirst();
-                if (first.isPresent()) {
-                    ZenodoRestVersion zenodoRestVersion = first.get();
-                    String pidType = zenodoRestVersion.getParent().getPid_type();
-                    if (pidType.equals("recid")) {
-                        String pidValue = zenodoRestVersion.getParent().getPid_value();
-                        MyCoReObjectInfo mycoreObject = objectInfoRepository
-                            .findFirstByRepositoryAndImportURLAndImportID(target.getUrl(),
-                                recordEntity.getConfigId(),
-                                pidValue);
-                        RelatedItem.Builder relatedItem = RelatedItem.builderForRelatedItem();
-                        relatedItem.otherType("has_grouping");
-                        String title = restRecord.getTitle();
-                        if (title != null) {
-                            relatedItem.addContent(getTitleInfo(title));
-                        }
-
-                        Genre intern = Genre.builderForGenre().type("intern")
-                            .authorityURI("http://www.mycore.org/classifications/mir_genres")
-                            .valueURI("http://www.mycore.org/classifications/mir_genres#grouping").build();
-                        relatedItem.addContent(intern);
-
-                        RecordInfo recordInfo = getRecordInfoBuilder(pidValue, recordEntity.getConfigId()).build();
-                        relatedItem.addContent(recordInfo);
-
-                        if (restRecord.getConceptdoi() != null) {
-                            relatedItem.addContent(
-                                Identifier.builderForIdentifier().content(restRecord.getConceptdoi()).type("doi")
-                                    .build());
-                        }
-
-                        if (mycoreObject != null) {
-                            // import with existing concept pid
-                            relatedItem.xlinkHref(mycoreObject.getMycoreId());
-                        } else {
-                            // refresh object info required after import
-                            // manually create the object info here
-                            String baseID = config.get("base-id");
-                            relatedItem.xlinkHref(baseID + "_00000000");
-                        }
-                        mods.addContent(relatedItem.build());
-
-                    }
-                }
-
-            }
-
+        JsonNode restRecord, Mods.Builder mods) {
+        String parentId = text(restRecord.at("/parent/id"));
+        if (parentId == null) {
+            return;
         }
+        MyCoReObjectInfo mycoreObject = objectInfoRepository
+            .findFirstByRepositoryAndImportURLAndImportID(target.getUrl(), recordEntity.getConfigId(), parentId);
+        RelatedItem.Builder relatedItem = RelatedItem.builderForRelatedItem();
+        relatedItem.otherType("has_grouping");
+        String title = text(restRecord.at("/metadata/title"));
+        if (title != null) {
+            relatedItem.addContent(getTitleInfo(title));
+        }
+
+        Genre intern = Genre.builderForGenre().type("intern")
+            .authorityURI("http://www.mycore.org/classifications/mir_genres")
+            .valueURI("http://www.mycore.org/classifications/mir_genres#grouping").build();
+        relatedItem.addContent(intern);
+
+        RecordInfo recordInfo = getRecordInfoBuilder(parentId, recordEntity.getConfigId()).build();
+        relatedItem.addContent(recordInfo);
+
+        String conceptDoi = text(restRecord.at("/parent/pids/doi/identifier"));
+        if (conceptDoi != null) {
+            relatedItem.addContent(Identifier.builderForIdentifier().content(conceptDoi).type("doi").build());
+        }
+
+        if (mycoreObject != null) {
+            // import with existing concept pid
+            relatedItem.xlinkHref(mycoreObject.getMycoreId());
+        } else {
+            // refresh object info required after import
+            // manually create the object info here
+            String baseID = config.get("base-id");
+            relatedItem.xlinkHref(baseID + "_00000000");
+        }
+        mods.addContent(relatedItem.build());
     }
 
-    private boolean handleLicense(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        if (restRecord.getMetadata().getLicense() != null) {
-            String id = restRecord.getMetadata().getLicense().getId();
-            String licenseMappingGroupName = config.get(LICENSE_MAPPING_PROPERTY);
-            MappingGroup licenseMappingGroup = mappingService.getGroupByName(licenseMappingGroupName);
-            Optional<Mapping> mappedValue = mappingService.getMappingByGroupAndFrom(licenseMappingGroup, id);
-            Optional<String> toOptional = mappedValue.filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
+    /**
+     * Adds the first license of the record. Custom licenses are ignored, because they can not be mapped.
+     */
+    private boolean handleLicense(JsonNode restRecord, Mods.Builder mods) {
+        Optional<String> licenseId = getLicenseIds(restRecord).stream().findFirst();
+        if (licenseId.isPresent()) {
+            Optional<String> toOptional = getMappingTarget(LICENSE_MAPPING_PROPERTY, licenseId.get());
             if (toOptional.isPresent()) {
                 String license = toOptional.get();
-                AccessCondition accessCondition
-                    = AccessCondition.builderForAccessCondition().type("use and reproduction")
+                AccessCondition accessCondition =
+                    AccessCondition.builderForAccessCondition().type("use and reproduction")
                         .xlinkHref("http://www.mycore.org/classifications/mir_licenses#" + license)
                         .build();
                 accessCondition.setXlinkType("simple");
                 mods.addContent(accessCondition);
                 return true;
             } else {
-                log.info("Could not find license mapping for {} in record {}", id, restRecord.getId());
+                log.info("Could not find license mapping for {} in record {}", licenseId.get(), getId(restRecord));
                 return false;
             }
         }
         return true;
     }
 
-    private boolean handleGenre(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
-        String completeType = getZenodoType(resourceType);
-        String mappingGroupName = config.get(GENRE_MAPPING_PROPERTY);
-        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
-        Optional<String> genreStrOptional
-            = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType).filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
+    private boolean handleGenre(JsonNode restRecord, Mods.Builder mods) {
+        String completeType = getZenodoType(restRecord);
+        Optional<String> genreStrOptional = getMappingTarget(GENRE_MAPPING_PROPERTY, completeType);
 
         if (genreStrOptional.isEmpty()) {
-            log.warn("Could not find genre mapping for {} in record {}", completeType, restRecord.getId());
+            log.warn("Could not find genre mapping for {} in record {}", completeType, getId(restRecord));
             return false;
         }
 
@@ -705,18 +643,12 @@ public class Zenodo2MyCoReImporter implements Importer {
         return true;
     }
 
-    private boolean handleType(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        ZenodoRestResourceType resourceType = restRecord.getMetadata().getResource_type();
-        String completeType = getZenodoType(resourceType);
-        String mappingGroupName = config.get(TYPE_MAPPING_PROPERTY);
-        MappingGroup mappingGroup = mappingService.getGroupByName(mappingGroupName);
-        Optional<String> typeStrOptional
-            = mappingService.getMappingByGroupAndFrom(mappingGroup, completeType).filter(m -> m.getTo() != null)
-                .filter(m -> !m.getTo().isBlank())
-                .map(Mapping::getTo);
+    private boolean handleType(JsonNode restRecord, Mods.Builder mods) {
+        String completeType = getZenodoType(restRecord);
+        Optional<String> typeStrOptional = getMappingTarget(TYPE_MAPPING_PROPERTY, completeType);
 
         if (typeStrOptional.isEmpty()) {
-            log.warn("Could not find type mapping for {} in record {}", completeType, restRecord.getId());
+            log.warn("Could not find type mapping for {} in record {}", completeType, getId(restRecord));
             return false;
         }
 
@@ -728,8 +660,6 @@ public class Zenodo2MyCoReImporter implements Importer {
         return true;
     }
 
-
-
     private String getStatus() {
         return config.get("status");
     }
@@ -739,8 +669,8 @@ public class Zenodo2MyCoReImporter implements Importer {
         this.config = importerConfig;
     }
 
-    private void handleAbstract(ZenodoRestRecord restRecord, Mods.Builder mods) {
-        String description = restRecord.getMetadata().getDescription();
+    private void handleAbstract(JsonNode restRecord, Mods.Builder mods) {
+        String description = text(restRecord.at("/metadata/description"));
         if (description != null) {
 
             String plainTextString = getPlainTextString(description);
@@ -761,8 +691,8 @@ public class Zenodo2MyCoReImporter implements Importer {
                 virtualPlainBilder.content(xhtmlSnippedString);
                 Abstract virtualAbstract = virtualPlainBilder.build();
                 QName abstractQName = new QName(MODS_NAMESPACE_STRING, "abstract", "mods");
-                JAXBElement<Abstract> jaxbAbstractElement
-                    = new JAXBElement<Abstract>(abstractQName, Abstract.class, virtualAbstract);
+                JAXBElement<Abstract> jaxbAbstractElement =
+                    new JAXBElement<Abstract>(abstractQName, Abstract.class, virtualAbstract);
 
                 // marshall it to string
                 Marshaller jaxbMarshaller = JAXBContext.newInstance(Abstract.class).createMarshaller();
