@@ -110,7 +110,14 @@ public class JobService {
         return result;
     }
 
-    public void runJob(String name) throws OAIException, IOException, URISyntaxException {
+    /**
+     * Imports all importable records of the job. A failing record is logged and does not stop the import of the
+     * remaining records.
+     *
+     * @param name the job to run
+     * @return the number of records and the foreign ids of the records that could not be imported
+     */
+    public JobResult runJob(String name) throws OAIException, IOException, URISyntaxException {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
@@ -133,6 +140,7 @@ public class JobService {
         importer.setConfig(jobConfig.getImporterConfig());
         log.info("Found {} records to import", records.getTotalElements());
 
+        List<String> errorRecords = new ArrayList<>();
         AtomicLong i = new AtomicLong(records.getTotalElements());
         records.forEach(record -> {
             try {
@@ -145,8 +153,14 @@ public class JobService {
                 log.info("{} jobs remaining", i.decrementAndGet());
             } catch (Exception e) {
                 log.error("Error while importing record {}", record.getForeignId(), e);
+                errorRecords.add(record.getForeignId());
             }
         });
+
+        if (!errorRecords.isEmpty()) {
+            log.info("Records with errors: {}", errorRecords);
+        }
+        return new JobResult(JobResult.Action.IMPORT, records.getTotalElements(), errorRecords);
     }
 
     public Page<Map.Entry<ForeignEntity, List<String>>> listImportableFiles(String name, Pageable pageable) {
@@ -284,7 +298,14 @@ public class JobService {
         return Page.empty();
     }
 
-    public void runUpdateJob(String name) {
+    /**
+     * Updates all already imported records of the job. A failing record is logged and does not stop the update of
+     * the remaining records.
+     *
+     * @param name the job to run
+     * @return the number of records and the foreign ids of the records that could not be updated
+     */
+    public JobResult runUpdateJob(String name) {
         ImportJobConfiguration jobConfig = configuration.getJobs().get(name);
         String targetConfigId = jobConfig.getTargetConfigId();
         String sourceConfigId = jobConfig.getSourceConfigId();
@@ -313,6 +334,7 @@ public class JobService {
         }
 
         log.info("Records with errors: {}", errorRecords);
+        return new JobResult(JobResult.Action.UPDATE, updatableEntities.getTotalElements(), errorRecords);
     }
 
     public void importSingleDocument(String jobID, String recordID)
@@ -340,9 +362,9 @@ public class JobService {
      *
      * @param jobID the job to import with
      * @param recordIDs the foreign ids of the records to import
-     * @return the foreign ids of the records that could not be imported
+     * @return the number of records and the foreign ids of the records that could not be imported
      */
-    public List<String> importDocuments(String jobID, List<String> recordIDs) {
+    public JobResult importDocuments(String jobID, List<String> recordIDs) {
         List<String> errorRecords = new ArrayList<>();
         AtomicLong remaining = new AtomicLong(recordIDs.size());
         for (String recordID : recordIDs) {
@@ -357,7 +379,31 @@ public class JobService {
         if (!errorRecords.isEmpty()) {
             log.info("Records with errors: {}", errorRecords);
         }
-        return errorRecords;
+        return new JobResult(JobResult.Action.IMPORT, recordIDs.size(), errorRecords);
+    }
+
+    /**
+     * Updates the given records of the job one after another. A failing record is logged and does not stop the
+     * update of the remaining records.
+     *
+     * @param jobID the job to update with
+     * @param recordIDs the foreign ids of the records to update
+     * @return the number of records and the foreign ids of the records that could not be updated
+     */
+    public JobResult updateDocuments(String jobID, List<String> recordIDs) {
+        List<String> errorRecords = new ArrayList<>();
+        for (String recordID : recordIDs) {
+            try {
+                updateSingleDocument(jobID, recordID);
+            } catch (Exception e) {
+                log.error("Error while updating record {}", recordID, e);
+                errorRecords.add(recordID);
+            }
+        }
+        if (!errorRecords.isEmpty()) {
+            log.info("Records with errors: {}", errorRecords);
+        }
+        return new JobResult(JobResult.Action.UPDATE, recordIDs.size(), errorRecords);
     }
 
     public void updateSingleDocument(String jobID, String recordID) {
