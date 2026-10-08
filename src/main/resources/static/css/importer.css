@@ -1,0 +1,648 @@
+/*
+ * Visual design for the importer web interface.
+ *
+ * The application is a working tool for library metadata: dense tables, many
+ * identifiers, little prose. The palette stays light and blue, greys are tinted
+ * towards blue so they belong to the same family, and the type scale favours
+ * legibility of identifiers over display effect.
+ */
+
+:root {
+    /* Palette */
+    --ink: #12263f;
+    --ink-soft: #445a75;
+    --ink-muted: #5a6b80;
+    --blue: #1a56b0;
+    --blue-deep: #103c7d;
+    --blue-tint: #eaf1fb;
+    --surface: #ffffff;
+    --canvas: #f4f7fb;
+    --line: #dbe3ee;
+    --line-strong: #c3d0e2;
+    --control-border: #76879f;
+    --danger: #b02a37;
+    --success: #1d6b45;
+    --warning-bg: #fdf3e2;
+    --warning-ink: #8a5a12;
+
+    /* Spacing scale, 4px based */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+
+    --radius: 6px;
+    --mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    /* Bootstrap overrides */
+    --bs-primary: var(--blue);
+    --bs-body-color: var(--ink);
+    --bs-body-bg: var(--canvas);
+    --bs-border-color: var(--line);
+    --bs-link-color: var(--blue);
+    --bs-link-hover-color: var(--blue-deep);
+    --bs-border-radius: var(--radius);
+}
+
+/* ---------------------------------------------------------------- base --- */
+
+body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: var(--blue);
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.15em;
+}
+
+a:hover {
+    color: var(--blue-deep);
+    text-decoration-color: currentColor;
+}
+
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Identifiers are compared character by character, so they get a mono face.
+   Everything else keeps tabular figures so columns of dates line up. */
+.identifier {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    color: var(--ink);
+}
+
+/* Identifiers must not be broken across lines, the table scrolls instead. */
+table.data .identifier {
+    white-space: nowrap;
+}
+
+.tabular {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    white-space: nowrap;
+}
+
+/* -------------------------------------------------------------- header --- */
+
+.masthead {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    border-top: 3px solid var(--blue);
+}
+
+.masthead__inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 var(--space-5);
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.wordmark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    font-size: 1.0625rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.wordmark::before {
+    content: "";
+    width: 4px;
+    height: 1.25rem;
+    border-radius: 2px;
+    background: var(--blue);
+}
+
+.wordmark:hover {
+    color: var(--blue-deep);
+}
+
+.mainnav {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.mainnav a {
+    display: flex;
+    align-items: center;
+    padding: var(--space-3) 0;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.mainnav a:hover {
+    color: var(--ink);
+}
+
+.mainnav a[aria-current="page"] {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom-color: var(--blue);
+}
+
+.masthead__end {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.linkbutton {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--ink-soft);
+    cursor: pointer;
+}
+
+.linkbutton:hover {
+    color: var(--blue-deep);
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- page --- */
+
+.page {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-5) var(--space-7);
+}
+
+/* Reading width for the help page, so lines stay under 80 characters. */
+.page--reading {
+    max-width: 44rem;
+}
+
+/* Narrow, centred variant for the sign in page. */
+.page--narrow {
+    max-width: 24rem;
+    padding-top: var(--space-7);
+}
+
+.page--narrow .page__head {
+    text-align: center;
+}
+
+.page__head {
+    margin-bottom: var(--space-5);
+}
+
+.page__title {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+}
+
+.page__lead {
+    margin: var(--space-2) 0 0;
+    color: var(--ink-muted);
+    max-width: 60ch;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+/* A back link sits with the actions but must not compete with them. */
+.toolbar .back {
+    margin-right: var(--space-2);
+    color: var(--ink-muted);
+}
+
+.toolbar .back:hover {
+    color: var(--ink);
+}
+
+.prose h2 + p {
+    margin-top: 0;
+}
+
+.prose h2 {
+    font-size: 1.0625rem;
+    font-weight: 650;
+    margin: var(--space-6) 0 var(--space-2);
+}
+
+.prose h2:first-child {
+    margin-top: 0;
+}
+
+.prose p {
+    margin: 0 0 var(--space-3);
+    color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------- panel --- */
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+.panel--pad {
+    padding: var(--space-5);
+}
+
+/* --------------------------------------------------------------- table --- */
+
+.tablewrap {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow-x: auto;
+}
+
+table.data {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+table.data th,
+table.data td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--line);
+}
+
+table.data thead th {
+    background: var(--canvas);
+    color: var(--ink-soft);
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom-color: var(--line-strong);
+}
+
+table.data tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+table.data tbody tr:hover td {
+    background: var(--blue-tint);
+}
+
+/* Columns that should only take the width they need, so the identifier and
+   URL columns get the remaining space. */
+table.data .shrink,
+table.data .tabular,
+table.data td:has(> .btn),
+table.data td:has(> .chip) {
+    width: 1px;
+    white-space: nowrap;
+}
+
+/* Inline actions in the last column. */
+.rowactions {
+    display: flex;
+    gap: var(--space-4);
+    white-space: nowrap;
+}
+
+.empty {
+    padding: var(--space-6) var(--space-4);
+    text-align: center;
+    color: var(--ink-muted);
+}
+
+/* ------------------------------------------------------------ controls --- */
+
+.btn {
+    --bs-btn-padding-x: var(--space-4);
+    --bs-btn-padding-y: 0.4rem;
+    --bs-btn-font-size: 0.9375rem;
+    --bs-btn-border-radius: var(--radius);
+    font-weight: 500;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--blue);
+    --bs-btn-border-color: var(--blue);
+    --bs-btn-hover-bg: var(--blue-deep);
+    --bs-btn-hover-border-color: var(--blue-deep);
+    --bs-btn-active-bg: var(--blue-deep);
+    --bs-btn-active-border-color: var(--blue-deep);
+    --bs-btn-disabled-bg: var(--blue);
+    --bs-btn-disabled-border-color: var(--blue);
+}
+
+.btn-secondary {
+    --bs-btn-color: var(--ink);
+    --bs-btn-bg: var(--surface);
+    --bs-btn-border-color: var(--control-border);
+    --bs-btn-hover-color: var(--ink);
+    --bs-btn-hover-bg: var(--blue-tint);
+    --bs-btn-hover-border-color: var(--control-border);
+    --bs-btn-active-color: var(--ink);
+    --bs-btn-active-bg: var(--blue-tint);
+    --bs-btn-active-border-color: var(--control-border);
+}
+
+.btn-quiet {
+    --bs-btn-color: var(--blue);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--control-border);
+    --bs-btn-hover-color: var(--blue-deep);
+    --bs-btn-hover-bg: var(--blue-tint);
+    --bs-btn-hover-border-color: var(--control-border);
+    --bs-btn-padding-y: 0.2rem;
+    --bs-btn-padding-x: var(--space-3);
+    --bs-btn-font-size: 0.875rem;
+}
+
+.chip {
+    display: inline-block;
+    padding: 0.15rem var(--space-3);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    background: var(--warning-bg);
+    color: var(--warning-ink);
+    white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- form -- */
+
+/* Forms stay narrow, a full width form field is hard to scan. */
+.formpanel {
+    max-width: 46rem;
+}
+
+.field {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    padding: var(--space-4) 0;
+}
+
+.field:first-child {
+    padding-top: 0;
+}
+
+.field + .field {
+    border-top: 1px solid var(--line);
+}
+
+.field > label {
+    padding-top: 0.4rem;
+    font-weight: 600;
+}
+
+.field input,
+.field select {
+    max-width: 32rem;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--surface);
+    border-color: var(--control-border);
+    border-radius: var(--radius);
+    padding: 0.4rem var(--space-3);
+    font-size: 0.9375rem;
+    color: var(--ink);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-tint);
+}
+
+.formactions {
+    display: flex;
+    gap: var(--space-2);
+    padding-top: var(--space-5);
+    margin-top: var(--space-4);
+    border-top: 1px solid var(--line);
+}
+
+/* ---------------------------------------------------------------- login -- */
+
+.login {
+    max-width: none;
+}
+
+.login .field {
+    display: block;
+    padding: 0 0 var(--space-4);
+}
+
+.login .field + .field {
+    border-top: 0;
+}
+
+.login .field > label {
+    display: block;
+    padding: 0 0 var(--space-1);
+}
+
+.login .field input {
+    max-width: none;
+}
+
+/* --------------------------------------------------------------- notice -- */
+
+.notice {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius);
+    border: 1px solid;
+    margin-bottom: var(--space-5);
+}
+
+.notice--ok {
+    background: #edf7f1;
+    border-color: #bfe0cd;
+    color: var(--success);
+}
+
+.notice--bad {
+    background: #fdf0f1;
+    border-color: #f0cace;
+    color: var(--danger);
+}
+
+/* ----------------------------------------------------------- pagination -- */
+
+.pagerbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+}
+
+.pagerbar__status {
+    margin: 0;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pager__gap {
+    display: block;
+    padding: 0.3rem var(--space-2);
+    color: var(--ink-muted);
+}
+
+.pager a {
+    display: block;
+    min-width: 2.25rem;
+    padding: 0.3rem var(--space-3);
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+}
+
+.pager a:hover {
+    border-color: var(--control-border);
+    background: var(--blue-tint);
+    color: var(--ink);
+}
+
+.pager a[aria-current="page"] {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- modal -- */
+
+/* The dialog is the one place where a shadow carries meaning: it sits above
+   the page. */
+.modal-content {
+    border: 0;
+    border-radius: var(--radius);
+    box-shadow: 0 16px 48px rgba(18, 38, 63, 0.24);
+}
+
+.modal-backdrop.show {
+    --bs-backdrop-opacity: 0.6;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--line);
+    padding: var(--space-4) var(--space-5);
+}
+
+.modal-body {
+    padding: var(--space-5);
+}
+
+.modal-title {
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+.metadata {
+    margin: 0;
+    max-height: 60vh;
+    overflow: auto;
+    padding: var(--space-4);
+    background: var(--canvas);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--ink);
+}
+
+.filelist {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.filelist li + li {
+    margin-top: var(--space-1);
+}
+
+.filelist span {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    word-break: break-all;
+}
+
+/* --------------------------------------------------------------- mobile -- */
+
+@media (max-width: 40rem) {
+    .masthead__inner,
+    .page {
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+    }
+
+    .masthead__inner {
+        gap: var(--space-4);
+    }
+
+    .field {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-1);
+    }
+
+    .field > label {
+        padding-top: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

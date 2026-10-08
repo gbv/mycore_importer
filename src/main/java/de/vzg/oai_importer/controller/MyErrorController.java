@@ -18,11 +18,10 @@ public class MyErrorController implements ErrorController {
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
 
-            if(statusCode == 404) {
-                return "error-404";
-            }
-            else if(statusCode == 403) {
-                return "error-403";
+            if (statusCode == 404) {
+                return "error_404";
+            } else if (statusCode == 403) {
+                return "error_403";
             }
         }
         return "error";

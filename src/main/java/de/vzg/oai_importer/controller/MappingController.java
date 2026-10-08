@@ -3,8 +3,6 @@ package de.vzg.oai_importer.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,9 +41,6 @@ public class MappingController {
         Page<MappingGroup> customerPage = mappingService.getMappingGroups(page, size);
 
         model.addAttribute("groups", customerPage);
-        model.addAttribute("pages", IntStream.rangeClosed(1, customerPage.getTotalPages())
-                .boxed()
-            .collect(Collectors.toList()));
         return "mapping/mapping_groups";
     }
 
@@ -62,13 +57,13 @@ public class MappingController {
     public String editGroup(@PathVariable(name = "id") Long id,
         @RequestParam("name") String name,
         @RequestParam("description") String description,
-                            @RequestParam("target") String target,
-                            @RequestParam("classId") String classId,
+        @RequestParam("target") String target,
+        @RequestParam("classId") String classId,
         Model model) {
         if (classId == null || classId.isEmpty()) {
             classId = null;
         }
-        if(target == null || target.isEmpty()) {
+        if (target == null || target.isEmpty()) {
             target = null;
         }
 
@@ -115,9 +110,10 @@ public class MappingController {
         MappingGroup group = mappingService.getGroup(id);
         model.addAttribute("group", group);
 
-        if(!(group.getTarget() == null || group.getClassId() == null)) {
+        if (!(group.getTarget() == null || group.getClassId() == null)) {
             MyCoReTargetConfiguration targetConfiguration = configuration.getTargets().get(group.getTarget());
-            List<MyCoReRestAPIService.Category> categories = myCoReRestAPIService.getClassificationCategories(targetConfiguration, group.getClassId());
+            List<MyCoReRestAPIService.Category> categories =
+                myCoReRestAPIService.getClassificationCategories(targetConfiguration, group.getClassId());
             model.addAttribute("categories", categories);
         }
 
@@ -137,14 +133,16 @@ public class MappingController {
 
     @RequestMapping(value = "/groups/{gid}/{mid}/edit/", method = RequestMethod.GET)
     @PreAuthorize(value = "hasAnyAuthority('mapping-admin', 'mapping-' + #gid)")
-    public String editMapping(@PathVariable(name = "gid") Long gid, @PathVariable(name = "mid") Long mid, Model model) throws IOException, URISyntaxException {
+    public String editMapping(@PathVariable(name = "gid") Long gid, @PathVariable(name = "mid") Long mid, Model model)
+        throws IOException, URISyntaxException {
         MappingGroup group = mappingService.getGroup(gid);
         model.addAttribute("group", group);
         model.addAttribute("mapping", mappingService.getMapping(mid));
 
-        if(!(group.getTarget() == null || group.getClassId() == null)) {
+        if (!(group.getTarget() == null || group.getClassId() == null)) {
             MyCoReTargetConfiguration targetConfiguration = configuration.getTargets().get(group.getTarget());
-            List<MyCoReRestAPIService.Category> categories = myCoReRestAPIService.getClassificationCategories(targetConfiguration, group.getClassId());
+            List<MyCoReRestAPIService.Category> categories =
+                myCoReRestAPIService.getClassificationCategories(targetConfiguration, group.getClassId());
             model.addAttribute("categories", categories);
         }
 
@@ -167,7 +165,8 @@ public class MappingController {
 
     @RequestMapping(value = "/groups/{gid}/{mid}/delete/", method = RequestMethod.GET)
     @PreAuthorize(value = "hasAnyAuthority('mapping-admin', 'mapping-' + #gid)")
-    public String deleteMapping(@PathVariable(name = "gid") Long gid, @PathVariable(name = "mid") Long mid, Model model) {
+    public String deleteMapping(@PathVariable(name = "gid") Long gid, @PathVariable(name = "mid") Long mid,
+        Model model) {
         MappingGroup group = mappingService.getGroup(gid);
         mappingService.deleteMapping(mid);
         return "redirect:/mapping/groups/" + group.getId() + "/";

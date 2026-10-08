@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import javax.xml.transform.TransformerException;
 
@@ -53,8 +52,6 @@ public class JobsController {
         Page<ForeignEntity> records = jobService.listImportableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
-        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
-            .boxed());
         return "job_records";
     }
 
@@ -63,11 +60,10 @@ public class JobsController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "100") int size, Model model) {
 
-        Page<Map.Entry<ForeignEntity, List<String>>> records
-            = jobService.listImportableFiles(jobID, Pageable.ofSize(size).withPage(page));
+        Page<Map.Entry<ForeignEntity, List<String>>> records =
+            jobService.listImportableFiles(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
-        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages()).boxed());
 
         return "job_records_file_check";
     }
@@ -76,11 +72,10 @@ public class JobsController {
     public String runFileCheckUpdateJob(@PathVariable("jobID") String jobID,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "100") int size, Model model) {
-        Page<Map.Entry<ForeignEntity, List<String>>> records
-            = jobService.runJobFileCheck(jobID, Pageable.ofSize(size).withPage(page));
+        Page<Map.Entry<ForeignEntity, List<String>>> records =
+            jobService.runJobFileCheck(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
-        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages()).boxed());
 
         return "job_records_file_check_update";
     }
@@ -92,12 +87,10 @@ public class JobsController {
         @RequestParam(defaultValue = "100") int size,
         Model model,
         @RequestParam(value = "success", required = false) String success) {
-        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records
-            = jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
+        Page<ImporterService.Pair<ForeignEntity, MyCoReObjectInfo>> records =
+            jobService.listUpdateableRecords(jobID, Pageable.ofSize(size).withPage(page));
         model.addAttribute("records", records);
         model.addAttribute("jobID", jobID);
-        model.addAttribute("pages", IntStream.rangeClosed(1, records.getTotalPages())
-            .boxed());
         if (success != null && (success.equals("true") || success.equals("false"))) {
             model.addAttribute("success", success);
         }

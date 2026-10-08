@@ -19,6 +19,20 @@ java -jar target/mycore-importer-cli.jar
 ```
 
 
+## Templates
+
+The web interface is rendered with [jte](https://jte.gg/) (Java Template Engine).
+The templates are located in `src/main/jte` and are precompiled by the `jte-maven-plugin`
+during the Maven build, so the application also runs on a JRE.
+
+Changed templates therefore require a rebuild. To get template hot reloading during
+development (a JDK is required), switch the settings in `application.properties`:
+
+```properties
+gg.jte.use-precompiled-templates=false
+gg.jte.development-mode=true
+```
+
 ## Configuration
 
 The following configuration is required in the application.properties. The application.properties should be located in the same directory as the jar file.
