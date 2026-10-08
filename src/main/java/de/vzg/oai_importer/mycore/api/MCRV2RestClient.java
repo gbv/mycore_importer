@@ -136,6 +136,22 @@ public abstract class MCRV2RestClient<T> implements RequestParameterAdapter {
         return getObject(repositoryURL, object, null);
     }
 
+    public T getClassifications(String repositoryURL) throws IOException, URISyntaxException {
+        HashMap<String, List<String>> parameters = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
+        adaptRequestParameters(parameters, headers);
+        TransferResult result = transferLayer.get(repositoryURL + API_V_2_CLASSIFICATION, headers, parameters);
+        int i = result.statusCode();
+        if (i != 200) {
+            throw new RuntimeException("Error while getting classifications: " + result.statusMessage());
+        }
+        try (InputStream inputStream = result.inputStream()) {
+            return resultMapper.mapGeneric(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public T getClassification(String repositoryURL, String classification) throws IOException, URISyntaxException {
         HashMap<String, List<String>> parameters = new HashMap<>();
         HashMap<String, String> headers = new HashMap<>();
