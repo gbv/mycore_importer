@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.vzg.oai_importer.AuthorityFilter;
 import de.vzg.oai_importer.ImporterConfiguration;
 import de.vzg.oai_importer.ImporterService;
 import de.vzg.oai_importer.JobService;
@@ -38,8 +40,8 @@ public class JobsController {
     private JobService jobService;
 
     @RequestMapping("/")
-    public String listJobs(Model model) {
-        model.addAttribute("jobs", configuration.getJobs());
+    public String listJobs(Model model, Authentication authentication) {
+        model.addAttribute("jobs", AuthorityFilter.filter(configuration.getJobs(), "job", authentication));
         return "jobs_list_config";
     }
 
@@ -56,6 +58,7 @@ public class JobsController {
     }
 
     @RequestMapping("/{jobID}/fileCheck")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runFileCheckJob(@PathVariable("jobID") String jobID,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "100") int size, Model model) {
@@ -69,6 +72,7 @@ public class JobsController {
     }
 
     @RequestMapping("/{jobID}/update/fileCheck")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runFileCheckUpdateJob(@PathVariable("jobID") String jobID,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "100") int size, Model model) {
@@ -153,6 +157,7 @@ public class JobsController {
     }
 
     @RequestMapping("/{jobID}/import")
+    @PreAuthorize("hasAnyAuthority('job-' + #jobID)")
     public String runJob(@PathVariable("jobID") String jobID, Model model)
         throws IOException, URISyntaxException, OAIException {
         model.addAttribute("jobID", jobID);

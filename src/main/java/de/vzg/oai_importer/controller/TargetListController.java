@@ -9,12 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.vzg.oai_importer.AuthorityFilter;
 import de.vzg.oai_importer.ImporterConfiguration;
 import de.vzg.oai_importer.mycore.MyCoReSynchronizeService;
 import de.vzg.oai_importer.mycore.MyCoReTargetConfiguration;
@@ -36,8 +38,8 @@ public class TargetListController {
     private MyCoReSynchronizeService synchronizeService;
 
     @RequestMapping("/")
-    public String listTargets(Model model) {
-        model.addAttribute("targets", configuration.getTargets());
+    public String listTargets(Model model, Authentication authentication) {
+        model.addAttribute("targets", AuthorityFilter.filter(configuration.getTargets(), "target", authentication));
         return "target_list_config";
     }
 

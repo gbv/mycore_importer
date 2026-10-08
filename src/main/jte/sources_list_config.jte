@@ -18,8 +18,7 @@ lead = "Datenbanken, aus denen Metadaten geholt werden.", content = @`
             <tbody>
             @if(sources == null || sources.isEmpty())
                 <tr>
-                    <td class="empty" colspan="3">Keine Quellen konfiguriert. Quellen werden in der
-                        <span class="identifier">application.properties</span> angelegt.</td>
+                    <td class="empty" colspan="3">Für Ihre Anwendung sind keine Quellen eingerichtet.</td>
                 </tr>
             @else
                 @for(Map.Entry<String,Configuration> source : sources.entrySet())

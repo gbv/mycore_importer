@@ -20,8 +20,7 @@ lead = "Ein Vorgang verknüpft eine Quelle mit einer MyCoRe Anwendung.", content
             <tbody>
             @if(jobs == null || jobs.isEmpty())
                 <tr>
-                    <td class="empty" colspan="5">Keine Vorgänge konfiguriert. Vorgänge werden in der
-                        <span class="identifier">application.properties</span> angelegt.</td>
+                    <td class="empty" colspan="5">Für Ihre Anwendung sind keine Vorgänge eingerichtet.</td>
                 </tr>
             @else
                 @for(Map.Entry<String,ImportJobConfiguration> job : jobs.entrySet())

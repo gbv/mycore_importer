@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.vzg.oai_importer.AuthorityFilter;
 import de.vzg.oai_importer.ImporterConfiguration;
 import de.vzg.oai_importer.mapping.MappingService;
 import de.vzg.oai_importer.mapping.jpa.Mapping;
@@ -37,8 +39,9 @@ public class MappingController {
 
     @RequestMapping("/groups/")
     public String listGroups(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-        Model model) {
-        Page<MappingGroup> customerPage = mappingService.getMappingGroups(page, size);
+        Model model, Authentication authentication) {
+        Page<MappingGroup> customerPage = mappingService
+            .getMappingGroupsByTargets(AuthorityFilter.getIds("target", authentication), page, size);
 
         model.addAttribute("groups", customerPage);
         return "mapping/mapping_groups";
