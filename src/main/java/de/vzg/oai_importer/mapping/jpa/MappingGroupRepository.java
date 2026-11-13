@@ -17,4 +17,8 @@ public interface MappingGroupRepository
     List<MappingGroup> findByTarget(String target);
 
     Page<MappingGroup> findByTargetIn(Collection<String> targets, Pageable pageable);
+
+    List<MappingGroup> findByNameIn(Collection<String> names);
+
+    Page<MappingGroup> findByTargetInOrIdIn(Collection<String> targets, Collection<Long> ids, Pageable pageable);
 }
