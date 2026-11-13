@@ -1,4 +1,5 @@
 @import gg.jte.Content
+@import static de.vzg.oai_importer.view.AuthHelper.hasAnyAuthority
 @import static de.vzg.oai_importer.view.AuthHelper.isFullyAuthenticated
 @import static de.vzg.oai_importer.view.UrlHelper.isSection
 @import static de.vzg.oai_importer.view.UrlHelper.url
@@ -25,10 +26,18 @@
         @if(isFullyAuthenticated())
             <nav aria-label="Hauptnavigation">
                 <ul class="mainnav">
-                    <li><a href="${url("/sources/")}" aria-current="${isSection("/sources") ? "page" : null}">Quellen</a></li>
-                    <li><a href="${url("/targets/")}" aria-current="${isSection("/targets") ? "page" : null}">Ziele</a></li>
-                    <li><a href="${url("/jobs/")}" aria-current="${isSection("/jobs") ? "page" : null}">Vorgänge</a></li>
-                    <li><a href="${url("/mapping/groups/")}" aria-current="${isSection("/mapping") ? "page" : null}">Zuordnung</a></li>
+                    @if(hasAnyAuthority("source"))
+                        <li><a href="${url("/sources/")}" aria-current="${isSection("/sources") ? "page" : null}">Quellen</a></li>
+                    @endif
+                    @if(hasAnyAuthority("target"))
+                        <li><a href="${url("/targets/")}" aria-current="${isSection("/targets") ? "page" : null}">Ziele</a></li>
+                    @endif
+                    @if(hasAnyAuthority("job"))
+                        <li><a href="${url("/jobs/")}" aria-current="${isSection("/jobs") ? "page" : null}">Vorgänge</a></li>
+                    @endif
+                    @if(hasAnyAuthority("mapping", "mapping-admin"))
+                        <li><a href="${url("/mapping/groups/")}" aria-current="${isSection("/mapping") ? "page" : null}">Zuordnung</a></li>
+                    @endif
                 </ul>
             </nav>
             <div class="masthead__end">

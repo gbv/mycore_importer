@@ -3,6 +3,8 @@ package de.vzg.oai_importer.controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,8 +45,12 @@ public class MappingController {
     @RequestMapping("/groups/")
     public String listGroups(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
         Model model, Authentication authentication) {
-        Page<MappingGroup> customerPage = mappingService
-            .getMappingGroupsByTargets(AuthorityFilter.getIds("target", authentication), page, size);
+        Set<Long> groupIds = AuthorityFilter.getIds("mapping", authentication).stream()
+            .filter(id -> id.chars().allMatch(Character::isDigit))
+            .map(Long::valueOf)
+            .collect(Collectors.toSet());
+        Page<MappingGroup> customerPage = mappingService.getMappingGroupsByTargetsOrIds(
+            AuthorityFilter.getIds("target", authentication), groupIds, page, size);
 
         model.addAttribute("groups", customerPage);
         return "mapping/mapping_groups";

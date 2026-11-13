@@ -49,6 +49,34 @@ public class MappingService {
         return mappingGroupRepository.findByTarget(target);
     }
 
+    /**
+     * Returns the mapping groups with one of the given names.
+     *
+     * @param names the names of the groups
+     * @return the groups, never null
+     */
+    public List<MappingGroup> getGroupsByNames(Collection<String> names) {
+        if (names == null || names.isEmpty()) {
+            return List.of();
+        }
+        return mappingGroupRepository.findByNameIn(names);
+    }
+
+    /**
+     * Returns the mapping groups which belong to one of the given targets or have one of the given ids.
+     *
+     * @param targets the target ids
+     * @param ids the ids of the groups
+     * @param page the page number
+     * @param size the page size
+     * @return the groups
+     */
+    public Page<MappingGroup> getMappingGroupsByTargetsOrIds(Collection<String> targets, Collection<Long> ids, int page,
+        int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        return mappingGroupRepository.findByTargetInOrIdIn(targets, ids, pageable);
+    }
+
     public Optional<Mapping> getMappingByGroupAndFrom(MappingGroup group, String from) {
         return mappingRepository.findByMappingGroupAndFrom(group, from);
     }

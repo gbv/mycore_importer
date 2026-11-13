@@ -165,18 +165,24 @@ The password is the password of the MyCoRe user. The target id selects the MyCoR
 The roles of the MyCoRe user decide which targets you can access. Roles are only valid for targets which use the same
 MyCoRe instance (same `url`) as the target you logged in with, so roles from another application never grant access.
 
-| Role                   | Access                                                                   |
-|------------------------|--------------------------------------------------------------------------|
-| `admin`                | all targets of the instance, can also create and edit mapping groups     |
-| `importer`             | all targets of the instance                                              |
-| `importer-<target-id>` | only this target, e.g. `importer-dhil`; can be combined with other roles |
+| Role                   | Access                                                                              |
+|------------------------|-------------------------------------------------------------------------------------|
+| `admin`                | everything for all targets of the instance, can also create and edit mapping groups |
+| `importer`             | all targets of the instance                                                         |
+| `importer-<target-id>` | only this target, e.g. `importer-dhil`                                              |
+| `mapper`               | the mappings used by the jobs of all targets of the instance                        |
+| `mapper-<target-id>`   | the mappings used by the jobs of this target, e.g. `mapper-dhil`                    |
 
-The target roles apply independently of the target id used for the login. A user with the roles `importer-dhil` and
-`importer-oii` sees both targets, whether they log in with `user@dhil` or `user@oii`.
+The roles can be combined, and the target roles apply independently of the target id used for the login. A user with
+the roles `importer-dhil` and `importer-oii` sees both targets, whether they log in with `user@dhil` or `user@oii`.
 
-Access to a target includes all jobs that import into it, the sources of these jobs and all mapping groups which are
-associated with the target.
+Access to a target with `importer` includes all jobs that import into it, the sources of these jobs and all mapping
+groups which are associated with the target.
+
+`mapper` only grants access to mappings, not to sources, targets or jobs. A mapping group is used by a job if its name
+is a value of the `importer-config` of the job, e.g. `importer.jobs.<job-id>.importer-config.genre=<group name>`. The
+group may be associated with any target; a group shared by several jobs can be edited by the mappers of all of them.
 
 The MyCoRe instance only passes roles to the importer which are listed in `MCR.Rest.JWT.Roles`. Every role you want to
-use has to be added there, e.g. `MCR.Rest.JWT.Roles=admin,editor,submitter,reader,restapi,importer,importer-dhil`.
+use has to be added there, e.g. `MCR.Rest.JWT.Roles=admin,editor,submitter,reader,restapi,importer,importer-dhil,mapper-dhil`.
 

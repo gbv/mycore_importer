@@ -33,10 +33,13 @@ import lombok.extern.log4j.Log4j2;
  * The roles of the MyCoRe user decide which targets are accessible. Roles are only valid for targets which use the
  * same MyCoRe instance (same url) as the target the user logged in with:
  * <ul>
- * <li>{@code admin} grants all targets of the instance and allows to manage mapping groups</li>
- * <li>{@code importer} grants all targets of the instance</li>
- * <li>{@code importer-<target-id>} grants the named target, if it belongs to the same instance</li>
+ * <li>{@code admin} grants everything below for all targets of the instance and allows to manage mapping groups</li>
+ * <li>{@code importer} grants the sources, jobs and mapping groups of all targets of the instance</li>
+ * <li>{@code importer-<target-id>} grants the sources, jobs and mapping groups of the named target</li>
+ * <li>{@code mapper} grants the mapping groups used by the jobs of all targets of the instance</li>
+ * <li>{@code mapper-<target-id>} grants the mapping groups used by the jobs of the named target</li>
  * </ul>
+ * A mapping group is used by a job, if its name is a value of the importer config of the job.
  * The MyCoRe instance has to pass these roles in the JWT, so they have to be listed in {@code MCR.Rest.JWT.Roles}.
  */
 @Log4j2
@@ -47,7 +50,7 @@ public class MyCoReAuthenticationProvider implements AuthenticationProvider {
 
     public static final String ROLE_IMPORTER = "importer";
 
-    public static final String ROLE_TARGET_IMPORTER_PREFIX = ROLE_IMPORTER + "-";
+    public static final String ROLE_MAPPER = "mapper";
 
     @Autowired
     private ImporterConfiguration configuration;
@@ -98,15 +101,15 @@ public class MyCoReAuthenticationProvider implements AuthenticationProvider {
             authorities.add("mapping-admin");
         }
 
-        Set<String> realms = getAccessibleRealms(loginRealm, roles);
-        if (!realms.isEmpty()) {
+        Set<String> importerRealms = getAccessibleRealms(loginRealm, roles, ROLE_IMPORTER);
+        if (!importerRealms.isEmpty()) {
             authorities.add("source");
             authorities.add("target");
             authorities.add("job");
             authorities.add("mapping");
         }
 
-        realms.forEach(realm -> {
+        importerRealms.forEach(realm -> {
             authorities.add("source-" + realm);
             authorities.add("target-" + realm);
             authorities.add("job-" + realm);
@@ -117,19 +120,30 @@ public class MyCoReAuthenticationProvider implements AuthenticationProvider {
             mappingService.getGroupsByTarget(realm).forEach(group -> authorities.add("mapping-" + group.getId()));
         });
 
-        log.debug("Granted realms {} for login realm {} and roles {}", realms, loginRealm, roles);
+        Set<String> mapperRealms = getAccessibleRealms(loginRealm, roles, ROLE_MAPPER);
+        if (!mapperRealms.isEmpty()) {
+            authorities.add("mapping");
+        }
+        mappingService.getGroupsByNames(getMappingGroupNames(mapperRealms))
+            .forEach(group -> authorities.add("mapping-" + group.getId()));
+
+        log.debug("Granted importer realms {} and mapper realms {} for login realm {} and roles {}", importerRealms,
+            mapperRealms, loginRealm, roles);
         return authorities.stream().<GrantedAuthority>map(SimpleGrantedAuthority::new).toList();
     }
 
     /**
-     * Returns the targets a user may access. Only targets which use the same MyCoRe instance as the login realm are
-     * considered, because the roles of the user are only valid for the instance the user authenticated against.
+     * Returns the targets a user may access with the given role. The role itself and {@code admin} grant all targets,
+     * {@code <role>-<target-id>} grants a single target. Only targets which use the same MyCoRe instance as the login
+     * realm are considered, because the roles of the user are only valid for the instance the user authenticated
+     * against.
      *
      * @param loginRealm the target id the user logged in with
      * @param roles the MyCoRe roles of the user, may be null
+     * @param role the role, e.g. {@code importer} or {@code mapper}
      * @return the accessible target ids, sorted, never null
      */
-    Set<String> getAccessibleRealms(String loginRealm, Collection<String> roles) {
+    Set<String> getAccessibleRealms(String loginRealm, Collection<String> roles, String role) {
         Set<String> realms = new TreeSet<>();
         MyCoReTargetConfiguration loginTarget = getTargets().get(loginRealm);
         String loginUrl = loginTarget == null ? null : normalizeUrl(loginTarget.getUrl());
@@ -137,10 +151,10 @@ public class MyCoReAuthenticationProvider implements AuthenticationProvider {
             return realms;
         }
 
-        boolean allRealms = roles.contains(ROLE_ADMIN) || roles.contains(ROLE_IMPORTER);
+        boolean allRealms = roles.contains(ROLE_ADMIN) || roles.contains(role);
         getTargets().forEach((realm, target) -> {
             if (loginUrl.equals(normalizeUrl(target.getUrl()))
-                && (allRealms || roles.contains(ROLE_TARGET_IMPORTER_PREFIX + realm))) {
+                && (allRealms || roles.contains(role + "-" + realm))) {
                 realms.add(realm);
             }
         });
@@ -162,6 +176,26 @@ public class MyCoReAuthenticationProvider implements AuthenticationProvider {
             .filter(e -> Objects.equals(e.getValue().getTargetConfigId(), realm))
             .map(Map.Entry::getKey)
             .toList();
+    }
+
+    /**
+     * Returns the values of the importer config of all jobs which import into one of the given targets. Mapping groups
+     * are referenced by their name in the importer config, e.g. {@code importer-config.genre=<group name>}.
+     *
+     * @param realms the target ids
+     * @return the values, never null
+     */
+    private Set<String> getMappingGroupNames(Set<String> realms) {
+        Set<String> names = new TreeSet<>();
+        realms.forEach(realm -> getJobsWithRealm(realm).forEach(jobID -> {
+            Map<String, String> importerConfig = configuration.getJobs().get(jobID).getImporterConfig();
+            if (importerConfig != null) {
+                importerConfig.values().stream()
+                    .filter(value -> value != null && !value.isBlank())
+                    .forEach(names::add);
+            }
+        }));
+        return names;
     }
 
     private Map<String, MyCoReTargetConfiguration> getTargets() {
